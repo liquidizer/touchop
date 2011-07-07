@@ -9,9 +9,10 @@ var wofns="http://www.dadim.de/wof";
 
 // initialize is called on load of the document. It layouts all elements and stores a reference to the winning test
 var winningTest;
-function init(evt) {
+var doc;
 
-    var doc= evt.target.ownerDocument;
+function init(evt) {
+    doc= evt.target.ownerDocument;
     deepLayout(doc.rootElement);
     winningTest= doc.rootElement.getAttributeNS(wofns,"test");
     doc.getElementById("wof:win").setAttribute("opacity","0.0");
@@ -84,6 +85,7 @@ function msMove (evt) {
         
         // if the mouse has moved more than a snap treshold "tresh"
         if (Math.abs(dx)+Math.abs(dy) > tresh) {
+	    sendHome(evt.target);
             tresh=0;
 
             // switch to screen coordinate system
@@ -105,17 +107,17 @@ function msMove (evt) {
 // The object obj is inserted into a new group element target. Layouts are updated
 function moveToGroup(obj, target) {
     if (target!=obj.parentNode) {
-        // remove object from its current container and recalculate layout
+        // move object from its current to the target container
         var oldContainer= obj.parentNode;
         oldContainer.removeChild(obj);
+        target.appendChild(obj);
+
+        // insert object to target group and layout new container
         layout(oldContainer);
+        layout(obj);
 
         // if previous container was blocked, it will accept drops again
         oldContainer.setAttribute("blocked",null);
-
-        // insert object to target group and layout new container
-        target.appendChild(obj);
-        layout(target);
     }
 }
 
@@ -134,9 +136,10 @@ function dropOn(evt) {
 
             // snap to target groups center
             var m= hand.getTransformToElement(hand.parentNode);
-            var box= hand.getBBox();
-            m.e = -box.x - 0.5*box.width;
-            m.f = -box.y - 0.5*box.height;
+	    var box1= target.getBBox();
+            var box2= hand.getBBox();
+            m.e = -box2.x - 0.5*box2.width + 0.5*box1.width;
+            m.f = -box2.y - 0.5*box2.height + 0.5*box1.width;
             setTransform(hand, m);
             startCTM= hand.getAttribute("transform");
 
@@ -163,21 +166,24 @@ function sendHome() {
 	if (hand.parentNode != target) {
 
 	    // store the current location
-	    var m1= hand.getScreenCTM();
+	    var m1= target.getScreenCTM().inverse();
+	    var m2= hand.getScreenCTM();
 
 	    // the object is inserted into its home group
 	    moveToGroup(hand, target);
 
-	    var m= hand.getScreenCTM();
-	    m.e= m1.e;
-	    m.f= m1.f;
-	    m= hand.parentNode.getScreenCTM().inverse().multiply(m); 
-
 	    // compute relative transformation matrix
+	    var m= hand.getScreenCTM();
+	    m.e= m2.e;
+	    m.f= m2.f;
+	    m= m1.multiply(m); 
+
+	    // update transformation
 	    setTransform(hand,m);
 	}
     }
 }
+
 
 // This method layouts all objects on the screen according to the default layout.
 function deepLayout(obj) {
@@ -188,7 +194,7 @@ function deepLayout(obj) {
         }
         // call layout function if available
         command= obj.getAttributeNS(wofns,"layout");
-        if (command!=null) {
+        if (command!="") {
             eval(command);
         }
     }
@@ -240,7 +246,7 @@ function insertParenthesis(obj) {
                     lastpar= child;
                     obj.removeChild(child);
                     --i;
-                } else if (child.getAttributeNS(wofns, "value")!="") {
+                } else {
                     // check if child's priority requires placing parethesis
                     if (myPrio < getPriority(child)) {
                         // reuse previous node for speed up, if possible
@@ -248,13 +254,13 @@ function insertParenthesis(obj) {
                             obj.insertBefore(lastpar, child);
                         } else {
                             // create new parenthesis objects
-                            var node= obj.ownerDocument.createElementNS(obj.namespaceURI, "text");
-                            node.appendChild(obj.ownerDocument.createTextNode("("));
+                            var node= doc.createElementNS(obj.namespaceURI, "text");
+                            node.appendChild(doc.createTextNode("("));
                             node.setAttribute("name","parenthesis");
                             node.setAttribute("transform", "scale(1.2,2)");
                             obj.insertBefore(node, child);
-                            var node= obj.ownerDocument.createElementNS(obj.namespaceURI, "text");
-                            node.appendChild(obj.ownerDocument.createTextNode(")"));
+                            var node= doc.createElementNS(obj.namespaceURI, "text");
+                            node.appendChild(doc.createTextNode(")"));
                             node.setAttribute("name","parenthesis");
                             node.setAttribute("transform", "scale(1.2,2)");
                             obj.insertBefore(node, child.nextSibling);
@@ -279,15 +285,16 @@ function getPriority(obj) {
         for (var i=0; i<obj.childNodes.length; ++i) {
             var child= obj.childNodes[i];
             if (child.nodeType==1) {
-                var value= child.getAttributeNS(wofns, "value");
-                if (value!="")
-                    return getPriority(child);
+		var prio= getPriority(child);
+                if (prio!=0)
+                    return prio;
             }
         }
     }
     return 0;
 }
 
+// Layout all children objects horizontally
 function horizontalLayout(obj) {
     insertParenthesis(obj);
     
@@ -337,7 +344,8 @@ function horizontalLayout(obj) {
     }
 }
 
-// transform the object, such that it fits into a box spanned by x0,x1,y0,y1 in the parents coordinate system 
+// transform the object, such that it fits into a box spanned
+// by x0,x1,y0,y1 in the parents coordinate system 
 function scaleElement(obj, x0, x1, y0, y1) {
 
     // determine current bounding box relative to the parent node's coordinate system
@@ -365,26 +373,28 @@ function scaleElement(obj, x0, x1, y0, y1) {
 function computeValue(obj) {
     var value= obj.getAttributeNS(wofns, "value");
     var args= [];
+
+    for (var i=0; i<obj.childNodes.length; ++i) {
+	if (obj.childNodes[i].nodeType==1) {
+	    // if the child node has a value, compute it and store as argument.
+	    var sub= computeValue(obj.childNodes[i]);
+	    if (sub!="") {
+		args[args.length]= sub;
+	    }
+	}
+    }
+
     // if value is a formula of child values
     if (value.indexOf("#")>=0) {
-        for (var i=0; i<obj.childNodes.length; ++i) {
-            if (obj.childNodes[i].nodeType==1) {
-                // if the child node has a value, compute it and store as potential argument.
-                var sub= computeValue(obj.childNodes[i]);
-                if (sub!="") {
-                    sub= sub.replace(/#/, "#"+(1+args.length)+":");
-                    args[args.length]= sub;
-                }
-            }
-        }
         // replace #n substrings with appropriate sub values
         for (var i=0; i<args.length; ++i) {
             var myex= new RegExp("#"+(i+1));
             value= value.replace(myex, args[i]);
         }
-        // ## matches the last value. This allows default values to be defined by the background.
-        if (args.length>0)
-            value= "("+value.replace(/##/, args[args.length-1])+")";
+    } else {
+        // By default return the one input argument
+        if (args.length == 1)
+            value= "("+args[0]+")";
     }
     return value;
 }
@@ -396,12 +406,15 @@ function verify(obj) {
     try {
         var win= eval(test);
         if (win) {
-            obj.ownerDocument.getElementById("wof:win").setAttribute("opacity","1.0");
-            obj.ownerDocument.getElementById("wof:notwin").setAttribute("opacity","0.0");
+	    smile(1.0);
             return;
         }
     } catch(e) {
     }
-    obj.ownerDocument.getElementById("wof:win").setAttribute("opacity","0.0");
-    obj.ownerDocument.getElementById("wof:notwin").setAttribute("opacity","1.0");            
+    smile(0.0);
+}
+
+function smile(value) {
+    doc.getElementById("wof:win").setAttribute("opacity",value);
+    doc.getElementById("wof:notwin").setAttribute("opacity",1.0-value);
 }

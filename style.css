@@ -1,0 +1,13 @@
+text {
+    text-anchor: middle;
+    font-size: 24px;
+    font-family: Verdana;
+}
+
+.operator {
+    fill: coral;
+}
+
+.operand {
+    fill: #ffffe0;
+}

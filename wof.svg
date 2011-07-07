@@ -1,303 +1,98 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<!--<?xml-stylesheet href="wof.xsl" type="text/xsl"?>-->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<?xml-stylesheet type="text/css" href="style.css"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+                     "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
 <svg xmlns="http://www.w3.org/2000/svg"
      xmlns:xlink="http://www.w3.org/1999/xlink"
      xmlns:wof="http://www.dadim.de/wof"
-     xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-     xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-	 xml:space="preserve"
-         width="100%" height="100%"
-         viewBox="0 0 600 400"
-         onmousemove="msMove(evt)"
-         onmouseup="msUp(evt)"
-	id="root"
-    onload ="init(evt)"
-    wof:test="8==?"
->
-<style type="text/css">
-text {
-	text-anchor: middle;
-	font-size: 24px;
-	font-family: Verdana;
-}
-</style>
+     onmousemove="msMove(evt)"
+     onmouseup="msUp(evt)"
+     width="100%" height="100%"
+     viewBox="0 0 600 400"
+     onload ="init(evt)"
+     wof:test="8==?">
 
-    <script type="text/javascript" xlink:href="wof.js"/>
-    <rect x="5" y="5" width="590" height="390" fill="white" stroke="orange" stroke-width="2" rx="10" ry="10"
-        onmousemove="sendHome(evt)"
-        id="background"
-    />
-    <text transform="translate(10,45)" style="font-size:40px; text-anchor:start" fill="black">8 = ?</text>
+  <script type="text/javascript" xlink:href="wof.js"/>
 
-    <g id="operator layer">
-        <g onmousedown="msDown(evt)"
-           transform="translate(340,200)"
-           wof:value="#1 * #2"
-           wof:priority="100"
-		   wof:layout="horizontalLayout(obj)">
-            <g wof:layoutOption="background">
-                <rect x="-65" y="-40" height="80" width="130" rx="10" ry="10" fill="orange"/>
-            </g>
-            <g onmousemove="dropOn(evt)"
-                wof:value="##"
-                transform="translate(-30,0)">
-                <rect height="50" x="-25" y="-25" width="50" rx="10" ry="10" fill="lightgrey"/>
-            </g>
-            <text>&#215;</text>
-            <g onmousemove="dropOn(evt)"
-                wof:value="##"
-                transform="translate(30,0)">
-                <rect height="50" x="-25" y="-25" width="50" rx="10" ry="10" fill="lightgrey"/>
-            </g>
-        </g>
-        <g onmousedown="msDown(evt)"
-           transform="translate(340,300)"
-		   wof:layout="horizontalLayout(obj)"
-           wof:priority="120"
-           wof:value="#1 + #2">
-            <g wof:layoutOption="background">
-                <rect x="-65" y="-40" height="80" width="130" rx="10" ry="10" fill="orange"/>
-            </g>
-            <g onmousemove="dropOn(evt)"
-                transform="scale(0.5)"
-                wof:value="##">
-                <rect height="50" x="-25" y="-25" width="50" rx="10" ry="10" fill="lightgrey"/>
-            </g>
-            <text>+</text>
-            <g onmousemove="dropOn(evt)"
-               wof:value="##"
-                transform="translate(30,0)">
-                <rect height="50" x="-25" y="-25" width="50" rx="10" ry="10" fill="lightgrey"/>
-            </g>
-        </g>
-    </g>
+  <text transform="translate(10,45)" style="font-size:40px; text-anchor:start" fill="black">8 = ?</text>
 
-    <g id="atom layer">
-        <g  transform="translate(100,200)"
-            onmousedown="msDown(evt)"
-            wof:value="1">
-            <rect height="60" width="60" x="-30" y="-30" rx="10" ry="10" fill="orange" stroke-width="1"/>
-            <text dy="0.7ex">1</text>
-        </g>
-        <g  transform="translate(100,300)"
-            onmousedown="msDown(evt)"
-            wof:value="2">
-            <rect height="60" width="60" x="-30" y="-30" rx="10" ry="10" fill="orange" stroke-width="1"/>
-            <text dy="0.7ex">2</text>
-        </g>
-        <g  transform="translate(200,300)"
-            onmousedown="msDown(evt)"
-            wof:value="3">
-            <rect height="60" width="60" x="-30" y="-30" rx="10" ry="10" fill="orange" stroke-width="1"/>
-            <text dy="0.7ex">3</text>
-        </g>
+  <g onmousedown="msDown(evt)"
+     transform="translate(340,200)"
+     wof:value="#1 * #2"
+     wof:priority="100"
+     wof:layout="horizontalLayout(obj)">
+
+    <g wof:layoutOption="background" class="operator">
+      <rect height="100" width="150"/>
     </g>
-    
-    <g
-       transform="translate(540,60)"
-       id="wof:notwin">
-      <circle
-         id="circle"
-         r="40"
-         cx="0"
-         cy="0"
-         sodipodi:cx="0"
-         sodipodi:cy="0"
-         sodipodi:rx="40"
-         sodipodi:ry="40"
-         style="fill:#ffffe0;stroke:#000000;stroke-width:1" />
-      <path
-         style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.88699472px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         d="M -30.979484,-10.456161 C -27.557138,-10.073016 -11.09823,-11.015102 -11.09823,-11.015102 C -12.868818,-0.70767034 -28.629191,-0.18766941 -30.979484,-10.456161 z"
-         id="path2382"
-         sodipodi:nodetypes="ccc" />
-      <path
-         style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.88699472px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         d="M -1.4837013,-10.864464 L 25.573279,-8.5392894 C 16.430115,4.4531791 -0.23332899,-0.53483355 -1.4837013,-10.864464 z"
-         id="path2384"
-         sodipodi:nodetypes="ccc" />
-      <path
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         d="M 413.29518,741.86218 L 449.40361,743.16339"
-         id="path3158"
-         sodipodi:nodetypes="cc"
-         transform="translate(-436.65491,-722.32689)" />
-      <path
-         style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1"
-         d="M 414.875,713.21875 C 412.63707,713.21875 410.8125,715.04332 410.8125,717.28125 C 410.8125,717.66209 410.87043,718.02546 410.96875,718.375 C 413.32543,719.43502 416.09333,719.58297 418.59375,718.875 C 418.79899,718.39002 418.90625,717.84073 418.90625,717.28125 C 418.90625,715.04332 417.11292,713.21873 414.875,713.21875 z"
-         id="circle3162"
-         transform="translate(-436.65491,-722.32689)" />
-      <path
-         style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1"
-         d="M 444.625,714.375 C 442.38707,714.375 440.56249,716.19957 440.5625,718.4375 C 440.5625,718.76334 440.6148,719.07134 440.6875,719.375 C 442.54979,720.5234 444.9202,720.63778 447.2564,720.9744 C 448.22231,720.23314 448.68749,719.74825 448.6875,718.4375 C 448.6875,716.19957 446.86293,714.37498 444.625,714.375 z"
-         id="circle3164"
-     sodipodi:nodetypes="csccsc"
-         transform="translate(-436.65491,-722.32689)" />
-      <path
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         d="M -16.040451,8.1497524 C -17.666961,10.589512 -17.666961,12.866622 -16.528401,14.167822 C -15.389851,15.469032 -14.251291,13.029272 -13.112741,13.842522 C -11.974191,14.655772 -10.185031,15.794332 -9.2091306,14.981072 C -8.2332206,14.167822 -6.9320206,14.655772 -5.3055106,15.306372 C -3.6790106,15.956982 -2.7031006,14.981072 -1.2392506,14.818422 C 0.2246094,14.655772 0.3872594,14.493122 0.3872594,14.493122 L 0.3872594,14.493122"
-         id="path3174" />
+    <g onmousemove="dropOn(evt)">
+      <rect height="50" width="50" class="operand"/>
     </g>
-     <g
-       id="wof:win"
-       transform="translate(540,60)">
-      <circle
-         style="fill:#ffffe0;stroke:#000000;stroke-width:1"
-         sodipodi:ry="40"
-         sodipodi:rx="40"
-         sodipodi:cy="0"
-         sodipodi:cx="0"
-         cy="0"
-         cx="0"
-         r="40"
-         id="circle3178" />
-      <path
-         sodipodi:nodetypes="ccc"
-         id="path3180"
-         d="M -32.739473,-6.326536 C -28.319037,-0.80819586 -15.754844,-0.59873862 -12.959541,-4.1597234 C -13.699034,-19.412283 -29.371423,-21.24289 -32.739473,-6.326536 z"
-         style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.88699478px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-      <path
-         sodipodi:nodetypes="ccc"
-         id="path3182"
-         d="M -3.3520691,-3.729854 C 1.6164091,1.1925935 17.651084,0.77451593 22.163225,-5.3114162 C 14.827601,-25.00518 -1.2184238,-18.810447 -3.3520691,-3.729854 z"
-         style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.88699478px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-      <path
-         sodipodi:nodetypes="cccc"
-         id="path3184"
-         d="M -27.466765,14.287421 C -15.418954,24.874399 3.5087976,25.704575 17.291777,14.618682 L 17.482263,14.618008 C 8.3902594,31.415245 -17.582081,32.241918 -27.466765,14.287421 z"
-         style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-      <path
-         id="path3190"
-         d="M -14.899605,7.1229919 C -16.982453,9.3345824 -17.552876,11.497608 -16.414316,12.798808 C -15.275766,14.100018 -13.338614,12.687018 -12.200064,13.500268 C -11.061514,14.313518 -9.5032214,15.035665 -8.2964546,14.638818 C -6.8642066,14.167822 -6.1334291,13.514927 -4.5069191,14.165527 C -2.8804191,14.816137 -1.448171,14.866988 -0.66882806,12.764901"
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         sodipodi:nodetypes="csssss" />
-      <circle
-         id="circle3192"
-         r="40"
-         cx="0"
-         cy="0"
-         sodipodi:cx="0"
-         sodipodi:cy="0"
-         sodipodi:rx="40"
-         sodipodi:ry="40"
-         style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:8.63221931"
-         transform="matrix(0.1158451,0,0,0.1158451,-22.246479,-7.6436615)" />
-      <circle
-         transform="matrix(0.1158451,0,0,0.1158451,7.0732393,-6.3887319)"
-         style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:8.63221931"
-         sodipodi:ry="40"
-         sodipodi:rx="40"
-         sodipodi:cy="0"
-         sodipodi:cx="0"
-         cy="0"
-         cx="0"
-         r="40"
-         id="circle3194" />
-      <path
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         d="M 162.68451,95.991761 L 158.00704,92.112887"
-         id="path3196"
-         transform="translate(-193.57407,-107.21379)"
-         sodipodi:nodetypes="cc" />
-      <path
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         d="M 164.62394,93.139648 L 160.74507,88.462182"
-         id="path3200"
-         transform="translate(-193.57407,-107.21379)"
-         sodipodi:nodetypes="cc" />
-      <path
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         d="M 166.90563,91.542465 L 164.73803,86.180493"
-         id="path3202"
-         transform="translate(-193.57407,-107.21379)"
-         sodipodi:nodetypes="cc" />
-      <path
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         d="M 170.1,90.743873 L 169.75775,85.61007"
-         id="path3204"
-         transform="translate(-193.57407,-107.21379)"
-         sodipodi:nodetypes="cc" />
-      <path
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         d="M 173.0662,90.857958 L 174.77746,86.180492"
-         id="path3206"
-         transform="translate(-193.57407,-107.21379)"
-         sodipodi:nodetypes="cc" />
-      <path
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         d="M 176.03239,92.569225 L 178.88451,88.690352"
-         id="path3208"
-         transform="translate(-193.57407,-107.21379)"
-         sodipodi:nodetypes="cc" />
-      <path
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         d="M 178.65633,94.850915 L 182.07887,91.542464"
-         id="path3210"
-         transform="translate(-193.57407,-107.21379)"
-         sodipodi:nodetypes="cc" />
-      <path
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         d="M 179.91127,97.703028 L 183.56197,96.21993"
-         id="path3212"
-         transform="translate(-193.57407,-107.21379)"
-         sodipodi:nodetypes="cc" />
-      <path
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         d="M 161.42958,98.387535 L 155.95352,95.99176"
-         id="path3216"
-         transform="translate(-193.57407,-107.21379)"
-         sodipodi:nodetypes="cc" />
-      <path
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.99999994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         d="M 19.85091,-10.737582 L 24.873191,-13.531828"
-         id="path3220"
-         sodipodi:nodetypes="cc"
-         inkscape:transform-center-y="0.68450704" />
-      <path
-         id="path3222"
-         d="M 15.736154,-15.671326 L 18.848713,-20.006537"
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         sodipodi:nodetypes="cc" />
-      <path
-         id="path3224"
-         d="M 12.599684,-17.040339 L 14.547496,-21.147382"
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         sodipodi:nodetypes="cc" />
-      <path
-         id="path3226"
-         d="M 8.9913624,-17.724846 L 9.0307754,-21.831889"
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         sodipodi:nodetypes="cc" />
-      <path
-         id="path3228"
-         d="M 5.8506969,-17.154424 L 4.3353218,-21.489636"
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         sodipodi:nodetypes="cc" />
-      <path
-         id="path3230"
-         d="M 2.0846703,-15.214987 L -0.48137801,-18.979776"
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         sodipodi:nodetypes="cc" />
-      <path
-         id="path3232"
-         d="M 0.37635847,-12.933297 L -3.3150097,-15.78541"
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         sodipodi:nodetypes="cc" />
-      <path
-         id="path3234"
-         d="M -1.4770883,-9.7389309 L -6.0459002,-11.906536"
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         sodipodi:nodetypes="cc" />
-      <path
-         id="path3236"
-         d="M 21.209255,-7.5713259 L 26.749876,-9.7389314"
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         sodipodi:nodetypes="cc" />
-      <path
-         id="path3238"
-         d="M 17.381139,-13.161466 C 20.859864,-16.241748 21.752821,-17.268509 21.752821,-17.268509"
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         sodipodi:nodetypes="cc" />
+    <text>&#215;</text>
+    <g onmousemove="dropOn(evt)">
+      <rect height="50" width="50" class="operand"/>
     </g>
+  </g>
+
+  <g onmousedown="msDown(evt)"
+     transform="translate(340,200)"
+     wof:value="#1 * #2"
+     wof:priority="100"
+     wof:layout="horizontalLayout(obj)">
+
+    <g wof:layoutOption="background" class="operator">
+      <rect height="100" width="150"/>
+    </g>
+    <g onmousemove="dropOn(evt)">
+      <rect height="50" width="50" class="operand"/>
+    </g>
+    <text>&#215;</text>
+    <g onmousemove="dropOn(evt)">
+      <rect height="50" width="50" class="operand"/>
+    </g>
+  </g>
+  
+  <g onmousedown="msDown(evt)"
+     transform="translate(340,300)"
+     wof:layout="horizontalLayout(obj)"
+     wof:priority="120"
+     wof:value="#1 + #2">
+
+    <g wof:layoutOption="background" class="operator">
+      <rect height="50" width="100"/>
+    </g>
+    <g onmousemove="dropOn(evt)">
+      <rect height="50" width="50" class="operand"/>
+    </g>
+    <text>+</text>
+    <g onmousemove="dropOn(evt)">
+      <rect height="50" width="50" class="operand"/>
+    </g>
+  </g>
+
+  <g  transform="translate(100,200)"
+      onmousedown="msDown(evt)">
+    <rect height="60" width="60" class="operator"/>
+    <text dx="60" dy="38" wof:value="1">1</text>
+  </g>
+
+  <g  transform="translate(100,300)"
+      onmousedown="msDown(evt)">
+    <rect height="60" width="60" class="operator"/>
+    <text dx="60" dy="38" wof:value="2">2</text>
+  </g>
+
+  <g  transform="translate(200,300)"
+      onmousedown="msDown(evt)">
+    <rect height="60" width="60" class="operator"/>
+    <text dx="60" dy="38" wof:value="3">3</text>
+  </g>
+  
+  <g transform="translate(500,20)" id="wof:notwin">
+    <use xlink:href="smiley.svg#frown"/>
+  </g>
+  <g transform="translate(500,20)" id="wof:win">
+    <use xlink:href="smiley.svg#smile"/>
+  </g>
 </svg>
