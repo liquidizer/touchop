@@ -10,45 +10,46 @@
      onmouseup="msUp(evt)"
      width="100%" height="100%"
      viewBox="0 0 600 400"
-     onload ="init(evt)"
-     wof:test="8==?">
+     onload ="init(evt)">
 
   <script type="text/javascript" xlink:href="wof.js"/>
 
-  <text transform="translate(10,45)" style="font-size:40px; text-anchor:start" fill="black">8 = ?</text>
+  <text transform="translate(100,45)" id="test" wof:test="8==?">8 = ?</text>
 
   <g onmousedown="msDown(evt)"
-     transform="translate(340,200)"
-     wof:value="#1 * #2"
+     transform="translate(340,100)"
+     wof:value="Math.pow(#1, #2)"
      wof:priority="100"
      wof:layout="horizontalLayout(obj)">
 
-    <g wof:layoutOption="background" class="operator">
+    <g class="background">
       <rect height="100" width="150"/>
     </g>
-    <g onmousemove="dropOn(evt)">
+    <g onmousemove="dropOn(evt)" wof:layout="snap(obj)">
       <rect height="50" width="50" class="operand"/>
     </g>
-    <text>&#215;</text>
-    <g onmousemove="dropOn(evt)">
-      <rect height="50" width="50" class="operand"/>
+    <g>
+      <rect y="50" width="1" height="1" class="background"/>
+      <g onmousemove="dropOn(evt)" wof:layout="snap(obj)" transform="scale(0.8)">
+	<rect y="-50" height="50" width="50" class="operand"/>
+      </g>
     </g>
   </g>
-
+  
   <g onmousedown="msDown(evt)"
      transform="translate(340,200)"
      wof:value="#1 * #2"
      wof:priority="100"
      wof:layout="horizontalLayout(obj)">
 
-    <g wof:layoutOption="background" class="operator">
+    <g class="background">
       <rect height="100" width="150"/>
     </g>
-    <g onmousemove="dropOn(evt)">
+    <g onmousemove="dropOn(evt)" wof:layout="snap(obj)">
       <rect height="50" width="50" class="operand"/>
     </g>
     <text>&#215;</text>
-    <g onmousemove="dropOn(evt)">
+    <g onmousemove="dropOn(evt)" wof:layout="snap(obj)">
       <rect height="50" width="50" class="operand"/>
     </g>
   </g>
@@ -59,40 +60,36 @@
      wof:priority="120"
      wof:value="#1 + #2">
 
-    <g wof:layoutOption="background" class="operator">
+    <g class="background">
       <rect height="50" width="100"/>
     </g>
-    <g onmousemove="dropOn(evt)">
+    <g onmousemove="dropOn(evt)" wof:layout="snap(obj)">
       <rect height="50" width="50" class="operand"/>
     </g>
     <text>+</text>
-    <g onmousemove="dropOn(evt)">
+    <g onmousemove="dropOn(evt)" wof:layout="snap(obj)">
       <rect height="50" width="50" class="operand"/>
     </g>
   </g>
 
-  <g  transform="translate(100,200)"
-      onmousedown="msDown(evt)">
-    <rect height="60" width="60" class="operator"/>
-    <text dx="60" dy="38" wof:value="1">1</text>
+  <g transform="translate(100,200)"
+     onmousedown="msDown(evt)">
+    <rect height="60" width="60" class="background"/>
+    <text dx="60" dy="45" wof:value="1">1</text>
   </g>
 
-  <g  transform="translate(100,300)"
-      onmousedown="msDown(evt)">
-    <rect height="60" width="60" class="operator"/>
-    <text dx="60" dy="38" wof:value="2">2</text>
+  <g transform="translate(100,300)"
+     onmousedown="msDown(evt)">
+    <rect height="60" width="60" class="background"/>
+    <text dx="60" dy="45" wof:value="2">2</text>
   </g>
 
-  <g  transform="translate(200,300)"
-      onmousedown="msDown(evt)">
-    <rect height="60" width="60" class="operator"/>
-    <text dx="60" dy="38" wof:value="3">3</text>
+  <g transform="translate(200,300)"
+     onmousedown="msDown(evt)">
+    <rect height="60" width="60" class="background"/>
+    <text dx="60" dy="50" wof:value="3">3</text>
   </g>
   
-  <g transform="translate(500,20)" id="wof:notwin">
-    <use xlink:href="smiley.svg#frown"/>
-  </g>
-  <g transform="translate(500,20)" id="wof:win">
-    <use xlink:href="smiley.svg#smile"/>
-  </g>
+  <use xlink:href="smiley.svg#frown" transform="translate(500,20)" id="wof:notwin"/>
+  <use xlink:href="smiley.svg#smile" transform="translate(500,20)" id="wof:win"/>
 </svg>

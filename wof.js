@@ -13,9 +13,13 @@ var doc;
 
 function init(evt) {
     doc= evt.target.ownerDocument;
-    deepLayout(doc.rootElement);
-    winningTest= doc.rootElement.getAttributeNS(wofns,"test");
+    deepLayout(doc.rootElement, true);
+    winningTest= doc.getElementById("test").getAttributeNS(wofns,"test");
     doc.getElementById("wof:win").setAttribute("opacity","0.0");
+    window.onload = function() {
+	document.onselectstart = function() {return false;} // ie
+	document.onmousedown = function() {return false;} // mozilla
+    }
 }
 
 // DnD frame work
@@ -114,7 +118,7 @@ function moveToGroup(obj, target) {
 
         // insert object to target group and layout new container
         layout(oldContainer);
-        layout(obj);
+        layout(target);
 
         // if previous container was blocked, it will accept drops again
         oldContainer.setAttribute("blocked",null);
@@ -134,24 +138,17 @@ function dropOn(evt) {
         if (hand.parentNode!=target && target.getAttribute("blocked")!="true") {
             startCTM=null;
 
-            // snap to target groups center
-            var m= hand.getTransformToElement(hand.parentNode);
-	    var box1= target.getBBox();
-            var box2= hand.getBBox();
-            m.e = -box2.x - 0.5*box2.width + 0.5*box1.width;
-            m.f = -box2.y - 0.5*box2.height + 0.5*box1.width;
-            setTransform(hand, m);
-            startCTM= hand.getAttribute("transform");
-
             // insert grabbed object into mouse pointer target group
+	    setFloating(hand, false);
             moveToGroup(hand, target);
             hand.parentNode.setAttribute("blocked","true");
             
             // set snap treshold. Further mouse movements are ignored until distance treshold is hit.
+	    startCTM= hand.getAttribute("transform");
             tresh= 30;
-            startx= evt.clientX;
-            starty= evt.clientY;
         }
+	startx= evt.clientX;
+	starty= evt.clientY;
     }
 }
 
@@ -179,24 +176,31 @@ function sendHome() {
 	    m= m1.multiply(m); 
 
 	    // update transformation
-	    setTransform(hand,m);
+	    setTransform(hand, m);
+   	    setFloating(hand, true);
 	}
     }
 }
 
 
 // This method layouts all objects on the screen according to the default layout.
-function deepLayout(obj) {
+function deepLayout(obj, doFloat) {
     if (obj.nodeType==1) {
         // layout children
         for (var i=0; i<obj.childNodes.length; ++i) {
-            deepLayout(obj.childNodes[i]);
+            deepLayout(obj.childNodes[i], !isObj && doFloat);
         }
         // call layout function if available
-        command= obj.getAttributeNS(wofns,"layout");
+        var command= obj.getAttributeNS(wofns,"layout");
         if (command!="") {
             eval(command);
         }
+
+	// set Floating
+        var isObj= obj.getAttribute("onmousedown")!=null;
+	if (isObj) {
+	    setFloating(obj, doFloat);
+	}
     }
 }
 
@@ -222,6 +226,7 @@ function layout(element) {
         var m= m0.translate(ctm1.e-ctm2.e, ctm1.f-ctm2.f);
         m= element.getTransformToElement(top.parentNode).multiply(m);
         setTransform(top, m);
+	setFloating(top, true);
         
         // verify whether the new object satisfies the winning test
         verify(top);
@@ -254,16 +259,14 @@ function insertParenthesis(obj) {
                             obj.insertBefore(lastpar, child);
                         } else {
                             // create new parenthesis objects
-                            var node= doc.createElementNS(obj.namespaceURI, "text");
-                            node.appendChild(doc.createTextNode("("));
-                            node.setAttribute("name","parenthesis");
-                            node.setAttribute("transform", "scale(1.2,2)");
-                            obj.insertBefore(node, child);
-                            var node= doc.createElementNS(obj.namespaceURI, "text");
-                            node.appendChild(doc.createTextNode(")"));
-                            node.setAttribute("name","parenthesis");
-                            node.setAttribute("transform", "scale(1.2,2)");
-                            obj.insertBefore(node, child.nextSibling);
+                            var lpar= doc.createElementNS(obj.namespaceURI, "text");
+                            lpar.appendChild(doc.createTextNode("("));
+                            lpar.setAttribute("name","parenthesis");
+                            obj.insertBefore(lpar, child);
+                            var rpar= doc.createElementNS(obj.namespaceURI, "text");
+                            rpar.appendChild(doc.createTextNode(")"));
+                            rpar.setAttribute("name","parenthesis");
+                            obj.insertBefore(rpar, child.nextSibling);
                         }
                         i+=2;
                     }
@@ -294,6 +297,26 @@ function getPriority(obj) {
     return 0;
 }
 
+// Layout that snaps the content centered to first element
+function snap(obj) {
+    var box1= null;
+    for (i=0; i<obj.childNodes.length; ++i) {
+        child= obj.childNodes[i];
+        if (child.nodeType==1) {
+	    if (box1==null) {
+		// The first element is the reference position
+		box1= child.getBBox();
+	    } else {
+		var m= child.getTransformToElement(child.parentNode);
+		var box2= child.getBBox();
+		m.e = box1.x - box2.x - 0.5*box2.width + 0.5*box1.width;
+		m.f = box1.y - box2.y - 0.5*box2.height + 0.5*box1.width;
+		setTransform(child, m);
+	    }
+	}
+    }
+}
+
 // Layout all children objects horizontally
 function horizontalLayout(obj) {
     insertParenthesis(obj);
@@ -311,9 +334,9 @@ function horizontalLayout(obj) {
     for (i=0; i<obj.childNodes.length; ++i) {
         child= obj.childNodes[i];
         if (child.nodeType==1) {
-            if (child.getAttributeNS(wofns, "layoutOption")=="background") {
+            if (child.getAttribute("class")=="background") {
                 back= child;
-            } else {
+            } else if (back!=null) {
                 // find local coordinate system
                 m= child.getTransformToElement(obj);
                 box= child.getBBox();
@@ -412,6 +435,23 @@ function verify(obj) {
     } catch(e) {
     }
     smile(0.0);
+}
+
+function setFloating(obj, doFloat) {
+    var shadow= obj.childNodes[0];
+    if (shadow.nodeType==1 && shadow.getAttribute("class")=="shadow") {
+	obj.removeChild(shadow);
+    }
+    if (doFloat) {
+	var box= obj.getBBox();
+	var node= doc.createElementNS(obj.namespaceURI, "rect");
+	node.setAttribute("width", box.width);
+	node.setAttribute("height", box.height);
+	node.setAttribute("x",box.x+3);
+	node.setAttribute("y",box.y+5);
+	node.setAttribute("class", "shadow");
+	obj.insertBefore(node, obj.childNodes[0]);
+    }
 }
 
 function smile(value) {
