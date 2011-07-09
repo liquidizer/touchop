@@ -69,6 +69,9 @@ function msUp (evt) {
             hand.setAttribute("transform",startCTM);
         }
         
+	// verify winning test
+	verify(hand);
+
         // delete reference to hand object.
         hand= null;
     }
@@ -148,7 +151,10 @@ function dropOn(evt) {
 		setFloating(hand, false);
 		moveToGroup(hand, target);
 		hand.parentNode.setAttribute("blocked","true");
-		
+	
+		// verify winning test
+		verify(hand);
+	
 		// set snap treshold. Further mouse movements 
 		// are ignored until distance treshold is hit.
 		startCTM= hand.getAttribute("transform");
@@ -224,6 +230,7 @@ function layout(element) {
         command= obj.getAttributeNS(wofns,"layout");
         if (command!="") {
             top= obj;
+	    insertParenthesis(obj);
             eval(command);
         }
         obj= obj.parentNode;
@@ -238,9 +245,6 @@ function layout(element) {
         m= element.getTransformToElement(top.parentNode).multiply(m);
         setTransform(top, m);
 	setFloating(top, true);
-        
-        // verify whether the new object satisfies the winning test
-        verify(top);
     }
 }
 
@@ -346,8 +350,6 @@ function verticalLayout(obj) {
 
 // Layout all children objects horizontally
 function boxLayout(obj, horizontal) {
-    insertParenthesis(obj);
-    
     var padding=5;
     if (obj.getAttribute("padding")!=null)
         padding= parseInt(obj.getAttribute("padding"));
@@ -468,10 +470,16 @@ function computeValue(obj) {
     return value;
 }
 
+// verify whether the new object satisfies the winning test
 function verify(obj) {
-    var value= computeValue(obj);
+    var test= obj;
+    while (obj.nodeType==1) {
+	if (obj.getAttributeNS(wofns,"value")!="")
+	    test= obj;
+	obj= obj.parentNode;
+    }
+    var value= computeValue(test);
     var test= winningTest.replace(/\?/, value);
-    //winningTest.firstChild.data=test;
     try {
         var win= eval(test);
         if (win) {

@@ -42,7 +42,7 @@
   <xsl:element name="svg:text">
     <xsl:attribute name="transform">translate(100,45)</xsl:attribute>
     <xsl:attribute name="id">test</xsl:attribute>
-    <xsl:attribute name="wof:test"><xsl:value-of select="concat(@win8,'==?')"/></xsl:attribute>
+    <xsl:attribute name="wof:test"><xsl:value-of select="concat(@win,'==?')"/></xsl:attribute>
     <xsl:value-of select="@win"/>
     <xsl:text> = ?</xsl:text>
   </xsl:element>
@@ -91,7 +91,7 @@
 	 wof:layout="horizontalLayout(obj)">
 
     <svg:g class="background">
-      <svg:rect height="100" width="150"/>
+      <svg:rect height="60" width="150"/>
     </svg:g>
     <svg:g onmousemove="dropOn(evt)" wof:layout="snap(obj)">
       <svg:rect height="50" width="50" class="operand"/>
@@ -131,12 +131,31 @@
      wof:value="#1 + #2">
 
     <svg:g class="background">
-      <svg:rect height="50" width="100"/>
+      <svg:rect height="60" width="100"/>
     </svg:g>
     <svg:g onmousemove="dropOn(evt)" wof:layout="snap(obj)">
       <svg:rect height="50" width="50" class="operand"/>
     </svg:g>
     <svg:text>+</svg:text>
+    <svg:g onmousemove="dropOn(evt)" wof:layout="snap(obj)">
+      <svg:rect height="50" width="50" class="operand"/>
+    </svg:g>
+  </svg:g>
+</xsl:template>
+
+<xsl:template match="op[@name='minus']">
+  <svg:g onmousedown="msDown(evt)"
+     wof:layout="horizontalLayout(obj)"
+     wof:priority="130"
+     wof:value="#1 - #2">
+
+    <svg:g class="background">
+      <svg:rect height="50" width="100"/>
+    </svg:g>
+    <svg:g onmousemove="dropOn(evt)" wof:layout="snap(obj)" wof:priority="120">
+      <svg:rect height="50" width="50" class="operand"/>
+    </svg:g>
+    <svg:text>&#8211;</svg:text>
     <svg:g onmousemove="dropOn(evt)" wof:layout="snap(obj)">
       <svg:rect height="50" width="50" class="operand"/>
     </svg:g>
