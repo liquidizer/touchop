@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<?xml-stylesheet type="text/xsl" href="touchop.xsl"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+                     "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<touchop win="8">
+  <pow xy="340,100"/>
+  <times xy="340,200"/>
+  <plus xy="340,300"/>
+  <divide xy="200,100"/>
+  <atom value="1" xy="100,300"/>
+  <atom value="2" xy="180,300"/>
+  <atom value="3" xy="260,300"/>
+</touchop>

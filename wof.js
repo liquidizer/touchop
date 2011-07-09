@@ -134,22 +134,32 @@ function dropOn(evt) {
         while (target.getAttribute("onmousemove")==null)
             target= target.parentNode;
         
-        // if target is not blocked
-        if (hand.parentNode!=target && target.getAttribute("blocked")!="true") {
-            startCTM=null;
+	// reset determines, if object can snap out
+	var reset= true;
+        if (hand.parentNode!=target) {
+	    reset= false;
+	    // if target is not blocked
+	    if (target.getAttribute("blocked")!="true") {
+		reset= true
+		    startCTM=null;
 
-            // insert grabbed object into mouse pointer target group
-	    sendHome(hand);
-	    setFloating(hand, false);
-            moveToGroup(hand, target);
-            hand.parentNode.setAttribute("blocked","true");
-            
-            // set snap treshold. Further mouse movements are ignored until distance treshold is hit.
-	    startCTM= hand.getAttribute("transform");
-            tresh= 30;
+		// insert grabbed object into mouse pointer target group
+		sendHome(hand);
+		setFloating(hand, false);
+		moveToGroup(hand, target);
+		hand.parentNode.setAttribute("blocked","true");
+		
+		// set snap treshold. Further mouse movements 
+		// are ignored until distance treshold is hit.
+		startCTM= hand.getAttribute("transform");
+		tresh= 30;
+	    }
         }
-	startx= evt.clientX;
-	starty= evt.clientY;
+	// reset moving treshold
+	if (reset) {
+	    startx= evt.clientX;
+	    starty= evt.clientY;
+	}
     }
 }
 
