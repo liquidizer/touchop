@@ -30,7 +30,7 @@
     </g>
     <g wof:priority="80">
       <rect y="50" width="1" height="1" class="background"/>
-      <g onmousemove="dropOn(evt)" wof:layout="snap(obj)" transform="scale(0.8)">
+      <g onmousemove="dropOn(evt)" wof:layout="snap(obj)" transform="scale(0.6)">
 	<rect y="-50" height="50" width="50" class="operand"/>
       </g>
     </g>
@@ -95,19 +95,19 @@
   <g transform="translate(0,300)"
      onmousedown="msDown(evt)">
     <rect height="60" width="60" class="background"/>
-    <text dx="60" dy="45" wof:value="1">1</text>
+    <text transform="translate(30,45)" wof:value="1">1</text>
   </g>
 
   <g transform="translate(100,300)"
      onmousedown="msDown(evt)">
     <rect height="60" width="60" class="background"/>
-    <text dx="60" dy="45" wof:value="2">2</text>
+    <text transform="translate(30,45)" wof:value="2">2</text>
   </g>
 
   <g transform="translate(200,300)"
      onmousedown="msDown(evt)">
     <rect height="60" width="60" class="background"/>
-    <text dx="60" dy="50" wof:value="3">3</text>
+    <text transform="translate(30,45)" wof:value="3">3</text>
   </g>
   
   <use xlink:href="smiley.svg#frown" transform="translate(500,20)" id="wof:notwin"/>
