@@ -25,7 +25,7 @@
 
     .background {
     fill: deepskyblue;
-    stroke: turquoise;
+    stroke: #0ACAFF;
     stroke-width: 1;
     }
 
@@ -62,7 +62,7 @@
 
 </xsl:template>
 
-<xsl:template match="pow">
+<xsl:template match="op[@name='pow']">
   <svg:g onmousedown="msDown(evt)"
 	   wof:value="Math.pow(#1, #2)"
 	   wof:priority="80"
@@ -84,7 +84,7 @@
   </svg:g>
 </xsl:template>
 
-<xsl:template match="times">
+<xsl:template match="op[@name='times']">
   <svg:g onmousedown="msDown(evt)"
 	 wof:value="#1 * #2"
 	 wof:priority="100"
@@ -103,7 +103,7 @@
   </svg:g>
 </xsl:template>
 
-<xsl:template match="divide">
+<xsl:template match="op[@name='divide']">
   <svg:g onmousedown="msDown(evt)"
      wof:value="#1 / #2"
      wof:priority="100"
@@ -124,7 +124,7 @@
   </svg:g>
 </xsl:template>
 
-<xsl:template match="plus">
+<xsl:template match="op[@name='plus']">
   <svg:g onmousedown="msDown(evt)"
      wof:layout="horizontalLayout(obj)"
      wof:priority="120"

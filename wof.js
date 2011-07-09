@@ -278,6 +278,12 @@ function insertParenthesis(obj) {
                             rpar.appendChild(doc.createTextNode(")"));
                             rpar.setAttribute("name","parenthesis");
                             obj.insertBefore(rpar, child.nextSibling);
+			    // scale the parenthesis to full height
+			    var cbox= child.getBBox();
+			    var parbox= lpar.getBBox();
+			    var scale= cbox.height / parbox.height;
+			    lpar.setAttribute("transform","scale(1,"+scale+")");
+			    rpar.setAttribute("transform","scale(1,"+scale+")");
                         }
                         i+=2;
                     }
