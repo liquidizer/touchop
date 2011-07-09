@@ -1,11 +1,12 @@
 text {
     text-anchor: middle;
     font-size: 48px;
-    font-family: Verdana;
 }
 
 .background {
-    fill: coral;
+    fill: deepskyblue;
+    stroke: turquoise;
+    stroke-width: 1;
 }
 
 .shadow {

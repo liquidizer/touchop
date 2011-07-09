@@ -19,7 +19,7 @@
   <g onmousedown="msDown(evt)"
      transform="translate(340,100)"
      wof:value="Math.pow(#1, #2)"
-     wof:priority="100"
+     wof:priority="80"
      wof:layout="horizontalLayout(obj)">
 
     <g class="background">
@@ -28,7 +28,7 @@
     <g onmousemove="dropOn(evt)" wof:layout="snap(obj)">
       <rect height="50" width="50" class="operand"/>
     </g>
-    <g>
+    <g wof:priority="80">
       <rect y="50" width="1" height="1" class="background"/>
       <g onmousemove="dropOn(evt)" wof:layout="snap(obj)" transform="scale(0.8)">
 	<rect y="-50" height="50" width="50" class="operand"/>
@@ -53,6 +53,26 @@
       <rect height="50" width="50" class="operand"/>
     </g>
   </g>
+
+  <g onmousedown="msDown(evt)"
+     transform="translate(200,100)"
+     wof:value="#1 / #2"
+     wof:priority="100"
+     wof:layout="verticalLayout(obj)">
+
+    <g class="background">
+      <rect height="150" width="100"/>
+    </g>
+    <g onmousemove="dropOn(evt)" transform="scale(0.8)" 
+       wof:layout="snap(obj)" wof:priority="100">
+      <rect height="50" width="50" class="operand"/>
+    </g>
+    <rect width="100" height="3"/>
+    <g onmousemove="dropOn(evt)" transform="scale(0.8)" 
+       wof:layout="snap(obj)" wof:priority="100">
+      <rect height="50" width="50" class="operand"/>
+    </g>
+  </g>
   
   <g onmousedown="msDown(evt)"
      transform="translate(340,300)"
@@ -72,7 +92,7 @@
     </g>
   </g>
 
-  <g transform="translate(100,200)"
+  <g transform="translate(0,300)"
      onmousedown="msDown(evt)">
     <rect height="60" width="60" class="background"/>
     <text dx="60" dy="45" wof:value="1">1</text>

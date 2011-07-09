@@ -139,6 +139,7 @@ function dropOn(evt) {
             startCTM=null;
 
             // insert grabbed object into mouse pointer target group
+	    sendHome(hand);
 	    setFloating(hand, false);
             moveToGroup(hand, target);
             hand.parentNode.setAttribute("blocked","true");
@@ -319,6 +320,16 @@ function snap(obj) {
 
 // Layout all children objects horizontally
 function horizontalLayout(obj) {
+    boxLayout(obj, true);
+}
+
+// Layout all children objects horizontally
+function verticalLayout(obj) {
+    boxLayout(obj, false);
+}
+
+// Layout all children objects horizontally
+function boxLayout(obj, horizontal) {
     insertParenthesis(obj);
     
     var padding=5;
@@ -343,18 +354,34 @@ function horizontalLayout(obj) {
 
                 if (n==0) {
                     // use first element as reference for alignment
-                    x0= m.e + m.a * box.x;
-                    x= x0;
-                    y= m.f + m.d * (box.y + box.height/2);
+		    if (horizontal) {
+			x0= m.e + m.a * box.x;
+			x= x0;
+			y= m.f + m.d * (box.y + box.height/2);
+		    } else {
+			x0= m.f + m.d * box.y;
+			x= x0;
+			y= m.e + m.a * (box.x + box.width/2);
+		    }
                 }
                 else {
-                    m.e= x - m.a * box.x;
-                    m.f= y - m.d * (box.y + 0.5*box.height);
+		    if (horizontal) {
+			m.e= x - m.a * box.x;
+			m.f= y - m.d * (box.y + 0.5*box.height);
+		    } else {
+			m.e= y - m.a * (box.x + 0.5*box.width);
+			m.f= x - m.d * box.y;
+		    }
                     setTransform(child,m);
                 }
                 // compute position for next element
-                x += + m.a * box.width + padding;
-                h = Math.max(h, m.d*box.height);
+		if (horizontal) {
+                    x += + m.a * box.width + padding;
+                    h = Math.max(h, m.d*box.height);
+		} else {
+                    x += + m.d * box.height + padding;
+                    h = Math.max(h, m.a*box.width);
+		}
                 n++;
             }
         }
@@ -363,7 +390,10 @@ function horizontalLayout(obj) {
     
     // scale the background to cover the object's area
     if (back!=null) {
-        scaleElement(back, x0-padding, x, y-h/2, y+h/2);
+	if (horizontal)
+            scaleElement(back, x0-padding, x, y-h/2, y+h/2);
+	else
+	    scaleElement(back, y-h/2, y+h/2, x0-padding, x); 
     }
 }
 
