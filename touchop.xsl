@@ -40,9 +40,9 @@
   </style>
   
   <xsl:element name="svg:text">
-    <xsl:attribute name="transform">translate(100,45)</xsl:attribute>
+    <xsl:attribute name="transform">translate(100,60)</xsl:attribute>
     <xsl:attribute name="id">test</xsl:attribute>
-    <xsl:attribute name="wof:test"><xsl:value-of select="concat(@win,'==?')"/></xsl:attribute>
+    <xsl:attribute name="wof:test"><xsl:value-of select="@win"/></xsl:attribute>
     <xsl:value-of select="@win"/>
     <xsl:text> = ?</xsl:text>
   </xsl:element>
@@ -65,7 +65,7 @@
 <xsl:template match="op[@name='pow']">
   <svg:g onmousedown="msDown(evt)"
 	   wof:value="Math.pow(#1, #2)"
-	   wof:priority="80"
+	   wof:priority="91"
 	   wof:layout="horizontalLayout(obj)">
       
     <svg:g class="background">
@@ -106,7 +106,7 @@
 <xsl:template match="op[@name='divide']">
   <svg:g onmousedown="msDown(evt)"
      wof:value="#1 / #2"
-     wof:priority="100"
+     wof:priority="1000"
      wof:layout="verticalLayout(obj)">
 
     <svg:g class="background">

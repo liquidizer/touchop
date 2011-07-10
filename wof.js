@@ -230,7 +230,6 @@ function layout(element) {
         command= obj.getAttributeNS(wofns,"layout");
         if (command!="") {
             top= obj;
-	    insertParenthesis(obj);
             eval(command);
         }
         obj= obj.parentNode;
@@ -255,6 +254,7 @@ function insertParenthesis(obj) {
     if (myPrio!="") {
         // myPrio is the operations priority
         myPrio= parseInt(myPrio);
+	myPrio= myPrio - 1;
         var lastpar= null;
         var i=0;
         // check each child if parenthesis are needed
@@ -340,6 +340,7 @@ function snap(obj) {
 
 // Layout all children objects horizontally
 function horizontalLayout(obj) {
+    insertParenthesis(obj);
     boxLayout(obj, true);
 }
 
@@ -479,9 +480,8 @@ function verify(obj) {
 	obj= obj.parentNode;
     }
     var value= computeValue(test);
-    var test= winningTest.replace(/\?/, value);
     try {
-        var win= eval(test);
+        var win= Math.abs(eval(value)-winningTest)<1e-12;
         if (win) {
 	    smile(1.0);
             return;
