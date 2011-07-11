@@ -1,11 +1,12 @@
-/* World of Formula
+/* Touchop - Touchable operators
  *
- * Copyright(C) 2008, Stefan Dirnstorfer
- * This software may be copied, distributed and modified under the terms of the GPL (http://www.gnu.org/licenses/gpl.html)
+ * Copyright(C) 2008, 2011, Stefan Dirnstorfer
+ * This software may be copied, distributed and modified under the terms 
+ * of the GPL (http://www.gnu.org/licenses/gpl.html)
  */
 
 // The namespace of additional attributes interpreted by this module
-var wofns="http://www.dadim.de/wof";
+var topns="http://www.dadim.de/touchop";
 
 // initialize is called on load of the document. It layouts all elements and stores a reference to the winning test
 var winningTest;
@@ -14,8 +15,8 @@ var doc;
 function init(evt) {
     doc= evt.target.ownerDocument;
     deepLayout(doc.rootElement, true);
-    winningTest= doc.getElementById("test").getAttributeNS(wofns,"test");
-    doc.getElementById("wof:win").setAttribute("opacity","0.0");
+    winningTest= doc.getElementById("test").getAttributeNS(topns,"test");
+    doc.getElementById("top:win").setAttribute("opacity","0.0");
     window.onload = function() {
 	document.onselectstart = function() {return false;} // ie
 	document.onmousedown = function() {return false;} // mozilla
@@ -208,7 +209,7 @@ function deepLayout(obj, doFloat) {
             deepLayout(obj.childNodes[i], !isObj && doFloat);
         }
         // call layout function if available
-        var command= obj.getAttributeNS(wofns,"layout");
+        var command= obj.getAttributeNS(topns,"layout");
         if (command!="") {
             eval(command);
         }
@@ -227,7 +228,7 @@ function layout(element) {
     var top= null;
     var ctm1= element.getCTM();
     do {
-        command= obj.getAttributeNS(wofns,"layout");
+        command= obj.getAttributeNS(topns,"layout");
         if (command!="") {
             top= obj;
             eval(command);
@@ -250,7 +251,7 @@ function layout(element) {
 // this function inserts parenthesis to ensure syntactic correctness
 function insertParenthesis(obj) {
     // check if object has priority attribute
-    var myPrio= obj.getAttributeNS(wofns, "priority");
+    var myPrio= obj.getAttributeNS(topns, "priority");
     if (myPrio!="") {
         // myPrio is the operations priority
         myPrio= parseInt(myPrio);
@@ -302,7 +303,7 @@ function insertParenthesis(obj) {
 
 // get an operators mathematical priority to determine whether parenthesis are required.
 function getPriority(obj) {
-    var prio= obj.getAttributeNS(wofns, "priority");
+    var prio= obj.getAttributeNS(topns, "priority");
     if (prio!="") {
         return parseInt(prio);
     } else {
@@ -441,9 +442,9 @@ function scaleElement(obj, x0, x1, y0, y1) {
 
 
 // Exactract the value of obj.
-// the object is expected to define the wof:value attribute
+// the object is expected to define the top:value attribute
 function computeValue(obj) {
-    var value= obj.getAttributeNS(wofns, "value");
+    var value= obj.getAttributeNS(topns, "value");
     var args= [];
 
     for (var i=0; i<obj.childNodes.length; ++i) {
@@ -475,7 +476,7 @@ function computeValue(obj) {
 function verify(obj) {
     var test= obj;
     while (obj.nodeType==1) {
-	if (obj.getAttributeNS(wofns,"value")!="")
+	if (obj.getAttributeNS(topns,"value")!="")
 	    test= obj;
 	obj= obj.parentNode;
     }
@@ -509,6 +510,6 @@ function setFloating(obj, doFloat) {
 }
 
 function smile(value) {
-    doc.getElementById("wof:win").setAttribute("opacity",value);
-    doc.getElementById("wof:notwin").setAttribute("opacity",1.0-value);
+    doc.getElementById("top:win").setAttribute("opacity",value);
+    doc.getElementById("top:notwin").setAttribute("opacity",1.0-value);
 }
