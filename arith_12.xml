@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <?xml-stylesheet type="text/xsl" href="touchop.xsl"?>
 <touchop win="12">
-  <op name="pow" xy="230,80"/>
-  <op name="pow" xy="230,180"/>
-  <op name="pow" xy="350,100"/>
+  <op name="power" xy="230,80"/>
+  <op name="power" xy="230,180"/>
+  <op name="power" xy="350,100"/>
   <op name="divide" xy="340,280"/>
   <op name="divide" xy="470,280"/>
   <op name="minus" xy="350,200"/>

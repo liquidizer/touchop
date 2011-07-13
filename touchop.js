@@ -485,6 +485,8 @@ function verify(obj) {
         var win= Math.abs(eval(value)-winningTest)<1e-12;
         if (win) {
 	    smile(1.0);
+	    var key= 
+	    window.localStorage.setItem("arith_1","PASSED");
             return;
         }
     } catch(e) {

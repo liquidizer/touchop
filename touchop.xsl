@@ -25,7 +25,7 @@
 
     .background {
     fill: deepskyblue;
-    stroke: #0ACAFF;
+    stroke: #10D0FF;
     stroke-width: 1;
     }
 
@@ -65,7 +65,7 @@
 
 </xsl:template>
 
-<xsl:template match="op[@name='pow']">
+<xsl:template match="op[@name='power']">
   <xsl:comment>Power operator</xsl:comment>
   <svg:g onmousedown="msDown(evt)"
 	   top:value="Math.pow(#1, #2)"
@@ -154,13 +154,13 @@
   <xsl:comment>Substraction operator</xsl:comment>
   <svg:g onmousedown="msDown(evt)"
      top:layout="horizontalLayout(obj)"
-     top:priority="130"
+     top:priority="111"
      top:value="#1 - #2">
 
     <svg:g class="background">
       <svg:rect height="50" width="100"/>
     </svg:g>
-    <svg:g onmousemove="dropOn(evt)" top:layout="snap(obj)" top:priority="120">
+    <svg:g onmousemove="dropOn(evt)" top:layout="snap(obj)" top:priority="110">
       <svg:rect height="50" width="50" class="operand"/>
     </svg:g>
     <svg:text>&#8211;</svg:text>
@@ -173,7 +173,13 @@
 <xsl:template match="atom">
   <xsl:comment>Atomic element</xsl:comment>
   <svg:g onmousedown="msDown(evt)">
-    <svg:rect height="60" width="60" class="background"/>
+    <xsl:element name="svg:rect">
+      <xsl:attribute name="class">background</xsl:attribute>
+      <xsl:attribute name="height">60</xsl:attribute>
+      <xsl:attribute name="width">
+	<xsl:value-of select="30+30*count(@value)"/>
+      </xsl:attribute>
+    </xsl:element>
     <xsl:element name="svg:text">
       <xsl:attribute name="transform">translate(30,45)</xsl:attribute>
       <xsl:attribute name="top:value"><xsl:value-of select="@value"/></xsl:attribute>

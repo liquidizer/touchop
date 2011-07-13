@@ -1,0 +1,135 @@
+<html>
+<script language="javascript">
+  function update(e) {
+    var scores= document.getElementsByName("score");
+    for (var i=0; i<scores.length; ++i) {
+      var key= scores[i].getAttribute("key");
+      var state= window.localStorage.getItem(key);
+      if (state!=null) {
+        var text= document.createTextNode("PASSED");
+        scores[i].setAttribute("style", "color:green"); 
+        scores[i].appendChild(text);
+      }
+    }
+  }
+  window.addEventListener("storage", update, false);
+</script>
+<body onload="update()">
+  <h1>Touchop</h1>
+  <h2>Touchable operators</h2>
+
+  <p>
+    Touchop is an arithmetics teaching game that asks
+    to set up your own formulas, such that they evaluate 
+    to given values.
+  </p>
+
+  <h2>Levels</h2>
+  
+  <p>
+    You need an HTML5 capable browser to play this (e.g. Firefox, Chome, Safari, IE9?)
+  </p>
+
+  <table>
+    <tr>
+      <td>
+	<a href="arith_1.svg">Level 1</a>
+      </td>
+      <td>
+	<span name="score" key="arith_1"/>
+      </td>
+    </tr>
+    <tr>
+      <td>
+	<a href="arith_2.svg">Level 2</a>
+      </td>
+      <td>
+	<span name="score" key="arith_2"/>
+      </td>
+    </tr>
+    <tr>
+      <td>
+	<a href="arith_3.svg">Level 3</a>
+      </td>
+      <td>
+	<span name="score" key="arith_3"/>
+      </td>
+    </tr>
+    <tr>
+      <td>
+	<a href="arith_4.svg">Level 4</a>
+      </td>
+      <td>
+	<span name="score" key="arith_4"/>
+      </td>
+    </tr>
+    <tr>
+      <td>
+	<a href="arith_5.svg">Level 5</a>
+      </td>
+      <td>
+	<span name="score" key="arith_5"/>
+      </td>
+    </tr>
+    <tr>
+      <td>
+	<a href="arith_6.svg">Level 6</a>
+      </td>
+      <td>
+	<span name="score" key="arith_6"/>
+      </td>
+    </tr>
+    <tr>
+      <td>
+	<a href="arith_7.svg">Level 7</a>
+      </td>
+      <td>
+	<span name="score" key="arith_1"/>
+      </td>
+    </tr>
+    <tr>
+      <td>
+	<a href="arith_8.svg">Level 8</a>
+      </td>
+      <td>
+	<span name="score" key="arith_1"/>
+      </td>
+    </tr>
+    <tr>
+      <td>
+	<a href="arith_9.svg">Level 9</a>
+      </td>
+      <td>
+	<span name="score" key="arith_1"/>
+      </td>
+    </tr>
+    <tr>
+      <td>
+	<a href="arith_10.svg">Level 10</a>
+      </td>
+      <td>
+	<span name="score" key="arith_1"/>
+      </td>
+    </tr>
+    <tr>
+      <td>
+	<a href="arith_11.svg">Level 11</a>
+      </td>
+      <td>
+	<span name="score" key="arith_1"/>
+      </td>
+    </tr>
+      <tr>
+      <td>
+	<a href="arith_12.svg">Level 12</a>
+      </td>
+      <td>
+	<span name="score" key="arith_12"/>
+      </td>
+    </tr>
+  </table>
+  <h2>Contact</h2>
+  Any interest in discussing or extending this game idea? Please contact me,
+  Stefan &lt;stefan&#x40;dadim.de&gt;
+</body>
+</html>
