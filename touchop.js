@@ -267,7 +267,8 @@ function insertParenthesis(obj) {
                     --i;
                 } else {
                     // check if child's priority requires placing parethesis
-                    if (myPrio < getPriority(child)) {
+		    var subPrio= getPriority(child)
+                    if (myPrio < subPrio) {
                         // reuse previous node for speed up, if possible
                         if (lastpar!=null) {
                             obj.insertBefore(lastpar, child);

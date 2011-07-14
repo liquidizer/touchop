@@ -73,6 +73,7 @@
 </svg>
 </xsl:template>
 
+<!-- power operator -->
 <xsl:template match="op[@name='power']">
   <xsl:comment>Power operator</xsl:comment>
   <svg:g onmousedown="msDown(evt)"
@@ -91,6 +92,7 @@
   </svg:g>
 </xsl:template>
 
+<!-- Multiplication operator -->
 <xsl:template match="op[@name='times']">
   <xsl:comment>Multiplication operator</xsl:comment>
   <svg:g onmousedown="msDown(evt)"
@@ -105,11 +107,12 @@
   </svg:g>
 </xsl:template>
 
+<!-- Division operator -->
 <xsl:template match="op[@name='divide']">
   <xsl:comment>Division operator</xsl:comment>
   <svg:g onmousedown="msDown(evt)"
      top:value="#1 / #2"
-     top:priority="1000"
+     top:priority="99"
      top:layout="verticalLayout(obj)">
 
     <svg:rect class="background" height="150" width="100"/>
@@ -137,6 +140,7 @@
   </svg:g>
 </xsl:template>
 
+<!-- substraction operator -->
 <xsl:template match="op[@name='minus']">
   <xsl:comment>Substraction operator</xsl:comment>
   <svg:g onmousedown="msDown(evt)"
@@ -173,6 +177,7 @@
 
 
 <xsl:template name="operand">
+  <xsl:comment>Drop area for operands</xsl:comment>
   <svg:g onmousemove="dropOn(evt)" top:layout="snap(obj)">
     <svg:rect height="50" width="50" class="operand"/>
   </svg:g>
