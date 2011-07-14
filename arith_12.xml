@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <?xml-stylesheet type="text/xsl" href="touchop.xsl"?>
-<touchop win="12">
+<touchop win="12" key="arith_12">
   <op name="power" xy="230,80"/>
   <op name="power" xy="230,180"/>
   <op name="power" xy="350,100"/>

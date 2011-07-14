@@ -9,13 +9,11 @@
 var topns="http://www.dadim.de/touchop";
 
 // initialize is called on load of the document. It layouts all elements and stores a reference to the winning test
-var winningTest;
 var doc;
 
 function init(evt) {
     doc= evt.target.ownerDocument;
     deepLayout(doc.rootElement, true);
-    winningTest= doc.getElementById("test").getAttributeNS(topns,"test");
     doc.getElementById("top:win").setAttribute("opacity","0.0");
     window.onload = function() {
 	document.onselectstart = function() {return false;} // ie
@@ -301,7 +299,8 @@ function insertParenthesis(obj) {
     }
 }
 
-// get an operators mathematical priority to determine whether parenthesis are required.
+// get an operators mathematical priority to determine
+// whether parenthesis are required.
 function getPriority(obj) {
     var prio= obj.getAttributeNS(topns, "priority");
     if (prio!="") {
@@ -421,7 +420,8 @@ function boxLayout(obj, horizontal) {
 // by x0,x1,y0,y1 in the parents coordinate system 
 function scaleElement(obj, x0, x1, y0, y1) {
 
-    // determine current bounding box relative to the parent node's coordinate system
+    // determine current bounding box relative to the 
+    // parent node's coordinate system
     var m= obj.getTransformToElement(obj.parentNode);
     var box= obj.getBBox();
     box.x = m.a * box.x + m.e;
@@ -441,15 +441,17 @@ function scaleElement(obj, x0, x1, y0, y1) {
 }
 
 
-// Exactract the value of obj.
-// the object is expected to define the top:value attribute
+// Exactract the formula for the user created value.
 function computeValue(obj) {
+    // The top:value attribute contains the formula
     var value= obj.getAttributeNS(topns, "value");
     var args= [];
 
+    // recurse through child elements to find open arguments
     for (var i=0; i<obj.childNodes.length; ++i) {
 	if (obj.childNodes[i].nodeType==1) {
-	    // if the child node has a value, compute it and store as argument.
+	    // if the child node has a value, compute it and 
+	    // store in the argument list.
 	    var sub= computeValue(obj.childNodes[i]);
 	    if (sub!="") {
 		args[args.length]= sub;
@@ -480,13 +482,19 @@ function verify(obj) {
 	    test= obj;
 	obj= obj.parentNode;
     }
+    // extract the user created formula in json
     var value= computeValue(test);
     try {
-        var win= Math.abs(eval(value)-winningTest)<1e-12;
+	// evalue the user created formula
+	value= eval(value);
+	// compare with the objective value
+	var test= doc.getElementById("test").getAttribute("win");
+        var win= Math.abs(eval(value)-test)<1e-12;
         if (win) {
 	    smile(1.0);
-	    var key= 
-	    window.localStorage.setItem("arith_1","PASSED");
+	    // store the success persitently
+	    var key= doc.getElementById("test").getAttribute("key");
+	    window.localStorage.setItem(key,"PASSED");
             return;
         }
     } catch(e) {
@@ -494,23 +502,27 @@ function verify(obj) {
     smile(0.0);
 }
 
+// Makes or removes a little shadow below the object
 function setFloating(obj, doFloat) {
+    // the shadow is always the first child
     var shadow= obj.childNodes[0];
     if (shadow.nodeType==1 && shadow.getAttribute("class")=="shadow") {
 	obj.removeChild(shadow);
     }
+    // create the shadow element of appropriate size
     if (doFloat) {
 	var box= obj.getBBox();
-	var node= doc.createElementNS(obj.namespaceURI, "rect");
-	node.setAttribute("width", box.width);
-	node.setAttribute("height", box.height);
-	node.setAttribute("x",box.x+3);
-	node.setAttribute("y",box.y+5);
-	node.setAttribute("class", "shadow");
-	obj.insertBefore(node, obj.childNodes[0]);
+	shadow= doc.createElementNS(obj.namespaceURI, "rect");
+	shadow.setAttribute("width", box.width);
+	shadow.setAttribute("height", box.height);
+	shadow.setAttribute("x",box.x+3);
+	shadow.setAttribute("y",box.y+5);
+	shadow.setAttribute("class", "shadow");
+	obj.insertBefore(shadow, obj.childNodes[0]);
     }
 }
 
+// sets the oppacitiy to show either of the two similies
 function smile(value) {
     doc.getElementById("top:win").setAttribute("opacity",value);
     doc.getElementById("top:notwin").setAttribute("opacity",1.0-value);

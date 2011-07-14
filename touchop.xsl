@@ -6,6 +6,7 @@
 		xmlns:top="http://www.dadim.de/touchop"
                 version="1.0">
 
+<!-- generate the svg main file structure -->
 <xsl:template match="touchop">
 <svg xmlns="http://www.w3.org/2000/svg"
      xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -17,7 +18,7 @@
      onload ="init(evt)">
 
   <script type="text/javascript" xlink:href="touchop.js"/>
-  <style type="text/css">
+  <svg:style type="text/css">
     text {
     text-anchor: middle;
     font-size: 48px;
@@ -37,32 +38,39 @@
     .operand {
     fill: #ffffe0;
     }
-  </style>
+  </svg:style>
   
+  <!-- construct the text element for the winning task -->
   <xsl:comment>Winning test</xsl:comment>
-  <xsl:element name="svg:text">
-    <xsl:attribute name="transform">translate(100,60)</xsl:attribute>
-    <xsl:attribute name="id">test</xsl:attribute>
-    <xsl:attribute name="top:test"><xsl:value-of select="@win"/></xsl:attribute>
-    <xsl:value-of select="@win"/>
-    <xsl:text> = ?</xsl:text>
-  </xsl:element>
+  <svg:g transform="translate(100,60)">
+    <xsl:element name="svg:text">
+      <xsl:attribute name="id">test</xsl:attribute>
+      <xsl:copy-of select="@*"/>
+      <xsl:value-of select="concat(@win,' = ?')"/>
+    </xsl:element>
+  </svg:g>
 
+  <!-- iterate over all xml elements in the source file -->
   <xsl:comment>List of operators</xsl:comment>
   <xsl:for-each select="*">
+    <!-- apply operator translation accoring to the xy attribute -->
     <xsl:element name="svg:g">
       <xsl:attribute name="transform">
 	<xsl:copy-of select="concat('translate(',@xy,')')"/>
       </xsl:attribute>
+      <!-- find the corresponding definition of that operator -->
       <xsl:apply-templates select="."/>
     </xsl:element>
   </xsl:for-each>
 
+  <!-- The emoticon indicates the winning status and links -->
+  <!-- back to the index page -->
   <xsl:comment>Emoticon</xsl:comment>
-  <use xlink:href="smiley.svg#frown" transform="translate(500,20)" id="top:notwin"/>
-  <use xlink:href="smiley.svg#smile" transform="translate(500,20)" id="top:win"/>
+  <svg:a xlink:href="index.html#levels">
+    <use xlink:href="smiley.svg#frown" transform="translate(500,20)" id="top:notwin"/>
+    <use xlink:href="smiley.svg#smile" transform="translate(500,20)" id="top:win"/>
+  </svg:a>
 </svg>
-
 </xsl:template>
 
 <xsl:template match="op[@name='power']">
@@ -72,17 +80,12 @@
 	   top:priority="91"
 	   top:layout="horizontalLayout(obj)">
       
-    <svg:g class="background">
-      <svg:rect height="100" width="150"/>
-    </svg:g>
-    <svg:g onmousemove="dropOn(evt)" top:layout="snap(obj)">
-      <svg:rect height="50" width="50" class="operand"/>
-    </svg:g>
+    <svg:rect class="background" height="100" width="150"/>
+    <xsl:call-template name="operand"/>
     <svg:g top:priority="80">
       <svg:rect y="50" width="1" height="1" class="background"/>
-      <svg:g onmousemove="dropOn(evt)" top:layout="snap(obj)" 
-	     transform="scale(0.6)">
-	<svg:rect y="-50" height="50" width="50" class="operand"/>
+      <svg:g transform="scale(0.6), translate(0,-50)">
+	<xsl:call-template name="operand"/>
       </svg:g>
     </svg:g>
   </svg:g>
@@ -95,16 +98,10 @@
 	 top:priority="100"
 	 top:layout="horizontalLayout(obj)">
 
-    <svg:g class="background">
-      <svg:rect height="60" width="150"/>
-    </svg:g>
-    <svg:g onmousemove="dropOn(evt)" top:layout="snap(obj)">
-      <svg:rect height="50" width="50" class="operand"/>
-    </svg:g>
+    <svg:rect class="background" height="60" width="150"/>
+    <xsl:call-template name="operand"/>
     <svg:text>&#215;</svg:text>
-    <svg:g onmousemove="dropOn(evt)" top:layout="snap(obj)">
-      <svg:rect height="50" width="50" class="operand"/>
-    </svg:g>
+    <xsl:call-template name="operand"/>
   </svg:g>
 </xsl:template>
 
@@ -115,17 +112,13 @@
      top:priority="1000"
      top:layout="verticalLayout(obj)">
 
-    <svg:g class="background">
-      <svg:rect height="150" width="100"/>
-    </svg:g>
-    <svg:g onmousemove="dropOn(evt)" transform="scale(0.8)" 
-       top:layout="snap(obj)" top:priority="100">
-      <svg:rect height="50" width="50" class="operand"/>
+    <svg:rect class="background" height="150" width="100"/>
+    <svg:g transform="scale(0.8)" top:priority="100">
+      <xsl:call-template name="operand"/>
     </svg:g>
     <svg:rect width="100" height="3"/>
-    <svg:g onmousemove="dropOn(evt)" transform="scale(0.8)" 
-       top:layout="snap(obj)" top:priority="100">
-      <svg:rect height="50" width="50" class="operand"/>
+    <svg:g transform="scale(0.8)" top:priority="100">
+      <xsl:call-template name="operand"/>
     </svg:g>
   </svg:g>
 </xsl:template>
@@ -137,16 +130,10 @@
      top:priority="120"
      top:value="#1 + #2">
 
-    <svg:g class="background">
-      <svg:rect height="60" width="100"/>
-    </svg:g>
-    <svg:g onmousemove="dropOn(evt)" top:layout="snap(obj)">
-      <svg:rect height="50" width="50" class="operand"/>
-    </svg:g>
+    <svg:rect class="background" height="60" width="100"/>
+    <xsl:call-template name="operand"/>
     <svg:text>+</svg:text>
-    <svg:g onmousemove="dropOn(evt)" top:layout="snap(obj)">
-      <svg:rect height="50" width="50" class="operand"/>
-    </svg:g>
+    <xsl:call-template name="operand"/>
   </svg:g>
 </xsl:template>
 
@@ -157,16 +144,12 @@
      top:priority="111"
      top:value="#1 - #2">
 
-    <svg:g class="background">
-      <svg:rect height="50" width="100"/>
-    </svg:g>
-    <svg:g onmousemove="dropOn(evt)" top:layout="snap(obj)" top:priority="110">
-      <svg:rect height="50" width="50" class="operand"/>
+    <svg:rect class="background" height="50" width="100"/>
+    <svg:g top:priority="110">
+      <xsl:call-template name="operand"/>
     </svg:g>
     <svg:text>&#8211;</svg:text>
-    <svg:g onmousemove="dropOn(evt)" top:layout="snap(obj)">
-      <svg:rect height="50" width="50" class="operand"/>
-    </svg:g>
+    <xsl:call-template name="operand"/>
   </svg:g>
 </xsl:template>
 
@@ -185,6 +168,13 @@
       <xsl:attribute name="top:value"><xsl:value-of select="@value"/></xsl:attribute>
       <xsl:value-of select="@value"/>
     </xsl:element>
+  </svg:g>
+</xsl:template>
+
+
+<xsl:template name="operand">
+  <svg:g onmousemove="dropOn(evt)" top:layout="snap(obj)">
+    <svg:rect height="50" width="50" class="operand"/>
   </svg:g>
 </xsl:template>
 </xsl:stylesheet>

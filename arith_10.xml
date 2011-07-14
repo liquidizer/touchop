@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <?xml-stylesheet type="text/xsl" href="touchop.xsl"?>
-<touchop win="10">
+<touchop win="10" key="arith_10">
   <op name="minus" xy="100,200"/>
   <op name="divide" xy="300,200"/>
   <op name="divide" xy="440,200"/>

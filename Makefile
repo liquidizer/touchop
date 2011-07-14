@@ -12,4 +12,4 @@ ALL: $(all)
 # | tidy -q -i -xml -utf8 > $@
 
 clean:
-	rm $(all) *~
+	rm -f $(all) *~

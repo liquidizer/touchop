@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <?xml-stylesheet type="text/xsl" href="touchop.xsl"?>
-<touchop win="3">
+<touchop win="3" key="arith_3">
   <op name="minus" xy="100,105"/>
   <op name="times" xy="200,205"/>
   <atom value="1" xy="320,100"/>

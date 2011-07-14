@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <?xml-stylesheet type="text/xsl" href="touchop.xsl"?>
-<touchop win="9">
+<touchop win="9" key="arith_9">
   <op name="minus" xy="250,100"/>
   <op name="plus" xy="250,200"/>
   <op name="plus" xy="250,300"/>
