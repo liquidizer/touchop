@@ -25,7 +25,7 @@ function init(evt) {
 // hand is a reference to the object currently beeing dragged.
 // The screen coordinates of the last drag update is stored in startx and starty.
 // startCTM is the objects initial screen position, so it can snap back if needed.
-// tresh is a mouse movement treshold, that is set when the draged object snaps onto a new drop area.
+// tresh is a mouse movement treshold, that lets objects snap into drop areas
 var hand= null;
 var startx, starty;
 var startCTM;
@@ -253,7 +253,8 @@ function insertParenthesis(obj) {
     if (myPrio!="") {
         // myPrio is the operations priority
         myPrio= parseInt(myPrio);
-	myPrio= myPrio - 1;
+	if ((myPrio&1)==1)
+	    myPrio= myPrio - 1;
         var lastpar= null;
         var i=0;
         // check each child if parenthesis are needed
@@ -357,14 +358,16 @@ function boxLayout(obj, horizontal) {
         padding= parseInt(obj.getAttribute("padding"));
 
     var back= null;
+    var stretch= null;
     var x = 0;
     var x0 = 0;
     var y = 0;
     var h = 0;
     var n = 0;
     for (i=0; i<obj.childNodes.length; ++i) {
-        child= obj.childNodes[i];
+        var child= obj.childNodes[i];
         if (child.nodeType==1) {
+	    var opt= child.getAttributeNS(topns, "layoutOpt");
             if (child.getAttribute("class")=="background") {
                 back= child;
             } else if (back!=null) {
@@ -385,6 +388,11 @@ function boxLayout(obj, horizontal) {
 		    }
                 }
                 else {
+		    if (opt=="stretch") {
+			m.a=1.0;
+			m.d=1.0;
+			stretch= child;
+		    }
 		    if (horizontal) {
 			m.e= x - m.a * box.x;
 			m.f= y - m.d * (box.y + 0.5*box.height);
@@ -406,9 +414,19 @@ function boxLayout(obj, horizontal) {
             }
         }
     }
-    h = h + 2*padding;
     
+    // strech object
+    if (stretch!=null) {
+	h= h+10;
+	var box= stretch.getBBox();
+	var m= stretch.getTransformToElement(obj);
+	m.a= h/box.width;
+	m.e= m.e + (1-m.a)*(box.x+box.width/2);
+	setTransform(stretch, m);
+    }
+
     // scale the background to cover the object's area
+    h = h + 2*padding;
     if (back!=null) {
 	if (horizontal)
             scaleElement(back, x0-padding, x, y-h/2, y+h/2);
@@ -485,22 +503,23 @@ function verify(obj) {
     }
     // extract the user created formula in json
     var value= computeValue(test);
+    var win= false;
     try {
 	// evalue the user created formula
 	value= eval(value);
 	// compare with the objective value
 	var test= doc.getElementById("test").getAttribute("win");
-        var win= Math.abs(eval(value)-test)<1e-12;
-        if (win) {
-	    smile(1.0);
-	    // store the success persitently
-	    var key= doc.getElementById("test").getAttribute("key");
-	    window.localStorage.setItem(key,"PASSED");
-            return;
-        }
+        win= Math.abs(eval(value)-test)<1e-12;
     } catch(e) {
     }
-    smile(0.0);
+    if (win) {
+	smile(1.0);
+	// store the success persitently
+	var key= doc.getElementById("test").getAttribute("key");
+	window.localStorage.setItem(key,"PASSED");
+    } else {
+	smile(0.0);
+    }
 }
 
 // Makes or removes a little shadow below the object

@@ -119,7 +119,7 @@
     <svg:g transform="scale(0.8)" top:priority="100">
       <xsl:call-template name="operand"/>
     </svg:g>
-    <svg:rect width="100" height="3"/>
+    <svg:rect width="80" height="3" top:layoutOpt="stretch"/>
     <svg:g transform="scale(0.8)" top:priority="100">
       <xsl:call-template name="operand"/>
     </svg:g>

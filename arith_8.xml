@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <?xml-stylesheet type="text/xsl" href="touchop.xsl"?>
 <touchop win="8" key="arith_8">
-  <op name="minus" xy="100,200"/>
-  <op name="divide" xy="320,220"/>
-  <op name="times" xy="100,300"/>
-  <atom value="2" xy="100,100"/>
-  <atom value="5" xy="180,100"/>
-  <atom value="6" xy="260,100"/>
-  <atom value="7" xy="340,100"/>
+  <op name="plus" xy="200,100"/>
+  <op name="plus" xy="200,200"/>
+  <op name="power" xy="400,200"/>
+  <atom value="2" xy="60,100"/>
+  <atom value="1" xy="60,200"/>
+  <atom value="1" xy="60,300"/>
+  <atom value="1" xy="140,300"/>
 </touchop>
