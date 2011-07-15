@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <?xml-stylesheet type="text/xsl" href="touchop.xsl"?>
-<touchop win="2" key="arith_2">
+<touchop key="arith_2">
+  <test domain="algebra" win="2"/>
   <op name="plus" xy="200,200"/>
   <atom value="1" xy="150,100"/>
   <atom value="1" xy="350,100"/>

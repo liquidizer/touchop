@@ -69,8 +69,8 @@ function msUp (evt) {
             hand.setAttribute("transform",startCTM);
         }
         
-	// verify winning test
-	verify(hand);
+	// verify winning test after mouse release
+	verify(hand, true);
 
         // delete reference to hand object.
         hand= null;
@@ -92,7 +92,7 @@ function msMove (evt) {
         
         // if the mouse has moved more than a snap treshold "tresh"
         if (Math.abs(dx)+Math.abs(dy) > tresh) {
-	    sendHome(evt.target);
+	    sendHome(hand);
             tresh=0;
 
             // switch to screen coordinate system
@@ -144,7 +144,7 @@ function dropOn(evt) {
 	    // if target is not blocked
 	    if (target.getAttribute("blocked")!="true") {
 		reset= true
-		    startCTM=null;
+		startCTM=null;
 
 		// insert grabbed object into mouse pointer target group
 		sendHome(hand);
@@ -152,8 +152,8 @@ function dropOn(evt) {
 		moveToGroup(hand, target);
 		hand.parentNode.setAttribute("blocked","true");
 	
-		// verify winning test
-		verify(hand);
+		// verify the winning test during mouse hover
+		verify(hand, false);
 	
 		// set snap treshold. Further mouse movements 
 		// are ignored until distance treshold is hit.
@@ -458,69 +458,6 @@ function scaleElement(obj, x0, x1, y0, y1) {
     m.e=x0-(box.x*sx) + m.e*sx;
     m.f=y0-(box.y*sy) + m.f*sy;
     setTransform(obj, m);
-}
-
-
-// Exactract the formula for the user created value.
-function computeValue(obj) {
-    // The top:value attribute contains the formula
-    var value= obj.getAttributeNS(topns, "value");
-    var args= [];
-
-    // recurse through child elements to find open arguments
-    for (var i=0; i<obj.childNodes.length; ++i) {
-	if (obj.childNodes[i].nodeType==1) {
-	    // if the child node has a value, compute it and 
-	    // store in the argument list.
-	    var sub= computeValue(obj.childNodes[i]);
-	    if (sub!="") {
-		args[args.length]= sub;
-	    }
-	}
-    }
-
-    // if value is a formula of child values
-    if (value.indexOf("#")>=0) {
-        // replace #n substrings with appropriate sub values
-        for (var i=0; i<args.length; ++i) {
-            var myex= new RegExp("#"+(i+1));
-            value= value.replace(myex, args[i]);
-        }
-    } else {
-        // By default return the one input argument
-        if (args.length == 1)
-            value= "("+args[0]+")";
-    }
-    return value;
-}
-
-// verify whether the new object satisfies the winning test
-function verify(obj) {
-    var test= obj;
-    while (obj.nodeType==1) {
-	if (obj.getAttributeNS(topns,"value")!="")
-	    test= obj;
-	obj= obj.parentNode;
-    }
-    // extract the user created formula in json
-    var value= computeValue(test);
-    var win= false;
-    try {
-	// evalue the user created formula
-	value= eval(value);
-	// compare with the objective value
-	var test= document.getElementById("test").getAttribute("win");
-        win= Math.abs(eval(value)-test)<1e-12;
-    } catch(e) {
-    }
-    if (win) {
-	smile(1.0);
-	// store the success persitently
-	var key= document.getElementById("test").getAttribute("key");
-	window.localStorage.setItem(key,"PASSED");
-    } else {
-	smile(0.0);
-    }
 }
 
 // Makes or removes a little shadow below the object

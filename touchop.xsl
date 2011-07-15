@@ -16,7 +16,6 @@
      width="100%" height="100%"
      viewBox="0 0 600 400">
 
-  <script type="text/javascript" xlink:href="touchop.js"/>
   <svg:style type="text/css">
     text {
     text-anchor: middle;
@@ -26,6 +25,12 @@
     .background {
     fill: deepskyblue;
     stroke: #10D0FF;
+    stroke-width: 1;
+    }
+    
+    .playback{
+    fill: deepskyblue;
+    stroke: black;
     stroke-width: 1;
     }
 
@@ -38,20 +43,16 @@
     fill: #ffffe0;
     }
   </svg:style>
+
+  <!-- Drag and drop interface -->
+  <svg:script type="text/javascript" xlink:href="touchop.js"/>
   
-  <!-- construct the text element for the winning task -->
-  <xsl:comment>Winning test</xsl:comment>
-  <svg:g transform="translate(100,60)">
-    <xsl:element name="svg:text">
-      <xsl:attribute name="id">test</xsl:attribute>
-      <xsl:copy-of select="@*"/>
-      <xsl:value-of select="concat(@win,' = ?')"/>
-    </xsl:element>
-  </svg:g>
+  <!-- Winning test -->
+  <xsl:apply-templates select="test"/>
 
   <!-- iterate over all xml elements in the source file -->
   <xsl:comment>List of operators</xsl:comment>
-  <xsl:for-each select="*">
+  <xsl:for-each select="op | atom">
     <!-- apply operator translation accoring to the xy attribute -->
     <xsl:element name="svg:g">
       <xsl:attribute name="transform">
@@ -72,6 +73,25 @@
 </svg>
 </xsl:template>
 
+<!-- construct the text element for the winning task -->
+<xsl:template match="test[@domain='algebra']">
+  <xsl:comment>Winning test for the algebra domain</xsl:comment>
+  <svg:script type="text/javascript" xlink:href="algebra.js"/>
+  <svg:g transform="translate(100,60)">
+    <xsl:element name="svg:text">
+      <xsl:attribute name="id">test</xsl:attribute>
+      <xsl:copy-of select="//@key | @win"/>
+      <xsl:value-of select="concat(@win,' = ?')"/>
+    </xsl:element>
+  </svg:g>
+</xsl:template>
+
+<!-- construct the test for the music domain -->
+<xsl:template match="test[@domain='music']">
+  <xsl:comment>Play the reference sound for music problem set</xsl:comment>
+  <svg:script type="text/javascript" xlink:href="music.js"/>
+</xsl:template>
+
 <!-- power operator -->
 <xsl:template match="op[@name='power']">
   <xsl:comment>Power operator</xsl:comment>
@@ -83,7 +103,7 @@
     <svg:rect class="background" height="100" width="150"/>
     <xsl:call-template name="operand"/>
     <svg:g top:priority="80">
-      <svg:rect y="50" width="1" height="1" class="background"/>
+      <svg:rect y="50" width="1" height="1" style="opacity:0.0"/>
       <svg:g transform="scale(0.6), translate(0,-50)">
 	<xsl:call-template name="operand"/>
       </svg:g>
@@ -161,6 +181,7 @@
   <svg:g onmousedown="msDown(evt)">
     <xsl:element name="svg:rect">
       <xsl:attribute name="class">background</xsl:attribute>
+      <xsl:attribute name="top:value"><xsl:value-of select="@value"/></xsl:attribute>
       <xsl:attribute name="height">60</xsl:attribute>
       <xsl:attribute name="width">
 	<xsl:value-of select="30+30*count(@value)"/>
@@ -168,7 +189,6 @@
     </xsl:element>
     <xsl:element name="svg:text">
       <xsl:attribute name="transform">translate(30,45)</xsl:attribute>
-      <xsl:attribute name="top:value"><xsl:value-of select="@value"/></xsl:attribute>
       <xsl:value-of select="@value"/>
     </xsl:element>
   </svg:g>
