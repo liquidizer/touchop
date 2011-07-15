@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <?xml-stylesheet type="text/xsl" href="touchop.xsl"?>
 <touchop win="12" key="arith_12">
-  <op name="power" xy="230,80"/>
-  <op name="power" xy="230,180"/>
-  <op name="power" xy="350,100"/>
-  <op name="divide" xy="340,280"/>
-  <op name="divide" xy="470,280"/>
-  <op name="minus" xy="350,200"/>
-  <atom value="1" xy="60,100"/>
-  <atom value="2" xy="60,200"/>
-  <atom value="2" xy="60,300"/>
-  <atom value="4" xy="140,100"/>
-  <atom value="4" xy="140,200"/>
-  <atom value="5" xy="140,300"/>
-  <atom value="7" xy="220,300"/>
+  <op name="divide" xy="270,105"/>
+  <op name="divide" xy="400,105"/>
+  <op name="divide" xy="400,250"/>
+  <op name="minus" xy="160,305"/>
+  <atom value="3" xy="60,100"/>
+  <atom value="4" xy="60,200"/>
+  <atom value="7" xy="60,300"/>
+  <atom value="7" xy="140,100"/>
+  <atom value="7" xy="140,200"/>
 </touchop>
