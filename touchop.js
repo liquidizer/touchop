@@ -8,27 +8,28 @@
 // The namespace of additional attributes interpreted by this module
 var topns="http://www.dadim.de/touchop";
 
-// initialize is called on load of the document. It layouts all elements and stores a reference to the winning test
-var doc;
-
-function init(evt) {
-    doc= evt.target.ownerDocument;
-    deepLayout(doc.rootElement, true);
-    doc.getElementById("top:win").setAttribute("opacity","0.0");
-    window.onload = function() {
-	document.onselectstart = function() {return false;} // ie
-	document.onmousedown = function() {return false;} // mozilla
-    }
+// initialize the touchop framework. 
+window.onload = function() {
+    // Relayout all objects on the screen
+    deepLayout(document.rootElement, true);
+    // Set the smiley to frowning
+    document.getElementById("top:win").setAttribute("opacity","0.0");
+    // Stop the browser from selecting objects
+    document.onselectstart = function() {return false;} // ie
+    document.onmousedown = function() {return false;} // mozilla
 }
 
 // DnD frame work
 // hand is a reference to the object currently beeing dragged.
-// The screen coordinates of the last drag update is stored in startx and starty.
-// startCTM is the objects initial screen position, so it can snap back if needed.
-// tresh is a mouse movement treshold, that lets objects snap into drop areas
 var hand= null;
+
+// The screen coordinates of the last drag update is stored in startx and starty.
 var startx, starty;
+
+// startCTM is the objects initial screen position, so it can snap back if needed.
 var startCTM;
+
+// tresh is a mouse movement treshold, that lets objects snap into drop areas
 var tresh=0;
 
 // msDown is called whenever the mouse button is pressed anywhere on the root document.
@@ -275,12 +276,12 @@ function insertParenthesis(obj) {
                             obj.insertBefore(lastpar, child);
                         } else {
                             // create new parenthesis objects
-                            var lpar= doc.createElementNS(obj.namespaceURI, "text");
-                            lpar.appendChild(doc.createTextNode("("));
+                            var lpar= document.createElementNS(obj.namespaceURI, "text");
+                            lpar.appendChild(document.createTextNode("("));
                             lpar.setAttribute("name","parenthesis");
                             obj.insertBefore(lpar, child);
-                            var rpar= doc.createElementNS(obj.namespaceURI, "text");
-                            rpar.appendChild(doc.createTextNode(")"));
+                            var rpar= document.createElementNS(obj.namespaceURI, "text");
+                            rpar.appendChild(document.createTextNode(")"));
                             rpar.setAttribute("name","parenthesis");
                             obj.insertBefore(rpar, child.nextSibling);
 			    // scale the parenthesis to full height
@@ -508,14 +509,14 @@ function verify(obj) {
 	// evalue the user created formula
 	value= eval(value);
 	// compare with the objective value
-	var test= doc.getElementById("test").getAttribute("win");
+	var test= document.getElementById("test").getAttribute("win");
         win= Math.abs(eval(value)-test)<1e-12;
     } catch(e) {
     }
     if (win) {
 	smile(1.0);
 	// store the success persitently
-	var key= doc.getElementById("test").getAttribute("key");
+	var key= document.getElementById("test").getAttribute("key");
 	window.localStorage.setItem(key,"PASSED");
     } else {
 	smile(0.0);
@@ -532,7 +533,7 @@ function setFloating(obj, doFloat) {
     // create the shadow element of appropriate size
     if (doFloat) {
 	var box= obj.getBBox();
-	shadow= doc.createElementNS(obj.namespaceURI, "rect");
+	shadow= document.createElementNS(obj.namespaceURI, "rect");
 	shadow.setAttribute("width", box.width);
 	shadow.setAttribute("height", box.height);
 	shadow.setAttribute("x",box.x+3);
@@ -544,6 +545,6 @@ function setFloating(obj, doFloat) {
 
 // sets the oppacitiy to show either of the two similies
 function smile(value) {
-    doc.getElementById("top:win").setAttribute("opacity",value);
-    doc.getElementById("top:notwin").setAttribute("opacity",1.0-value);
+    document.getElementById("top:win").setAttribute("opacity",value);
+    document.getElementById("top:notwin").setAttribute("opacity",1.0-value);
 }

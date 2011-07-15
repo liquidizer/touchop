@@ -14,8 +14,7 @@
      onmousemove="msMove(evt)"
      onmouseup="msUp(evt)"
      width="100%" height="100%"
-     viewBox="0 0 600 400"
-     onload ="init(evt)">
+     viewBox="0 0 600 400">
 
   <script type="text/javascript" xlink:href="touchop.js"/>
   <svg:style type="text/css">
