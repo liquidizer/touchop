@@ -8,34 +8,34 @@
 
 
 var play= null;
+var stop= null;
 function verify(obj, isFinal) {
     if (isFinal) {
 	play= obj;
 	while (obj.nodeType==1) {
-	    if (obj.getAttributeNS(topns, "value")!="")
+	    if (obj.getAttributeNS(topns, "layout")!="")
 		play= obj;
 	    obj= obj.parentNode;
 	}
+	stop= play;
 	playSequence();
     }
  }
 
 function playSequence() {
-    var stop= false;
     while (play!=null) {
 	if (play.nodeType==1) {
-	    var v= play.getAttributeNS(topns,"value");
 
 	    var c= play.getAttribute("class");
 	    if (c=="playback") {
 		play.setAttribute("class","background");
 	    }
 	    else {
-		stop = stop | (v!="" && v.replace(/#/,"")==v)
 		if (c=="background") {
-		    if (stop) {
+		    var v= play.getAttributeNS(topns,"play");
+		    if (v!="") {
 			play.setAttribute("class","playback");
-			setTimeout("playSequence()",1000);
+			setTimeout("playSequence()",parseInt(v));
 			return;
 		    }
 		}
@@ -45,8 +45,11 @@ function playSequence() {
 		continue;
 	    }
 	}
-	while (play!=null && play.nextSibling == null)
+	while (play!=null && play.nextSibling == null) {
 	    play= play.parentNode;
-	play= play.nextSibling;
+	    if (play==stop) play=null;
+	}
+	if (play!=null)
+	    play= play.nextSibling;
     }
 }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type="text/xsl" href="touchop.xsl"?>
 <touchop key="arith_1">
   <test domain="algebra" win="1"/>
