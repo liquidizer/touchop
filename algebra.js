@@ -60,10 +60,6 @@ function verify(obj, isFinal) {
     }
     if (win) {
 	smile(1.0);
-
-	// store the success persitently
-	var key= document.getElementById("test").getAttribute("key");
-	window.localStorage.setItem(key,"PASSED");
     } else {
 	smile(0.0);
     }

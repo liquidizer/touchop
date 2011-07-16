@@ -1,15 +1,24 @@
 <html>
+<head>
+  <title>Touchop - Touchable Operators</title>
+  <meta charset="UTF-8">
+</head>
 <script language="javascript">
-  function update(e) {
+  function update(evt) {
     var scores= document.getElementsByName("score");
     for (var i=0; i<scores.length; ++i) {
-      var key= scores[i].getAttribute("key");
+      var href= scores[i].getAttribute("href");
+      var key= window.location.pathname.replace(/[^/]*$/,href);
       var state= window.localStorage.getItem(key);
-      if (state!=null) {
-        var text= document.createTextNode("PASSED");
-        scores[i].setAttribute("style", "color:green"); 
-        scores[i].appendChild(text);
+      var span= document.createElement("span");
+      if (state==null) {
+        span.appendChild(document.createTextNode(" ☹"));
+        span.setAttribute("style", "color:lightgray"); 
+      } else {	   
+        span.appendChild(document.createTextNode(" ☻"));
+        span.setAttribute("style", "color:green"); 
       }
+      scores[i].parentNode.replaceChild(span, scores[i].nextSibling);
     }
   }
   window.addEventListener("storage", update, false);
@@ -32,104 +41,45 @@
     You need an HTML5 capable browser to play this (e.g. Firefox, Chome, Safari, IE9?)
   </p>
 
-  <table>
-    <tr>
-      <td>
-	<a href="arith_1.xhtml">Level 1</a>
-      </td>
-      <td>
-	<span name="score" key="arith_1"/>
-      </td>
-    </tr>
-    <tr>
-      <td>
-	<a href="arith_2.xhtml">Level 2</a>
-      </td>
-      <td>
-	<span name="score" key="arith_2"/>
-      </td>
-    </tr>
-    <tr>
-      <td>
-	<a href="arith_3.xhtml">Level 3</a>
-      </td>
-      <td>
-	<span name="score" key="arith_3"/>
-      </td>
-    </tr>
-    <tr>
-      <td>
-	<a href="arith_4.xhtml">Level 4</a>
-      </td>
-      <td>
-	<span name="score" key="arith_4"/>
-      </td>
-    </tr>
-    <tr>
-      <td>
-	<a href="arith_5.xhtml">Level 5</a>
-      </td>
-      <td>
-	<span name="score" key="arith_5"/>
-      </td>
-    </tr>
-    <tr>
-      <td>
-	<a href="arith_6.xhtml">Level 6</a>
-      </td>
-      <td>
-	<span name="score" key="arith_6"/>
-      </td>
-    </tr>
-    <tr>
-      <td>
-	<a href="arith_7.xhtml">Level 7</a>
-      </td>
-      <td>
-	<span name="score" key="arith_1"/>
-      </td>
-    </tr>
-    <tr>
-      <td>
-	<a href="arith_8.xhtml">Level 8</a>
-      </td>
-      <td>
-	<span name="score" key="arith_1"/>
-      </td>
-    </tr>
-    <tr>
-      <td>
-	<a href="arith_9.xhtml">Level 9</a>
-      </td>
-      <td>
-	<span name="score" key="arith_1"/>
-      </td>
-    </tr>
-    <tr>
-      <td>
-	<a href="arith_10.xhtml">Level 10</a>
-      </td>
-      <td>
-	<span name="score" key="arith_1"/>
-      </td>
-    </tr>
-    <tr>
-      <td>
-	<a href="arith_11.xhtml">Level 11</a>
-      </td>
-      <td>
-	<span name="score" key="arith_1"/>
-      </td>
-    </tr>
-      <tr>
-      <td>
-	<a href="arith_12.xhtml">Level 12</a>
-      </td>
-      <td>
-	<span name="score" key="arith_12"/>
-      </td>
-    </tr>
-  </table>
+  <ul>
+    <li>
+      <a name="score" href="arith_1.xhtml">Level 1</a>
+    </li>
+    <li>
+      <a name="score" href="arith_2.xhtml">Level 2</a>
+    </li>
+    <li>
+      <a name="score" href="arith_3.xhtml">Level 3</a>
+    </li>
+    <li>
+      <a name="score" href="arith_4.xhtml">Level 4</a>
+    </li>
+    <li>
+      <a name="score" href="arith_5.xhtml">Level 5</a>
+    </li>
+    <li>
+      <a name="score" href="arith_6.xhtml">Level 6</a>
+    </li>
+    <li>
+      <a name="score" href="arith_7.xhtml">Level 7</a>
+    </li>
+    <li>
+      <a name="score" href="arith_8.xhtml">Level 8</a>
+    </li>
+    <li>
+      <a name="score" href="arith_9.xhtml">Level 9</a>
+    </li>
+    <li>
+      <a name="score" href="arith_10.xhtml">Level 10</a>
+    </li>
+    <li>
+      <a name="score" href="arith_11.xhtml">Level 11</a>
+    </li>
+    <li>
+      <a name="score" href="arith_12.xhtml">Level 12</a>
+    </li>
+  </ul>
+      
   <h2>Contact</h2>
   Any interest in discussing or extending this game idea? Please contact me,
   Stefan &lt;stefan&#x40;dadim.de&gt;

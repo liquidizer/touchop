@@ -97,7 +97,7 @@
   <svg:g transform="translate(100,60)">
     <xsl:element name="svg:text">
       <xsl:attribute name="id">test</xsl:attribute>
-      <xsl:copy-of select="//@key | @win"/>
+      <xsl:copy-of select="@win"/>
       <xsl:value-of select="concat(@win,' = ?')"/>
     </xsl:element>
   </svg:g>

@@ -484,4 +484,8 @@ function setFloating(obj, doFloat) {
 function smile(value) {
     document.getElementById("top:win").setAttribute("opacity",value);
     document.getElementById("top:notwin").setAttribute("opacity",1.0-value);
+    if (value==1.0) {
+	// store the success persitently
+	window.localStorage.setItem(window.location.pathname,"PASSED");
+    }
 }
