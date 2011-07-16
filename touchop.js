@@ -11,7 +11,7 @@ var topns="http://www.dadim.de/touchop";
 // initialize the touchop framework. 
 window.onload = function() {
     // Relayout all objects on the screen
-    deepLayout(document.rootElement, true);
+    deepLayout(document.childNodes[0], true);
     // Set the smiley to frowning
     document.getElementById("top:win").setAttribute("opacity","0.0");
     // Stop the browser from selecting objects
@@ -176,7 +176,7 @@ function sendHome() {
     if (hand!=null) {
 	
         // move this object to the root element
-        var target= hand.ownerDocument.rootElement;
+        var target= hand.ownerDocument.childNodes[0];
 	if (hand.parentNode != target) {
 
 	    // store the current location
