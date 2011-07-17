@@ -3,27 +3,8 @@
   <title>Touchop - Touchable Operators</title>
   <meta charset="UTF-8">
 </head>
-<script language="javascript">
-  function update(evt) {
-    var scores= document.getElementsByName("score");
-    for (var i=0; i<scores.length; ++i) {
-      var href= scores[i].getAttribute("href");
-      var key= window.location.pathname.replace(/[^/]*$/,href);
-      var state= window.localStorage.getItem(key);
-      var span= document.createElement("span");
-      if (state==null) {
-        span.appendChild(document.createTextNode(" ☹"));
-        span.setAttribute("style", "color:lightgray"); 
-      } else {	   
-        span.appendChild(document.createTextNode(" ☻"));
-        span.setAttribute("style", "color:green"); 
-      }
-      scores[i].parentNode.replaceChild(span, scores[i].nextSibling);
-    }
-  }
-  window.addEventListener("storage", update, false);
-</script>
-<body onload="update()">
+<script type="text/javascript" src="showscore.js"/>
+<body>
   <h1>Touchop</h1>
   <h2>Touchable operators</h2>
 
