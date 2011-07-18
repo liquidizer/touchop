@@ -239,9 +239,11 @@ function layout(element) {
     if (top!=null) {
         // make sure original element does not move on the screen
         var ctm2= element.getCTM();
-        var m0= top.getTransformToElement(element);
-        var m= m0.translate(ctm1.e-ctm2.e, ctm1.f-ctm2.f);
-        m= element.getTransformToElement(top.parentNode).multiply(m);
+	var w= top.getCTM();
+	var m= top.getTransformToElement(top.parentNode);
+	m= m.multiply(w.inverse());
+	m= m.translate(ctm1.e-ctm2.e, ctm1.f-ctm2.f);
+	m= m.multiply(w);
         setTransform(top, m);
 	setFloating(top, true);
     }
