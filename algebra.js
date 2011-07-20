@@ -28,8 +28,7 @@ function computeValue(obj) {
     if (value.indexOf("#")>=0) {
         // replace #n substrings with appropriate sub values
         for (var i=0; i<args.length; ++i) {
-            var myex= new RegExp("#"+(i+1));
-            value= value.replace(myex, args[i]);
+            value= value.replace("#"+(i+1), args[i]);
         }
     } else {
         // By default return the one input argument

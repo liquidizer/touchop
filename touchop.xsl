@@ -34,8 +34,8 @@
     stroke-width: 1;
     }
     
-    .playback{
-    fill: deepskyblue;
+    .playback .background {
+    fill: #CC0000;
     stroke: black;
     stroke-width: 1;
     }
@@ -189,12 +189,12 @@
 
 <xsl:template match="atom">
   <xsl:comment>Atomic element</xsl:comment>
-  <svg:g onmousedown="msDown(evt)">
+  <svg:g onmousedown="msDown(evt)"
+	 top:play="500">
     <xsl:element name="svg:rect">
       <xsl:variable name="len" select="string-length(@value)"/>
       <xsl:attribute name="class">background</xsl:attribute>
       <xsl:attribute name="top:value"><xsl:value-of select="@value"/></xsl:attribute>
-      <xsl:attribute name="top:play">1000</xsl:attribute>
       <xsl:attribute name="height">60</xsl:attribute>
       <xsl:attribute name="width"><xsl:value-of select="30+30*$len"/></xsl:attribute>
       <xsl:attribute name="x"><xsl:value-of select="-15*$len"/></xsl:attribute>
@@ -218,23 +218,29 @@
 <!-- fast play -->
 <xsl:template match="op[@name='fast']">
   <xsl:comment>Fast play operator</xsl:comment>
-  <svg:g onmousedown="msDown(evt)"
-	 top:layout="horizontalLayout(obj)">
+    <svg:g onmousedown="msDown(evt)"
+	   top:filter="speed(0.5,#)"
+	   top:padding="10"
+	   top:priority="200"
+	   top:layout="horizontalLayout(obj)">
 
-    <svg:rect class="background" height="60" width="100"/>
-    <svg:g transform="scale(0.5,1.0)">
-      <xsl:call-template name="operand"/>
+      <svg:rect class="background" height="60" width="100"/>
+      <svg:text transform="scale(0.5,1.0)">Fast</svg:text>
+      <svg:g transform="scale(0.5,1.0)">
+	<xsl:call-template name="operand"/>
+      </svg:g>
+      <svg:g transform="scale(0.5,1.0)">
+	<xsl:call-template name="operand"/>
+      </svg:g>
     </svg:g>
-    <svg:g transform="scale(0.5,1.0)">
-      <xsl:call-template name="operand"/>
-    </svg:g>
-  </svg:g>
 </xsl:template>
 
 <!-- Linked play -->
 <xsl:template match="op[@name='link']">
-  <xsl:comment>Fast play operator</xsl:comment>
+  <xsl:comment>Linked play operator</xsl:comment>
   <svg:g onmousedown="msDown(evt)"
+	 top:priority="100"
+	 top:padding="10"
 	 top:layout="horizontalLayout(obj)">
 
     <svg:rect class="background" height="60" width="100"/>
@@ -246,11 +252,39 @@
 <!-- Pitch -->
 <xsl:template match="op[@name='pitch']">
   <svg:g onmousedown="msDown(evt)"
+	 top:padding="10"
 	 top:layout="verticalLayout(obj)">
 
     <svg:rect class="background" height="60" width="60"/>
-    <xsl:text>Pitch</xsl:text>
+    <svg:text>Pitch</svg:text>
     <xsl:call-template name="operand"/>
+  </svg:g>
+</xsl:template>
+
+<!-- Repeated play -->
+<xsl:template match="op[@name='repeat']">
+  <svg:g onmousedown="msDown(evt)"
+	 top:repeat="3"
+	 top:padding="10"
+	 top:layout="verticalLayout(obj)">
+
+    <svg:rect class="background" height="60" width="60"/>
+    <svg:text><xsl:value-of select="@count"/>&#215;</svg:text>
+    <xsl:call-template name="operand"/>
+  </svg:g>
+</xsl:template>
+
+<!-- Reverse play -->
+<xsl:template match="op[@name='reverse']">
+  <svg:g onmousedown="msDown(evt)"
+	 top:padding="10"
+	 top:layout="verticalLayout(obj)">
+
+    <svg:rect class="background" height="60" width="60"/>
+    <svg:text>Reverse</svg:text>
+    <svg:g transform="scale(-1,1)">
+      <xsl:call-template name="operand"/>
+    </svg:g>
   </svg:g>
 </xsl:template>
 

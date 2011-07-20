@@ -13,7 +13,7 @@ window.onload = function() {
     // Relayout all objects on the screen
     deepLayout(document.childNodes[0], true);
     // Set the smiley to frowning
-    document.getElementById("top:win").setAttribute("opacity","0.0");
+    smile(0.0);
     // Stop the browser from selecting objects
     document.onselectstart = function() {return false;} // ie
     document.onmousedown = function() {return false;} // mozilla
@@ -34,9 +34,7 @@ var tresh=0;
 
 // msDown is called whenever the mouse button is pressed anywhere on the root document.
 function msDown (evt) {
-    if (hand!=null)
-        msUp(evt);
-    if (evt.target!=null) {
+    if (hand==null && evt.target!=null) {
         // find signaling object
         hand= evt.target;
         while (hand.getAttribute("onmousedown")==null)
@@ -357,8 +355,8 @@ function verticalLayout(obj) {
 // Layout all children objects horizontally
 function boxLayout(obj, horizontal) {
     var padding=5;
-    if (obj.getAttribute("padding")!=null)
-        padding= parseInt(obj.getAttribute("padding"));
+    if (obj.getAttributeNS(topns, "padding")!="")
+        padding= parseInt(obj.getAttributeNS(topns, "padding"));
 
     var back= null;
     var stretch= null;
@@ -411,7 +409,7 @@ function boxLayout(obj, horizontal) {
                     h = Math.max(h, m.d*box.height);
 		} else {
                     x += + m.d * box.height + padding;
-                    h = Math.max(h, m.a*box.width);
+                    h = Math.max(h, Math.abs(m.a)*box.width);
 		}
                 n++;
             }
