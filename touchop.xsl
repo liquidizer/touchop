@@ -87,6 +87,17 @@
   </svg:g>
 </xsl:template>
 
+<!-- Multiple drop areas for operator arguments -->
+<xsl:template name="multiop">
+  <xsl:param name="count" select="2"/>
+  <xsl:if test="$count &gt; 1">
+    <xsl:call-template name="multiop">
+      <xsl:with-param name="count" select="$count - 1"/>
+    </xsl:call-template>
+  </xsl:if>
+  <xsl:call-template name="operand"/>
+</xsl:template>
+
 <!-- TouchOp ALGEBRA DOMAIN -->
 <!-- Special operators for the algebra domain -->
 
@@ -222,16 +233,13 @@
 	   top:filter="speed(0.5,#)"
 	   top:padding="10"
 	   top:priority="200"
+	   transform="scale(0.5,1.0)"
 	   top:layout="horizontalLayout(obj)">
 
       <svg:rect class="background" height="60" width="100"/>
-      <svg:text transform="scale(0.5,1.0)">Fast</svg:text>
-      <svg:g transform="scale(0.5,1.0)">
-	<xsl:call-template name="operand"/>
-      </svg:g>
-      <svg:g transform="scale(0.5,1.0)">
-	<xsl:call-template name="operand"/>
-      </svg:g>
+      <svg:text>Fast</svg:text>
+      <xsl:call-template name="operand"/>
+      <xsl:call-template name="operand"/>
     </svg:g>
 </xsl:template>
 
@@ -244,8 +252,9 @@
 	 top:layout="horizontalLayout(obj)">
 
     <svg:rect class="background" height="60" width="100"/>
-    <xsl:call-template name="operand"/>
-    <xsl:call-template name="operand"/>
+    <xsl:call-template name="multiop">
+      <xsl:with-param name="count" select="@count"/>
+    </xsl:call-template>
   </svg:g>
 </xsl:template>
 
@@ -264,12 +273,12 @@
 <!-- Repeated play -->
 <xsl:template match="op[@name='repeat']">
   <svg:g onmousedown="msDown(evt)"
-	 top:repeat="3"
+	 top:filter="repeat(3,#)"
 	 top:padding="10"
 	 top:layout="verticalLayout(obj)">
 
     <svg:rect class="background" height="60" width="60"/>
-    <svg:text><xsl:value-of select="@count"/>&#215;</svg:text>
+    <svg:text><xsl:value-of select="@times"/>&#215;</svg:text>
     <xsl:call-template name="operand"/>
   </svg:g>
 </xsl:template>
@@ -278,13 +287,12 @@
 <xsl:template match="op[@name='reverse']">
   <svg:g onmousedown="msDown(evt)"
 	 top:padding="10"
+	 top:filter="reverse(#)"
 	 top:layout="verticalLayout(obj)">
 
     <svg:rect class="background" height="60" width="60"/>
     <svg:text>Reverse</svg:text>
-    <svg:g transform="scale(-1,1)">
-      <xsl:call-template name="operand"/>
-    </svg:g>
+    <xsl:call-template name="operand"/>
   </svg:g>
 </xsl:template>
 

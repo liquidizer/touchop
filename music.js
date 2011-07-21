@@ -6,88 +6,93 @@
  * of the GPL (http://www.gnu.org/licenses/gpl.html)
  */
 
-var play= null;
-var playMode= null;
+var playQueue= [];
 function verify(obj, isFinal) {
     if (isFinal) {
 	var toplay= obj;
+	// find the top most group for playing
 	while (obj.nodeType==1) {
-
 	    if (obj.getAttributeNS(topns, "layout")!="")
 		toplay= obj;
 	    obj= obj.parentNode;
 	}
-	playMode= "#";
-	if (play==null) {
-	    play= toplay;
-	    playSequence();
+	// check, if something is already playing
+	if (playQueue.length>0) {
+	    playQueue[0][0].setAttribute("class","");
+	    playQueue= playSequence(toplay);
 	} else {
-	    play.setAttribute("class","");
-	    play= toplay;
+	    playQueue= playSequence(toplay);
+	    playNext()
 	}
     }
 }
 
-function playSequence() {
-    while (play!=null) {
-	if (play.nodeType==1) {
-	    var c= play.getAttribute("class");
-	    if (c=="playback") {
-		play.setAttribute("class","");
-	    }
-	    else {
-		var v= play.getAttributeNS(topns,"play");
-		if (v!="") {
-		    play.setAttribute("class","playback");
-		    time= eval(playMode.replace("#",v));
-		    setTimeout("playSequence()",time);
-		    return;
-		}
-	    }
-	    if (play.childNodes.length>0) {
-		// apply a play filter
-		var filter= play.getAttributeNS(topns, "filter");
-		if (filter=="") filter="(#)";
-		playMode= playMode.replace(/#/, "("+filter+")");
-
-		// traverse down to the first child
-		play.setAttribute("done","0");
-		play= play.childNodes[0];
-		continue;
-	    }
-	}
-	// with the final sibling, traverse up
-	while (play!=null && play.nextSibling == null) {
-	    play= play.parentNode;
-	    // repeated play
-	    if (play.nodeType==1) {
-		var repeat= play.getAttributeNS(topns, "repeat");
-		if (repeat!="") {
-		    var done= play.getAttribute("done");
-		    if (done==null) done= "0";
-		    done= parseInt(done)+1;
-		    play.setAttribute("done",""+done);
-		    if (done<parseInt(repeat)) {
-			play= play.childNodes[0];
-			continue;
-		    }
-		}
-	    }
-	    // unapply the play filter
-	    var filter= play.getAttributeNS(topns, "filter");
-	    if (filter=="") filter="(#)";
-	    playMode= playMode.replace("("+filter+")", "#");
-	    // stop playing
-	    if (playMode=="#") play=null;
-	}
-	// traverse to the next node for playing
-	if (play!=null) {
-	    play= play.nextSibling;
+// play the next tune and highlight the sound element
+function playNext() {
+    if (playQueue.length>0) {
+	if (playQueue[0][0].getAttribute("class")=="playback") {
+	    // a tune finished playing, unmark and dequeue
+	    playQueue[0][0].setAttribute("class","")
+	    var seq=[];
+	    for (var j=0; j<playQueue.length-1; ++j)
+		seq[j]= playQueue[j+1];
+	    playQueue= seq;
+	    setTimeout("playNext()", 50);
+	} else {
+	    // nothing is playing, mark next tune and play
+	    playQueue[0][0].setAttribute("class","playback");
+	    setTimeout("playNext()", playQueue[0][1]-50);
 	}
     }
 }
 
-function speed(factor, value) {
-    return value * factor;
+// extract the sequence of playable tunes
+function playSequence(obj) {
+    var seq=[];
+    if (obj.nodeType==1) {
+	// check if object is playable
+	var play= obj.getAttributeNS(topns, "play");
+	if (play!="") {
+	    seq[seq.length]= [obj, parseInt(play)];
+	}
+	// recurse over child elements
+	for (var i=0; i<obj.childNodes.length; ++i) {
+	    var subSeq= playSequence(obj.childNodes[i]);
+	    for (var j=0; j<subSeq.length; ++j)
+		seq[seq.length]= subSeq[j];
+        }
+	// apply sound filters, if present
+	var filter= obj.getAttributeNS(topns, "filter");
+	if (filter!="")
+	    seq= eval(filter.replace("#","seq"));
+    }
+    return seq;
 }
 
+// speed filter for time adjusted play
+function speed(factor, seq) {
+    for (var j=0; j<seq.length; ++j)
+	seq[j][1]= factor * seq[j][1];
+    return seq;
+}
+
+// repeat filter
+function repeat(count, seq) {
+    var len= seq.length;
+    for (var i=1; i<count; ++i) {
+	for (var j=0; j<len; ++j) {
+	    seq[seq.length]= [seq[j][0],seq[j][1]];
+	}
+    }
+    return seq;
+}
+
+// reverse filter
+function reverse(seq) {
+    for (var j=0; j<seq.length/2; ++j) {
+	var tmp= seq[j];
+	seq[j]= seq[seq.length-1-j];
+	seq[seq.length-1-j]= tmp;
+    }
+    return seq;
+}
