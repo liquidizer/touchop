@@ -38,6 +38,12 @@ function computeValue(obj) {
     return value;
 }
 
+// check if the expression is syntactically complete
+function checkIsValid(obj) {
+    var value= computeValue(obj);
+    return value.length>0 && value.indexOf("#") < 0;
+}
+
 // verify whether the new object satisfies the winning test
 function verify(obj, isFinal) {
     var test= obj;

@@ -33,7 +33,7 @@
 
   <!-- iterate over all xml elements in the source file -->
   <xsl:comment>List of operators</xsl:comment>
-  <xsl:for-each select="op | atom | vardef | var">
+  <xsl:for-each select="op | atom | def | var">
     <!-- apply operator translation accoring to the xy attribute -->
     <xsl:element name="svg:g">
       <xsl:attribute name="transform">
@@ -75,16 +75,54 @@
   <xsl:call-template name="operand"/>
 </xsl:template>
 
+<!-- A literal placed on the screen -->
+<xsl:template name="literal">
+  <xsl:param name="name" select="@value"/>
+  <xsl:comment>Literal</xsl:comment>
+  <xsl:variable name="len" select="string-length($name)"/>
+  <xsl:element name="svg:rect">
+    <xsl:attribute name="class">background</xsl:attribute>
+    <xsl:attribute name="height">60</xsl:attribute>
+    <xsl:attribute name="width"><xsl:value-of select="30+30*$len"/></xsl:attribute>
+    <xsl:attribute name="x"><xsl:value-of select="-15*$len"/></xsl:attribute>
+  </xsl:element>
+  <xsl:element name="svg:text">
+    <xsl:attribute name="transform">translate(15,45)</xsl:attribute>
+    <xsl:value-of select="$name"/>
+  </xsl:element>
+</xsl:template>
+
 <!-- TouchOp VARIABLE DEFINITION -->
 <!-- Operators used for variable definition and use -->
-<xsl:template match="vardef">
+<xsl:template match="def">
   <xsl:comment>Variable definition</xsl:comment>
-  <svg:g class="fixed"
-	 top:layout="horizontalLayout(obj)">
-    <svg:rect class="background" height="100" width="150"/>
+  <!-- variable definition is identified by def-@name -->
+  <xsl:element name="svg:g">
+    <xsl:attribute name="class">invalid</xsl:attribute>
+    <xsl:attribute name="id">def-<xsl:value-of select="@name"/></xsl:attribute>
+    <xsl:attribute name="top:def"><xsl:value-of select="@name"/></xsl:attribute>
+    <xsl:attribute name="top:layout">horizontalLayout(obj); validateDef(obj)</xsl:attribute>
+
+    <!-- assignment operation -->
+    <svg:rect class="background"/>
     <svg:text><xsl:value-of select="@name"/>=</svg:text>
     <xsl:call-template name="operand"/>
-  </svg:g>
+  </xsl:element>
+</xsl:template>
+
+<!-- variable usage -->
+<xsl:template match="var">
+    <xsl:element name="svg:g">
+    <xsl:attribute name="name">var-<xsl:value-of select="@name"/></xsl:attribute>
+    <xsl:attribute name="class">invalid</xsl:attribute>
+    <xsl:attribute name="onmousedown">msDown(evt)</xsl:attribute>
+    <xsl:attribute name="top:use"><xsl:value-of select="@name"/></xsl:attribute>
+    
+    <!-- insert background and text -->
+    <xsl:call-template name="literal">
+      <xsl:with-param name="name" select="@name"/>
+    </xsl:call-template>
+  </xsl:element>
 </xsl:template>
 
 <!-- TouchOp ALGEBRA DOMAIN -->
@@ -111,7 +149,7 @@
 	   top:priority="91"
 	   top:layout="horizontalLayout(obj)">
       
-    <svg:rect class="background" height="100" width="150"/>
+    <svg:rect class="background"/>
     <xsl:call-template name="operand"/>
     <svg:g top:priority="80">
       <svg:rect y="50" width="1" height="1" style="opacity:0.0"/>
@@ -130,7 +168,7 @@
 	 top:priority="100"
 	 top:layout="horizontalLayout(obj)">
 
-    <svg:rect class="background" height="60" width="150"/>
+    <svg:rect class="background"/>
     <xsl:call-template name="operand"/>
     <svg:text>&#215;</svg:text>
     <xsl:call-template name="operand"/>
@@ -145,7 +183,7 @@
      top:priority="99"
      top:layout="verticalLayout(obj)">
 
-    <svg:rect class="background" height="150" width="100"/>
+    <svg:rect class="background"/>
     <svg:g transform="scale(0.8)" top:priority="100">
       <xsl:call-template name="operand"/>
     </svg:g>
@@ -163,7 +201,7 @@
      top:priority="120"
      top:value="#1 + #2">
 
-    <svg:rect class="background" height="60" width="100"/>
+    <svg:rect class="background"/>
     <xsl:call-template name="operand"/>
     <svg:text>+</svg:text>
     <xsl:call-template name="operand"/>
@@ -178,7 +216,7 @@
      top:priority="111"
      top:value="#1 - #2">
 
-    <svg:rect class="background" height="50" width="100"/>
+    <svg:rect class="background"/>
     <svg:g top:priority="110">
       <xsl:call-template name="operand"/>
     </svg:g>
@@ -189,21 +227,12 @@
 
 <xsl:template match="atom">
   <xsl:comment>Atomic element</xsl:comment>
-  <svg:g onmousedown="msDown(evt)"
-	 top:play="500">
-    <xsl:element name="svg:rect">
-      <xsl:variable name="len" select="string-length(@value)"/>
-      <xsl:attribute name="class">background</xsl:attribute>
-      <xsl:attribute name="top:value"><xsl:value-of select="@value"/></xsl:attribute>
-      <xsl:attribute name="height">60</xsl:attribute>
-      <xsl:attribute name="width"><xsl:value-of select="30+30*$len"/></xsl:attribute>
-      <xsl:attribute name="x"><xsl:value-of select="-15*$len"/></xsl:attribute>
-    </xsl:element>
-    <xsl:element name="svg:text">
-      <xsl:attribute name="transform">translate(15,45)</xsl:attribute>
-      <xsl:value-of select="@value"/>
-    </xsl:element>
-  </svg:g>
+  <xsl:element name="svg:g">
+    <xsl:attribute name="onmousedown">msDown(evt)</xsl:attribute>
+    <xsl:attribute name="top:value"><xsl:value-of select="@value"/></xsl:attribute>
+    <xsl:attribute name="top:play">500</xsl:attribute>
+    <xsl:call-template name="literal"/>
+  </xsl:element>
 </xsl:template>
 
 <!-- TouchOp MUSIC DOMAIN -->
@@ -225,7 +254,7 @@
 	 transform="scale(0.5,1.0)"
 	 top:layout="horizontalLayout(obj)">
     
-    <svg:rect class="background" height="60" width="100"/>
+    <svg:rect class="background"/>
     <svg:text>Fast</svg:text>
     <xsl:call-template name="operand"/>
     <xsl:call-template name="operand"/>
@@ -240,7 +269,7 @@
 	 top:padding="10"
 	 top:layout="horizontalLayout(obj)">
 
-    <svg:rect class="background" height="60" width="100"/>
+    <svg:rect class="background"/>
     <xsl:call-template name="multiop">
       <xsl:with-param name="count" select="@count"/>
     </xsl:call-template>
@@ -253,7 +282,7 @@
 	 top:padding="10"
 	 top:layout="verticalLayout(obj)">
 
-    <svg:rect class="background" height="60" width="60"/>
+    <svg:rect class="background"/>
     <svg:text>Pitch</svg:text>
     <xsl:call-template name="operand"/>
   </svg:g>
@@ -266,7 +295,7 @@
 	 top:padding="10"
 	 top:layout="verticalLayout(obj)">
 
-    <svg:rect class="background" height="60" width="60"/>
+    <svg:rect class="background"/>
     <svg:text><xsl:value-of select="@times"/>&#215;</svg:text>
     <xsl:call-template name="operand"/>
   </svg:g>
@@ -279,7 +308,7 @@
 	 top:filter="reverse(#)"
 	 top:layout="verticalLayout(obj)">
 
-    <svg:rect class="background" height="60" width="60"/>
+    <svg:rect class="background"/>
     <svg:text>Reverse</svg:text>
     <xsl:call-template name="operand"/>
   </svg:g>

@@ -15,8 +15,14 @@ text {
     stroke-width: 2;
 }
 
-.fixed .background {
+.invalid .background {
     fill: lightgray;
+    stroke: gray;
+    stroke-width: 1;
+}
+
+.valid .background {
+    fill: green;
     stroke: gray;
     stroke-width: 1;
 }

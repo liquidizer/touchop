@@ -322,7 +322,7 @@ function getPriority(obj) {
 // Layout that snaps the content centered to first element
 function snap(obj) {
     var box1= null;
-    for (i=0; i<obj.childNodes.length; ++i) {
+    for (var i=0; i<obj.childNodes.length; ++i) {
         child= obj.childNodes[i];
         if (child.nodeType==1) {
 	    if (box1==null) {
@@ -363,7 +363,7 @@ function boxLayout(obj, horizontal) {
     var y = 0;
     var h = 0;
     var n = 0;
-    for (i=0; i<obj.childNodes.length; ++i) {
+    for (var i=0; i<obj.childNodes.length; ++i) {
         var child= obj.childNodes[i];
         if (child.nodeType==1) {
 	    var opt= child.getAttributeNS(topns, "layoutOpt");
@@ -431,6 +431,31 @@ function boxLayout(obj, horizontal) {
             scaleRect(back, x0-padding, x, y-h/2, y+h/2);
 	else
 	    scaleRect(back, y-h/2, y+h/2, x0-padding, x); 
+    }
+}
+
+// check a variable definition and set its validity 
+function validateDef(obj) {
+    var flag= "valid";
+    if (!checkIsValid(obj))
+	flag= "invalid";
+    var oldFlag= obj.getAttribute("class");
+    if (flag!=oldFlag) {
+	var name= obj.getAttributeNS(topns, "def");
+	obj.setAttribute("class",flag);
+	setValidDef(document.childNodes[0], name, flag);
+    }
+}
+
+function setValidDef(obj, name, flag) {
+    var use= obj.getAttributeNS(topns, "use");
+    if (use==name)
+	obj.setAttribute("class", flag);
+    for (var i=0; i<obj.childNodes.length; ++i) {
+        var child= obj.childNodes[i];
+        if (child.nodeType==1) {
+	    setValidDef(child, name, flag);
+	}
     }
 }
 
