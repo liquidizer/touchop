@@ -202,6 +202,7 @@ function sendHome() {
 function deepLayout(obj, doFloat) {
     if (obj.nodeType==1) {
         // layout children
+        var isObj= obj.getAttribute("onmousedown")!=null;
         for (var i=0; i<obj.childNodes.length; ++i) {
             deepLayout(obj.childNodes[i], !isObj && doFloat);
         }
@@ -212,10 +213,7 @@ function deepLayout(obj, doFloat) {
         }
 
 	// set Floating
-        var isObj= obj.getAttribute("onmousedown")!=null;
-	if (isObj) {
-	    setFloating(obj, doFloat);
-	}
+	setFloating(obj, doFloat);
     }
 }
 
@@ -430,53 +428,39 @@ function boxLayout(obj, horizontal) {
     h = h + 2*padding;
     if (back!=null) {
 	if (horizontal)
-            scaleElement(back, x0-padding, x, y-h/2, y+h/2);
+            scaleRect(back, x0-padding, x, y-h/2, y+h/2);
 	else
-	    scaleElement(back, y-h/2, y+h/2, x0-padding, x); 
+	    scaleRect(back, y-h/2, y+h/2, x0-padding, x); 
     }
 }
 
-// transform the object, such that it fits into a box spanned
-// by x0,x1,y0,y1 in the parents coordinate system 
-function scaleElement(obj, x0, x1, y0, y1) {
-
-    // determine current bounding box relative to the 
-    // parent node's coordinate system
-    var m= obj.getTransformToElement(obj.parentNode);
-    var box= obj.getBBox();
-    box.x = m.a * box.x + m.e;
-    box.y = m.d * box.y + m.f;
-    box.width= m.a * box.width;
-    box.height= m.d * box.height;
-
-    // scale
-    var sx= (x1-x0)/box.width;
-    var sy= (y1-y0)/box.height;
-    m=m.scaleNonUniform(sx,sy);
-    
-    // translate
-    m.e=x0-(box.x*sx) + m.e*sx;
-    m.f=y0-(box.y*sy) + m.f*sy;
-    setTransform(obj, m);
+// Set the boundaries of a rect element
+function scaleRect(obj, x0, x1, y0, y1) {
+    obj.setAttribute("width", x1-x0);
+    obj.setAttribute("height", y1-y0);
+    obj.setAttribute("x", x0);
+    obj.setAttribute("y", y0);
 }
 
-// Makes or removes a little shadow below the object
+// Makes or removes a little shadow below movable objects
 function setFloating(obj, doFloat) {
-    // the shadow is always the first child
-    var shadow= obj.childNodes[0];
-    if (shadow.nodeType==1 && shadow.getAttribute("class")=="shadow") {
-	obj.removeChild(shadow);
-    }
-    // create the shadow element of appropriate size
-    if (doFloat) {
-	var box= obj.getBBox();
-	shadow= document.createElementNS(obj.namespaceURI, "rect");
-	shadow.setAttribute("width", box.width);
-	shadow.setAttribute("height", box.height);
-	shadow.setAttribute("x",box.x+3);
-	shadow.setAttribute("y",box.y+5);
-	shadow.setAttribute("class", "shadow");
-	obj.insertBefore(shadow, obj.childNodes[0]);
+    var canMove= obj.getAttribute("onmousedown")!=null;
+    if (canMove) {
+	// the shadow is always the first child
+	var shadow= obj.childNodes[0];
+	if (shadow.nodeType==1 && shadow.getAttribute("class")=="shadow") {
+	    obj.removeChild(shadow);
+	}
+	// create the shadow element of appropriate size
+	if (doFloat) {
+	    var box= obj.getBBox();
+	    shadow= document.createElementNS(obj.namespaceURI, "rect");
+	    scaleRect(shadow, 
+		      box.x + 3, box.x + box.width + 3, 
+		      box.y + 5, box.y + box.height + 5);
+	    shadow.setAttribute("class", "shadow");
+	    obj.insertBefore(shadow, obj.childNodes[0]);
+	}
     }
 }
 

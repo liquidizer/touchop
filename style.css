@@ -5,7 +5,19 @@ text {
 
 .background {
     fill: deepskyblue;
-    stroke: turquoise;
+    stroke: #10D0FF;
+    stroke-width: 1;
+}
+
+.playback .background {
+    fill: #CC0000;
+    stroke: black;
+    stroke-width: 2;
+}
+
+.fixed .background {
+    fill: lightgray;
+    stroke: gray;
     stroke-width: 1;
 }
 

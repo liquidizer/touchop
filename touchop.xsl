@@ -22,43 +22,18 @@
      width="100%" height="100%"
      viewBox="0 0 600 400">
 
-  <svg:style type="text/css">
-    text {
-    text-anchor: middle;
-    font-size: 48px;
-    }
-
-    .background {
-    fill: deepskyblue;
-    stroke: #10D0FF;
-    stroke-width: 1;
-    }
-    
-    .playback .background {
-    fill: #CC0000;
-    stroke: black;
-    stroke-width: 1;
-    }
-
-    .shadow {
-    fill: black;
-    opacity: 0.2;
-    }
-
-    .operand {
-    fill: #ffffe0;
-    }
-  </svg:style>
+  <!-- import the style sheet -->
+  <svg:style type="text/css">@import url('style.css');</svg:style>
 
   <!-- Drag and drop interface -->
   <svg:script type="text/javascript" xlink:href="touchop.js"/>
 
-  <!-- Winning test -->
+  <!-- Set up the levels objective -->
   <xsl:apply-templates select="test"/>
 
   <!-- iterate over all xml elements in the source file -->
   <xsl:comment>List of operators</xsl:comment>
-  <xsl:for-each select="op | atom">
+  <xsl:for-each select="op | atom | vardef | var">
     <!-- apply operator translation accoring to the xy attribute -->
     <xsl:element name="svg:g">
       <xsl:attribute name="transform">
@@ -90,12 +65,26 @@
 <!-- Multiple drop areas for operator arguments -->
 <xsl:template name="multiop">
   <xsl:param name="count" select="2"/>
+  <!-- recursive call for multiple arguments -->
   <xsl:if test="$count &gt; 1">
     <xsl:call-template name="multiop">
       <xsl:with-param name="count" select="$count - 1"/>
     </xsl:call-template>
   </xsl:if>
+  <!-- single argument -->
   <xsl:call-template name="operand"/>
+</xsl:template>
+
+<!-- TouchOp VARIABLE DEFINITION -->
+<!-- Operators used for variable definition and use -->
+<xsl:template match="vardef">
+  <xsl:comment>Variable definition</xsl:comment>
+  <svg:g class="fixed"
+	 top:layout="horizontalLayout(obj)">
+    <svg:rect class="background" height="100" width="150"/>
+    <svg:text><xsl:value-of select="@name"/>=</svg:text>
+    <xsl:call-template name="operand"/>
+  </svg:g>
 </xsl:template>
 
 <!-- TouchOp ALGEBRA DOMAIN -->
@@ -229,18 +218,18 @@
 <!-- fast play -->
 <xsl:template match="op[@name='fast']">
   <xsl:comment>Fast play operator</xsl:comment>
-    <svg:g onmousedown="msDown(evt)"
-	   top:filter="speed(0.5,#)"
-	   top:padding="10"
-	   top:priority="200"
-	   transform="scale(0.5,1.0)"
-	   top:layout="horizontalLayout(obj)">
-
-      <svg:rect class="background" height="60" width="100"/>
-      <svg:text>Fast</svg:text>
-      <xsl:call-template name="operand"/>
-      <xsl:call-template name="operand"/>
-    </svg:g>
+  <svg:g onmousedown="msDown(evt)"
+	 top:filter="speed(0.5,#)"
+	 top:padding="10"
+	 top:priority="200"
+	 transform="scale(0.5,1.0)"
+	 top:layout="horizontalLayout(obj)">
+    
+    <svg:rect class="background" height="60" width="100"/>
+    <svg:text>Fast</svg:text>
+    <xsl:call-template name="operand"/>
+    <xsl:call-template name="operand"/>
+  </svg:g>
 </xsl:template>
 
 <!-- Linked play -->
