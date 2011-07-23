@@ -434,31 +434,6 @@ function boxLayout(obj, horizontal) {
     }
 }
 
-// check a variable definition and set its validity 
-function validateDef(obj) {
-    var flag= "valid";
-    if (!checkIsValid(obj))
-	flag= "invalid";
-    var oldFlag= obj.getAttribute("class");
-    if (flag!=oldFlag) {
-	var name= obj.getAttributeNS(topns, "def");
-	obj.setAttribute("class",flag);
-	setValidDef(document.childNodes[0], name, flag);
-    }
-}
-
-function setValidDef(obj, name, flag) {
-    var use= obj.getAttributeNS(topns, "use");
-    if (use==name)
-	obj.setAttribute("class", flag);
-    for (var i=0; i<obj.childNodes.length; ++i) {
-        var child= obj.childNodes[i];
-        if (child.nodeType==1) {
-	    setValidDef(child, name, flag);
-	}
-    }
-}
-
 // Set the boundaries of a rect element
 function scaleRect(obj, x0, x1, y0, y1) {
     obj.setAttribute("width", x1-x0);

@@ -27,6 +27,7 @@
 
   <!-- Drag and drop interface -->
   <svg:script type="text/javascript" xlink:href="touchop.js"/>
+  <svg:script type="text/javascript" xlink:href="def.js"/>
 
   <!-- Set up the levels objective -->
   <xsl:apply-templates select="test"/>
@@ -113,7 +114,6 @@
 <!-- variable usage -->
 <xsl:template match="var">
     <xsl:element name="svg:g">
-    <xsl:attribute name="name">var-<xsl:value-of select="@name"/></xsl:attribute>
     <xsl:attribute name="class">invalid</xsl:attribute>
     <xsl:attribute name="onmousedown">msDown(evt)</xsl:attribute>
     <xsl:attribute name="top:use"><xsl:value-of select="@name"/></xsl:attribute>

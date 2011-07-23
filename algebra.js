@@ -8,11 +8,19 @@
 
 // Exactract the formula for the user created value.
 function computeValue(obj) {
+    // check for redirections
+    var use= obj.getAttributeNS(topns, "use");
+    if (use!="") {
+	obj= document.getElementById("def-"+use);
+	if (isCyclicDef(obj, use)) 
+	    return null;
+    }
+
     // The top:value attribute contains the formula
     var value= obj.getAttributeNS(topns, "value");
-    var args= [];
 
     // recurse through child elements to find open arguments
+    var args= [];
     for (var i=0; i<obj.childNodes.length; ++i) {
 	if (obj.childNodes[i].nodeType==1) {
 	    // if the child node has a value, compute it and 
@@ -54,14 +62,20 @@ function verify(obj, isFinal) {
     }
     // extract the user created formula in json
     var value= computeValue(test);
-    var win= false;
+    var win= true;
     try {
-	// evalue the user created formula
-	value= eval(value);
-	// compare with the objective value
+	// construct the objective function
 	var goal= document.getElementById("test").getAttribute("win");
-        win= Math.abs(value-goal)<1e-12;
+	goal= value+" - ("+goal+")";
+	// check for free variables
+	var vars= new RegExp("\([a-zA-Z]+\)");
+	for (var i=0; win && i<1; ++i) {
+	    // compare with the objective value
+	    var eps= eval(goal);
+	    win= win && Math.abs(eps)<1e-12;
+	}
     } catch(e) {
+	win= false;
     }
     if (win) {
 	smile(1.0);
