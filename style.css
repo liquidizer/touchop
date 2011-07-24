@@ -21,12 +21,6 @@ text {
     stroke-width: 1;
 }
 
-.valid .background {
-    fill: green;
-    stroke: gray;
-    stroke-width: 1;
-}
-
 .shadow {
     fill: black;
     opacity: 0.2;

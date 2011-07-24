@@ -136,7 +136,14 @@
     <xsl:element name="svg:text">
       <xsl:attribute name="id">test</xsl:attribute>
       <xsl:copy-of select="@win"/>
-      <xsl:value-of select="concat(@win,' = ?')"/>
+      <!-- if no text is provided set default -->
+      <xsl:if test="not(text())">
+	<xsl:value-of select="concat(@win,' = ?')"/>
+      </xsl:if>
+      <!-- set the provided test text -->
+      <xsl:if test="text()">
+	<xsl:value-of select="text()"/>
+      </xsl:if>
     </xsl:element>
   </svg:g>
 </xsl:template>

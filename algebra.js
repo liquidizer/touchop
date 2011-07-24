@@ -66,13 +66,17 @@ function verify(obj, isFinal) {
     try {
 	// construct the objective function
 	var goal= document.getElementById("test").getAttribute("win");
-	goal= value+" - ("+goal+")";
+	goal= "("+value+") - ("+goal+")";
 	// check for free variables
-	var vars= new RegExp("\([a-zA-Z]+\)");
-	for (var i=0; win && i<1; ++i) {
+	var vars= goal.match(/\([a-zA-Z]+\)/g);
+	var tries= 1 + 10*vars.length;
+	for (var i=0; win && i<tries; ++i) {
+	    var eps= goal;
+	    for (var j=0; j<vars.length; ++j) {
+		eps= eps.replace(new RegExp(vars[j],"g"), 123.12);
+	    }
 	    // compare with the objective value
-	    var eps= eval(goal);
-	    win= win && Math.abs(eps)<1e-12;
+	    win= win && Math.abs(eval(eps))<1e-12;
 	}
     } catch(e) {
 	win= false;
