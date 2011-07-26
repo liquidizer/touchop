@@ -63,17 +63,20 @@ function verify(obj, isFinal) {
     // extract the user created formula in json
     var value= computeValue(test);
     var win= true;
+
+    // construct the objective function
+    var goal= document.getElementById("test").getAttribute("win");
+    goal= "("+value+") - ("+goal+")";
+    // check for free variables
+    var vars= goal.match(/\([a-zA-Z]+\)/g);
+    if (vars==null) vars=[];
+    
     try {
-	// construct the objective function
-	var goal= document.getElementById("test").getAttribute("win");
-	goal= "("+value+") - ("+goal+")";
-	// check for free variables
-	var vars= goal.match(/\([a-zA-Z]+\)/g);
 	var tries= 1 + 10*vars.length;
 	for (var i=0; win && i<tries; ++i) {
 	    var eps= goal;
 	    for (var j=0; j<vars.length; ++j) {
-		eps= eps.replace(new RegExp(vars[j],"g"), 123.12);
+		eps= eps.replace(new RegExp(vars[j],"g"), Math.random()*6-3);
 	    }
 	    // compare with the objective value
 	    win= win && Math.abs(eval(eps))<1e-12;

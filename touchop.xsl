@@ -28,13 +28,14 @@
   <!-- Drag and drop interface -->
   <svg:script type="text/javascript" xlink:href="touchop.js"/>
   <svg:script type="text/javascript" xlink:href="def.js"/>
+  <svg:script type="text/javascript" xlink:href="plot.js"/>
 
   <!-- Set up the levels objective -->
   <xsl:apply-templates select="test"/>
 
   <!-- iterate over all xml elements in the source file -->
   <xsl:comment>List of operators</xsl:comment>
-  <xsl:for-each select="op | atom | def | var">
+  <xsl:for-each select="op | atom | def | use | canvas">
     <!-- apply operator translation accoring to the xy attribute -->
     <xsl:element name="svg:g">
       <xsl:attribute name="transform">
@@ -112,7 +113,7 @@
 </xsl:template>
 
 <!-- variable usage -->
-<xsl:template match="var">
+<xsl:template match="use">
     <xsl:element name="svg:g">
     <xsl:attribute name="class">invalid</xsl:attribute>
     <xsl:attribute name="onmousedown">msDown(evt)</xsl:attribute>
@@ -242,12 +243,30 @@
   </xsl:element>
 </xsl:template>
 
+<!-- TouchOp FUNCTION PLOTTING -->
+<!-- Special operators for the function plotting domain -->
+
+<!-- construct the test for the music domain -->
+<xsl:template match="test[@domain='plot']">
+  <xsl:comment>Create formulas according to a reference plot</xsl:comment>
+  <svg:script type="text/javascript" xlink:href="plot.js"/>
+</xsl:template>
+
+<xsl:template match="canvas">
+  <xsl:comment>Plotting canvas</xsl:comment>
+  <xsl:element name="svg:g">
+    <xsl:attribute name="id">canvas</xsl:attribute>
+    <xsl:attribute name="top:plot"><xsl:value-of select="@plot"/></xsl:attribute>
+    <xsl:attribute name="top:scale"><xsl:value-of select="@scale"/></xsl:attribute>
+  </xsl:element>
+</xsl:template>
+
 <!-- TouchOp MUSIC DOMAIN -->
 <!-- Special operators for the music domain -->
 
 <!-- construct the test for the music domain -->
 <xsl:template match="test[@domain='music']">
-  <xsl:comment>Play the reference sound for music problem set</xsl:comment>
+  <xsl:comment>Apply sound filters to match a reference sound</xsl:comment>
   <svg:script type="text/javascript" xlink:href="music.js"/>
 </xsl:template>
 
