@@ -51,8 +51,8 @@
   <xsl:comment>Emoticon</xsl:comment>
   <svg:a xlink:href="index.html#levels">
     <!-- Webkit  bug
-    <use xlink:href="smiley.svg#smile" transform="translate(500,20)" id="top:win"/>
-    <use xlink:href="smiley.svg#frown" transform="translate(500,20)" id="top:notwin"/>
+    <use href="smiley.svg#smile" transform="translate(500,20)" id="top:win"/>
+    <use href="smiley.svg#frown" transform="translate(500,20)" id="top:notwin"/>
     -->
     <svg:g transform="translate(500,20)" id="top:notwin">
       <xsl:call-template name="frown"/>
@@ -63,6 +63,8 @@
   </svg:a>
 </svg>
 </xsl:template>
+
+<!-- Webkit work around: Wrap smiley.svg  -->
 <xsl:include href="smiley.xsl"/>
 
 
@@ -260,14 +262,41 @@
 <xsl:template match="test[@domain='plot']">
   <xsl:comment>Create formulas according to a reference plot</xsl:comment>
   <svg:script type="text/javascript" xlink:href="plot.js"/>
+  <xsl:element name="svg:g">
+    <xsl:attribute name="id">test</xsl:attribute>
+    <xsl:copy-of select="@win"/>
+  </xsl:element>
 </xsl:template>
 
 <xsl:template match="canvas">
   <xsl:comment>Plotting canvas</xsl:comment>
+  <xsl:element name="svg:rect">
+    <xsl:attribute name="class">canvas</xsl:attribute>
+    <xsl:attribute name="height"><xsl:value-of select="@size"/></xsl:attribute>
+    <xsl:attribute name="width"><xsl:value-of select="@size"/></xsl:attribute>
+  </xsl:element>
   <xsl:element name="svg:g">
     <xsl:attribute name="id">canvas</xsl:attribute>
     <xsl:attribute name="top:plot"><xsl:value-of select="@plot"/></xsl:attribute>
-    <xsl:attribute name="top:scale"><xsl:value-of select="@scale"/></xsl:attribute>
+    <xsl:attribute name="top:size"><xsl:value-of select="@size"/></xsl:attribute>
+    <xsl:attribute name="top:xmin"><xsl:value-of select="@xmin"/></xsl:attribute>
+    <xsl:attribute name="top:ymin"><xsl:value-of select="@ymin"/></xsl:attribute>
+    <xsl:attribute name="top:xmax"><xsl:value-of select="@xmax"/></xsl:attribute>
+    <xsl:attribute name="top:ymax"><xsl:value-of select="@ymax"/></xsl:attribute>
+    <xsl:variable name="xscale" select="@size div (@xmax - @xmin)"/>
+    <xsl:variable name="yscale" select="@size div (@ymax - @ymin)"/>
+    <xsl:for-each select="point">
+      <xsl:element name="svg:circle">
+	<xsl:attribute name="class">graph</xsl:attribute>
+	<xsl:attribute name="r">5</xsl:attribute>
+	<xsl:attribute name="cx">
+	  <xsl:value-of select="(@x - ../@xmin)*$xscale"/>
+	</xsl:attribute>
+	<xsl:attribute name="cy">
+	  <xsl:value-of select="(../@ymax - @y)*$yscale"/>
+	</xsl:attribute>
+      </xsl:element>
+    </xsl:for-each>
   </xsl:element>
 </xsl:template>
 
