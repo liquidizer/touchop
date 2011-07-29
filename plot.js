@@ -11,18 +11,29 @@ function plot(obj) {
     var canvas= document.getElementById(canvasId);
     var target= canvas.getAttributeNS(topns, "plot");
     var def= obj.getAttributeNS(topns, "def");
-    if (target!=def)
-	return;
+    if (target==def) {
+	var f= function(x) { return computeValue(obj,x); }
+	
+	var win = true;
+	for (var i=0; i<canvas.childNodes.length; i) {
+	    var child= canvas.childNodes[i];
+	    if (child.tagName=="path")
+		canvas.removeChild(child);
+	    else {
+		i= i+1;
+		var x= child.getAttributeNS(topns, "x");
+		var y= child.getAttributeNS(topns, "y");
+		if (x!="" && y!="") {
+		    x= eval(x);
+		    y= eval(y);
+		    win = win && (Math.abs(y- f(x)) < 1e-3)
+		}
+	    }
+	}
+	if (win) smile(1.0); else smile(0.0);
 
-    for (var i=0; i<canvas.childNodes.length; i) {
-	if (canvas.childNodes[i].tagName=="path")
-	    canvas.removeChild(canvas.childNodes[i]);
-	else
-	    i= i+1;
+	drawGraph(canvas,f);
     }
-
-    var f= function(x) { return computeValue(obj,x); }
-    drawGraph(canvas,f);
 }
 
 function drawGraph(canvas, f) {

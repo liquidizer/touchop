@@ -298,6 +298,8 @@
 	<xsl:attribute name="cy">
 	  <xsl:value-of select="(../@ymax - @y)*$yscale"/>
 	</xsl:attribute>
+	<xsl:attribute name="top:x"><xsl:value-of select="@x"/></xsl:attribute>
+	<xsl:attribute name="top:y"><xsl:value-of select="@y"/></xsl:attribute>
       </xsl:element>
     </xsl:for-each>
   </xsl:element>
