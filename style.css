@@ -32,8 +32,14 @@ text {
 
 path.graph {
     fill: none;
-    stroke: #000000;
-    stroke-width: 1px;
+    stroke: blue;
+    stroke-width: 3px;
+}
+
+path.axes {
+    fill: none;
+    stroke: black;
+    stroke-width: 0.5px;
 }
 
 circle.graph {
@@ -46,4 +52,8 @@ rect.canvas {
     fill: none;
     stroke: #000000;
     stroke-width: 1px;
+}
+
+text.canvas {
+    font-size: 10pt;
 }

@@ -258,16 +258,13 @@
 <!-- TouchOp FUNCTION PLOTTING -->
 <!-- Special operators for the function plotting domain -->
 
-<!-- construct the test for the music domain -->
+<!-- Import the verify function for the plotting domain -->
 <xsl:template match="test[@domain='plot']">
   <xsl:comment>Create formulas according to a reference plot</xsl:comment>
   <svg:script type="text/javascript" xlink:href="plot.js"/>
-  <xsl:element name="svg:g">
-    <xsl:attribute name="id">test</xsl:attribute>
-    <xsl:copy-of select="@win"/>
-  </xsl:element>
 </xsl:template>
 
+<!-- Create a canvas for the plotted graph -->
 <xsl:template match="canvas">
   <xsl:comment>Plotting canvas</xsl:comment>
   <svg:clipPath id="canvasClip"><svg:use xlink:href="#canvasFrame"/></svg:clipPath>
@@ -280,6 +277,7 @@
   <xsl:element name="svg:g">
     <xsl:attribute name="id">canvas</xsl:attribute>
     <xsl:attribute name="clip-path">url(#canvasClip)</xsl:attribute>
+    <xsl:attribute name="top:layout">addAxes(obj)</xsl:attribute>
     <xsl:attribute name="top:plot"><xsl:value-of select="@plot"/></xsl:attribute>
     <xsl:attribute name="top:size"><xsl:value-of select="@size"/></xsl:attribute>
     <xsl:attribute name="top:xmin"><xsl:value-of select="@xmin"/></xsl:attribute>
@@ -381,6 +379,23 @@
     <svg:rect class="background"/>
     <svg:text>Reverse</svg:text>
     <xsl:call-template name="operand"/>
+  </svg:g>
+</xsl:template>
+
+<!-- TOUCHOP - Image processing domain -->
+<!-- Special operators for image processing and image synthesis -->
+<xsl:template match="op[@name='stack']">
+  <svg:g onmousedown="msDown(evt)"
+	 top:padding="10"
+	 top:layout="verticalLayout(obj)">
+
+    <svg:rect class="background"/>
+    <svg:g transform="matrix(1, 0, 0.5 ,0.5, 0, 0)">
+      <xsl:call-template name="operand"/>
+    </svg:g>
+    <svg:g transform="matrix(1, 0, 0.5 ,0.5, 0, 0)">
+      <xsl:call-template name="operand"/>
+    </svg:g>
   </svg:g>
 </xsl:template>
 
