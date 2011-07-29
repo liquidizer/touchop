@@ -270,13 +270,16 @@
 
 <xsl:template match="canvas">
   <xsl:comment>Plotting canvas</xsl:comment>
+  <svg:clipPath id="canvasClip"><svg:use xlink:href="#canvasFrame"/></svg:clipPath>
   <xsl:element name="svg:rect">
+    <xsl:attribute name="id">canvasFrame</xsl:attribute>
     <xsl:attribute name="class">canvas</xsl:attribute>
     <xsl:attribute name="height"><xsl:value-of select="@size"/></xsl:attribute>
     <xsl:attribute name="width"><xsl:value-of select="@size"/></xsl:attribute>
   </xsl:element>
   <xsl:element name="svg:g">
     <xsl:attribute name="id">canvas</xsl:attribute>
+    <xsl:attribute name="clip-path">url(#canvasClip)</xsl:attribute>
     <xsl:attribute name="top:plot"><xsl:value-of select="@plot"/></xsl:attribute>
     <xsl:attribute name="top:size"><xsl:value-of select="@size"/></xsl:attribute>
     <xsl:attribute name="top:xmin"><xsl:value-of select="@xmin"/></xsl:attribute>
