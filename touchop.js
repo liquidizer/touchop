@@ -84,6 +84,7 @@ function setTransform(obj, m) {
 // Move the grabbed object "hand" with the mouse
 function msMove (evt) {
     if (hand!=null) {
+	evt.preventDefault();
         // compute relative mouse movements since last call
         var dx=evt.clientX-startx;
         var dy=evt.clientY-starty;
@@ -325,7 +326,7 @@ function snap(obj) {
     var box1= null;
     for (var i=0; i<obj.childNodes.length; ++i) {
         child= obj.childNodes[i];
-        if (child.nodeType==1) {
+        if (child.nodeType==1 && child.getAttribute("display")!="none") {
 	    if (box1==null) {
 		// The first element is the reference position
 		box1= child.getBBox();

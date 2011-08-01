@@ -17,6 +17,7 @@ function verify(obj, isFinal) {
 		    if (state || checkIsValid(obj)) {
 			setState(obj, state);
 		    }
+		    layout(result);
 		    return;
 		}
 	    }
