@@ -45,7 +45,7 @@ function addAxes(canvas) {
     var yrange= ymax-ymin;
     for (var i=0; i<=yrange; i++) {
 	var path= document.createElementNS(canvas.namespaceURI, "path");
-	var y= size-(i*size/yrange);
+	var y= size - Math.ceil(i*size/yrange);
 	var d= "M "+size+","+y+" L -10,"+y;
 	path.setAttribute("d", d)
 	path.setAttribute("class", "axes")
@@ -60,7 +60,7 @@ function addAxes(canvas) {
     var xrange= xmax-xmin;
     for (var i=0; i<=xrange; i++) {
 	var path= document.createElementNS(canvas.namespaceURI, "path");
-	var x= i*size/xrange;
+	var x= Math.ceil(i*size/xrange);
 	var d= "M "+x+","+0+" L "+x+","+(size+10);
 	path.setAttribute("d", d)
 	path.setAttribute("class", "axes")

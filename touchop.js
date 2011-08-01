@@ -69,7 +69,7 @@ function msUp (evt) {
         
 	// verify winning test after mouse release
 	verify(hand, true);
-
+	
         // delete reference to hand object.
         hand= null;
     }
@@ -300,7 +300,7 @@ function insertParenthesis(obj) {
     }
 }
 
-// get an operators mathematical priority to determine
+// get an operator's mathematical priority to determine
 // whether parenthesis are required.
 function getPriority(obj) {
     var prio= obj.getAttributeNS(topns, "priority");
@@ -319,7 +319,8 @@ function getPriority(obj) {
     return 0;
 }
 
-// Layout that snaps the content centered to first element
+// Layouts the content centered to its first child element
+// Creates a snap-in like effect what dropping operands
 function snap(obj) {
     var box1= null;
     for (var i=0; i<obj.childNodes.length; ++i) {
@@ -339,18 +340,19 @@ function snap(obj) {
     }
 }
 
-// Layout all children objects horizontally
+// Layouts all child objects horizontally.
 function horizontalLayout(obj) {
     insertParenthesis(obj);
     boxLayout(obj, true);
 }
 
-// Layout all children objects horizontally
+// Layouts all child objects horizontally.
 function verticalLayout(obj) {
     boxLayout(obj, false);
 }
 
-// Layout all children objects horizontally
+// Layouts all child objects sequentially in one axis,
+// centered in the other axis.
 function boxLayout(obj, horizontal) {
     var padding=5;
     if (obj.getAttributeNS(topns, "padding")!="")
@@ -369,7 +371,7 @@ function boxLayout(obj, horizontal) {
 	    var opt= child.getAttributeNS(topns, "layoutOpt");
             if (child.getAttribute("class")=="background") {
                 back= child;
-            } else if (back!=null) {
+            } else if (back!=null && child.getAttribute("display")!="none") {
                 // find local coordinate system
                 m= child.getTransformToElement(obj);
                 box= child.getBBox();
@@ -383,7 +385,7 @@ function boxLayout(obj, horizontal) {
 		    } else {
 			x0= m.f + m.d * box.y;
 			x= x0;
-			y= m.e + m.a * (box.x + box.width/2);
+			y= m.e + m.a * (box.x + box.width/2) + m.c * (box.height/2);
 		    }
                 }
                 else {
@@ -396,7 +398,7 @@ function boxLayout(obj, horizontal) {
 			m.e= x - m.a * box.x;
 			m.f= y - m.d * (box.y + 0.5*box.height);
 		    } else {
-			m.e= y - m.a * (box.x + 0.5*box.width);
+			m.e= y - m.a * (box.x + 0.5*box.width) - m.c * (0.5*box.height);
 			m.f= x - m.d * box.y;
 		    }
                     setTransform(child,m);
@@ -404,10 +406,10 @@ function boxLayout(obj, horizontal) {
                 // compute position for next element
 		if (horizontal) {
                     x += + m.a * box.width + padding;
-                    h = Math.max(h, m.d*box.height);
+                    h = Math.max(h, Math.abs(m.d)*box.height);
 		} else {
                     x += + m.d * box.height + padding;
-                    h = Math.max(h, Math.abs(m.a)*box.width);
+                    h = Math.max(h, Math.abs(m.a)*box.width + Math.abs(m.c)*box.height);
 		}
                 n++;
             }

@@ -14,13 +14,10 @@
 
 <!-- generate the svg main file structure -->
 <xsl:template match="touchop">
-<svg xmlns="http://www.w3.org/2000/svg"
-     xmlns:xlink="http://www.w3.org/1999/xlink"
-     xmlns:top="http://www.dadim.de/touchop"
-     onmousemove="msMove(evt)"
-     onmouseup="msUp(evt)"
-     width="100%" height="100%"
-     viewBox="0 0 600 400">
+<svg:svg onmousemove="msMove(evt)"
+	 onmouseup="msUp(evt)"
+	 width="100%" height="100%"
+	 viewBox="0 0 600 400">
 
   <!-- import the style sheet -->
   <svg:style type="text/css">@import url('style.css');</svg:style>
@@ -28,19 +25,17 @@
   <!-- Drag and drop interface -->
   <svg:script type="text/javascript" xlink:href="touchop.js"/>
   <svg:script type="text/javascript" xlink:href="def.js"/>
-  <svg:script type="text/javascript" xlink:href="plot.js"/>
-
-  <!-- Set up the levels objective -->
-  <xsl:apply-templates select="test"/>
 
   <!-- iterate over all xml elements in the source file -->
   <xsl:comment>List of operators</xsl:comment>
-  <xsl:for-each select="op | atom | def | use | canvas">
+  <xsl:for-each select="*">
     <!-- apply operator translation accoring to the xy attribute -->
     <xsl:element name="svg:g">
-      <xsl:attribute name="transform">
-	<xsl:copy-of select="concat('translate(',@xy,')')"/>
-      </xsl:attribute>
+      <xsl:if test="@xy">
+	<xsl:attribute name="transform">
+	  <xsl:copy-of select="concat('translate(',@xy,')')"/>
+	</xsl:attribute>
+      </xsl:if>
       <!-- find the corresponding definition of that operator -->
       <xsl:apply-templates select="."/>
     </xsl:element>
@@ -61,7 +56,7 @@
       <xsl:call-template name="smile"/>
     </svg:g>
   </svg:a>
-</svg>
+</svg:svg>
 </xsl:template>
 
 <!-- Webkit work around: Wrap smiley.svg  -->
@@ -382,19 +377,64 @@
   </svg:g>
 </xsl:template>
 
-<!-- TOUCHOP - Image processing domain -->
+<!-- TOUCHOP - IMAGE PROCESSING DOMAIN -->
 <!-- Special operators for image processing and image synthesis -->
+<xsl:template match="test[@domain='image']">
+  <xsl:comment>Image processing</xsl:comment>
+  <svg:script type="text/javascript" xlink:href="image.js"/>
+  <svg:defs>
+    <svg:filter id="Blur" x="-10" y="-10" width="70" height="70">
+      <svg:feGaussianBlur stdDeviation="4"/>
+    </svg:filter>
+  </svg:defs>
+</xsl:template>
+
 <xsl:template match="op[@name='stack']">
   <svg:g onmousedown="msDown(evt)"
 	 top:padding="10"
 	 top:layout="verticalLayout(obj)">
 
     <svg:rect class="background"/>
-    <svg:g transform="matrix(1, 0, 0.5 ,0.5, 0, 0)">
+    <svg:g transform="matrix(1, 0, 0.5 ,0.5, 0, 0)" top:role="layer">
       <xsl:call-template name="operand"/>
     </svg:g>
-    <svg:g transform="matrix(1, 0, 0.5 ,0.5, 0, 0)">
+    <svg:g transform="matrix(1, 0, 0.5 ,0.5, 0, 0)" top:role="layer">
       <xsl:call-template name="operand"/>
+    </svg:g>
+    <svg:g top:role="result" transform="translate(10,5)" display="none">
+      <svg:rect width="60" height="60" class="frame"/>
+      <svg:g/>
+    </svg:g>
+  </svg:g>
+</xsl:template>
+
+<xsl:template match="op[@name='blur']">
+  <svg:g onmousedown="msDown(evt)"
+	 top:padding="10"
+	 top:layout="verticalLayout(obj)">
+
+    <svg:rect class="background"/>
+    <svg:g transform="scale(0.5)">
+      <svg:text>Blur</svg:text>
+    </svg:g>
+    <svg:g transform="matrix(1, 0, 0.5 ,0.5, 0, 0)" top:role="layer">
+      <xsl:call-template name="operand"/>
+    </svg:g>
+    <svg:g top:role="result" transform="translate(-30,-15)" 
+	   display="none">
+      <svg:rect width="60" height="60" class="frame"/>
+      <svg:g filter="url(#Blur)">
+      </svg:g>
+    </svg:g>
+  </svg:g>
+</xsl:template>
+
+<!-- Image -->
+<xsl:template match="image">
+  <svg:g onmousedown="msDown(evt)" top:role="image">
+    <svg:rect width="60" height="60" class="frame"/>
+    <svg:g top:role="content">
+      <xsl:copy-of select="*"/>
     </svg:g>
   </svg:g>
 </xsl:template>
