@@ -5,7 +5,7 @@ text {
 
 .background {
     fill: deepskyblue;
-    stroke: #10D0FF;
+    stroke: #00B0E0;
     stroke-width: 1;
 }
 
@@ -23,7 +23,7 @@ text {
 
 .shadow {
     fill: black;
-    opacity: 0.2;
+    opacity: 0.4;
 }
 
 .operand {
@@ -62,4 +62,8 @@ rect.frame {
     fill: white;
     stroke: black;
     stroke-width: 1px;
+}
+
+text.imgfilter {
+    font-size: 12pt;
 }

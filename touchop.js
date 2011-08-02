@@ -84,7 +84,9 @@ function setTransform(obj, m) {
 // Move the grabbed object "hand" with the mouse
 function msMove (evt) {
     if (hand!=null) {
+	// pevent scrolling on mobile devices
 	evt.preventDefault();
+
         // compute relative mouse movements since last call
         var dx=evt.clientX-startx;
         var dy=evt.clientY-starty;
@@ -223,6 +225,7 @@ function layout(element) {
     var obj= element;
     var top= null;
     var ctm1= element.getCTM();
+    var box1= element.getBBox();
     do {
         command= obj.getAttributeNS(topns,"layout");
         if (command!="") {
@@ -236,6 +239,7 @@ function layout(element) {
     if (top!=null) {
         // make sure original element does not move on the screen
         var ctm2= element.getCTM();
+	var box2= element.getBBox();
 	var w= top.getCTM();
 	var m= top.getTransformToElement(top.parentNode);
 	m= m.multiply(w.inverse());
@@ -397,9 +401,11 @@ function boxLayout(obj, horizontal) {
 		    }
 		    if (horizontal) {
 			m.e= x - m.a * box.x;
-			m.f= y - m.d * (box.y + 0.5*box.height);
+			m.f= y - m.d * (box.y + 0.5*box.height)
+			    - m.b * (box.x + 0.5*box.width);
 		    } else {
-			m.e= y - m.a * (box.x + 0.5*box.width) - m.c * (0.5*box.height);
+			m.e= y - m.a * (box.x + 0.5*box.width) 
+			    - m.c * (box.y + 0.5*box.height);
 			m.f= x - m.d * box.y;
 		    }
                     setTransform(child,m);

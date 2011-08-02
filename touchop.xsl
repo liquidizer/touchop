@@ -384,10 +384,22 @@
   <xsl:comment>Image processing</xsl:comment>
   <svg:script type="text/javascript" xlink:href="image.js"/>
   <svg:defs>
-    <svg:filter id="Blur" x="-10" y="-10" width="70" height="70">
+    <svg:filter id="filter-blur" x="-10" y="-10" width="70" height="70">
       <svg:feGaussianBlur stdDeviation="4"/>
     </svg:filter>
+    <svg:filter id="filter-atop" x="0" y="0" width="60" height="60">
+      <!-- not working. No browser supports the enable-background attribute -->
+      <svg:feComposite operator="xor" in="SourceGraphic" in2="BackgroundImage"/>
+    </svg:filter>
   </svg:defs>
+</xsl:template>
+
+<xsl:template name="layer">
+    <svg:g transform="matrix(1, 0, 0.5 ,0.5, 0, 0)" 
+	   top:role="layer" 
+	   top:layout="layerLayout(obj)">
+      <xsl:call-template name="operand"/>
+    </svg:g>
 </xsl:template>
 
 <xsl:template match="op[@name='stack']">
@@ -396,13 +408,10 @@
 	 top:layout="verticalLayout(obj)">
 
     <svg:rect class="background"/>
-    <svg:g transform="matrix(1, 0, 0.5 ,0.5, 0, 0)" top:role="layer">
-      <xsl:call-template name="operand"/>
-    </svg:g>
-    <svg:g transform="matrix(1, 0, 0.5 ,0.5, 0, 0)" top:role="layer">
-      <xsl:call-template name="operand"/>
-    </svg:g>
-    <svg:g top:role="result" transform="translate(10,5)" display="none">
+    <xsl:call-template name="layer"/>
+    <xsl:call-template name="layer"/>
+    <xsl:call-template name="layer"/>
+    <svg:g top:role="result" display="none">
       <svg:rect width="60" height="60" class="frame"/>
       <svg:g/>
     </svg:g>
@@ -415,17 +424,11 @@
 	 top:layout="verticalLayout(obj)">
 
     <svg:rect class="background"/>
-    <svg:g transform="scale(0.5)">
-      <svg:text>Blur</svg:text>
-    </svg:g>
-    <svg:g transform="matrix(1, 0, 0.5 ,0.5, 0, 0)" top:role="layer">
-      <xsl:call-template name="operand"/>
-    </svg:g>
-    <svg:g top:role="result" transform="translate(-30,-15)" 
-	   display="none">
+    <svg:text class="imgfilter" transform="translate(45,16)">Blur</svg:text>
+    <xsl:call-template name="layer"/>
+    <svg:g top:role="result" display="none">
       <svg:rect width="60" height="60" class="frame"/>
-      <svg:g filter="url(#Blur)">
-      </svg:g>
+      <svg:g filter="url(#filter-blur)"/>
     </svg:g>
   </svg:g>
 </xsl:template>

@@ -12,13 +12,26 @@ function verify(obj, isFinal) {
 	    if (obj.nodeType==1) {
 		var result= obj.lastChild;
 		if (result.getAttributeNS(topns, "role")=="result") {
+		    // composite result, toggle layer view
 		    var state= result.getAttribute("display");
-		    state= state!="none";
-		    if (state || checkIsValid(obj)) {
-			setState(obj, state);
+		    state= state=="none";
+		    var ctm=obj.getCTM();
+		    var x= obj.getAttribute("img-x");
+		    var y= obj.getAttribute("img-y");
+		    // clicked, not dragged
+		    if (state || Math.abs(x-ctm.e) + Math.abs(y-ctm.f) < 1) {
+			state=!state;
+			if (state || checkIsValid(obj)) {
+			    // set new layer vs. result state
+			    setState(obj, state);
+			}
+			layout(obj);
 		    }
-		    layout(result);
-		    return;
+		    ctm= obj.getCTM();
+		    obj.setAttribute("img-x",ctm.e);
+		    obj.setAttribute("img-y",ctm.f);
+		    if (state)
+			return;
 		}
 	    }
 	    obj= obj.parentNode;
@@ -31,7 +44,7 @@ function setState(obj, state) {
     setDisplay(result, !state);
     for (var i=obj.childNodes.length-2; i>=0; --i) {
 	var child= obj.childNodes[i];
-	if (child.nodeName=="svg:g") {
+	if (child.nodeName!="svg:rect") {
 	    if (state)
 		setDisplay(child, true);
 	    if (child.getAttributeNS(topns, "role")=="layer") {
@@ -57,7 +70,7 @@ function setDisplay(obj, state) {
 
 function checkIsValid(obj) {
     if (obj.getAttributeNS(topns, "role")=="layer") {
-	return findImage(obj)!=null;
+	return findImage(obj, false)!=null;
     } else {
 	var valid= true;
 	for (var i=0; i<obj.childNodes.length; ++i) {
@@ -70,19 +83,42 @@ function checkIsValid(obj) {
     }
 }
 
-function findImage(obj) {
-    if (obj.getAttribute("display")=="none")
-	return null;
-    var role= obj.getAttributeNS(topns, "role");
-    if (role=="image" || role=="result")
-	return obj;
+function findImage(obj, hidden) {
     for (var i=0; i<obj.childNodes.length; ++i) {
 	var child= obj.childNodes[i];
 	if (child.nodeType==1) {
-	    var img= findImage(child);
+	    var role= child.getAttributeNS(topns, "role");
+	    // don't traverse into layers and hidden results
+	    if ((!hidden && child.getAttribute("display")=="none") || role=="layer")
+		continue;
+	    // this is a atomic image, or a combined result from layers
+	    if (role=="image" || role=="result")
+		return child;
+	    // recursive search
+	    var img= findImage(child, hidden);
 	    if (img!=null)
 		return img;
 	}
     }
     return null;
+}
+
+function layerLayout(obj) {
+    var img= findImage(obj, true);
+    if (img==null) {
+	// obj is undefined
+	obj.setAttribute("transform","matrix(1, 0, 0.5 ,0.5, 0, 0)");
+    } else {
+	var role= img.getAttributeNS(topns, "role");
+	var disp= img.getAttribute("display");
+	if (role=="image")
+	    // obj is a base image
+	    obj.setAttribute("transform","matrix(1, 0, 0.5 ,0.5, 0, 0)");
+	else if (role="result" && disp!="none")
+	    // obj is filter with displayed sub layers, do not sheer
+	    obj.setAttribute("transform","matrix(1, 0, 0.5 ,0.5, 0, 0)");
+	else
+	    // if result is atomic or result image display sheered
+	    obj.setAttribute("transform","scale(1, 0.8)");
+    }
 }
