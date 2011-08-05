@@ -54,7 +54,7 @@ rect.canvas {
     stroke-width: 1px;
 }
 
-text.canvas {
+text.axes {
     font-size: 10pt;
 }
 
@@ -64,6 +64,12 @@ rect.frame {
     stroke-width: 1px;
 }
 
-text.imgfilter {
+text.filter {
     font-size: 12pt;
+}
+
+#turtle {
+    fill: red;
+    stroke: #000000;
+    stroke-width: 1px;
 }

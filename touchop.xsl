@@ -72,19 +72,6 @@
   </svg:g>
 </xsl:template>
 
-<!-- Multiple drop areas for operator arguments -->
-<xsl:template name="multiop">
-  <xsl:param name="count" select="2"/>
-  <!-- recursive call for multiple arguments -->
-  <xsl:if test="$count &gt; 1">
-    <xsl:call-template name="multiop">
-      <xsl:with-param name="count" select="$count - 1"/>
-    </xsl:call-template>
-  </xsl:if>
-  <!-- single argument -->
-  <xsl:call-template name="operand"/>
-</xsl:template>
-
 <!-- A literal placed on the screen -->
 <xsl:template name="literal">
   <xsl:param name="name" select="@value"/>
@@ -273,7 +260,6 @@
   <xsl:element name="svg:g">
     <xsl:attribute name="id">canvas</xsl:attribute>
     <xsl:attribute name="clip-path">url(#canvasClip)</xsl:attribute>
-    <xsl:attribute name="top:layout">addAxes(obj)</xsl:attribute>
     <xsl:attribute name="top:plot"><xsl:value-of select="@plot"/></xsl:attribute>
     <xsl:attribute name="top:size"><xsl:value-of select="@size"/></xsl:attribute>
     <xsl:attribute name="top:xmin"><xsl:value-of select="@xmin"/></xsl:attribute>
@@ -295,6 +281,97 @@
 	<xsl:attribute name="top:x"><xsl:value-of select="@x"/></xsl:attribute>
 	<xsl:attribute name="top:y"><xsl:value-of select="@y"/></xsl:attribute>
       </xsl:element>
+    </xsl:for-each>
+    <xsl:for-each select="turtle">
+      <xsl:element name="svg:path">
+	<xsl:attribute name="id">turtle</xsl:attribute>
+	<xsl:attribute name="d">
+	  <xsl:value-of select="concat('M ',../@size div 2,',', ../@size div 2-5)"/>
+	  <xsl:text> l 12,5, -12,5 Z</xsl:text>
+	</xsl:attribute>
+      </xsl:element>
+    </xsl:for-each>
+  </xsl:element>
+  <xsl:call-template name="ygrid">
+    <xsl:with-param name="pos" select="@ymin"/>
+    <xsl:with-param name="res" select="1"/>
+  </xsl:call-template>
+  <xsl:call-template name="xgrid">
+    <xsl:with-param name="pos" select="@xmin"/>
+    <xsl:with-param name="res" select="1"/>
+  </xsl:call-template>
+</xsl:template>
+
+<xsl:template name="ygrid">
+  <xsl:param name="pos"/>
+  <xsl:param name="res"/>
+  <xsl:if test="$pos &lt;= @ymax">
+    <xsl:variable name="y" select="($pos - @ymin) * @size div (@ymax - @ymin)"/>
+    <xsl:element name="svg:path">
+      <xsl:attribute name="class">axes</xsl:attribute>
+      <xsl:attribute name="d">
+	<xsl:value-of select="concat('M ',@size,',',$y,' L -10,',$y)"/>
+      </xsl:attribute>
+    </xsl:element>
+    <xsl:element name="svg:text">
+      <xsl:attribute name="class">axes</xsl:attribute>
+      <xsl:attribute name="y"><xsl:value-of select="$y + 5"/></xsl:attribute>
+      <xsl:attribute name="x">-20</xsl:attribute>
+      <xsl:value-of select="$pos"/>
+    </xsl:element>
+    <xsl:call-template name="ygrid">
+      <xsl:with-param name="pos" select="$pos+$res"/>
+      <xsl:with-param name="res" select="$res"/>
+    </xsl:call-template>
+  </xsl:if>
+</xsl:template>
+
+<xsl:template name="xgrid">
+  <xsl:param name="pos"/>
+  <xsl:param name="res"/>
+  <xsl:if test="$pos &lt;= @xmax">
+    <xsl:variable name="x" select="($pos - @xmin) * @size div (@xmax - @xmin)"/>
+    <xsl:element name="svg:path">
+      <xsl:attribute name="class">axes</xsl:attribute>
+      <xsl:attribute name="d">
+	<xsl:value-of select="concat('M ',$x,',0 L ',$x,',',@size+10)"/>
+      </xsl:attribute>
+    </xsl:element>
+    <xsl:element name="svg:text">
+      <xsl:attribute name="class">axes</xsl:attribute>
+      <xsl:attribute name="y"><xsl:value-of select="@size + 25"/></xsl:attribute>
+      <xsl:attribute name="x"><xsl:value-of select="$x"/></xsl:attribute>
+      <xsl:value-of select="$pos"/>
+    </xsl:element>
+    <xsl:call-template name="xgrid">
+      <xsl:with-param name="pos" select="$pos+$res"/>
+      <xsl:with-param name="res" select="$res"/>
+    </xsl:call-template>
+  </xsl:if>
+</xsl:template>
+
+<!-- TouchOp TURTLE GRAPHICS -->
+<!-- Special operators for turtle graphics -->
+
+<!-- Import the verify function for the plotting domain -->
+<xsl:template match="test[@domain='turtle']">
+  <xsl:comment>Move a turtle to specified goal</xsl:comment>
+  <svg:script type="text/javascript" xlink:href="turtle.js"/>
+</xsl:template>
+
+<xsl:template match="program">
+  <xsl:comment>Program</xsl:comment>
+  <!-- variable definition is identified by def-@name -->
+  <xsl:element name="svg:g">
+    <xsl:attribute name="id">def-<xsl:value-of select="@name"/></xsl:attribute>
+    <xsl:attribute name="top:def"><xsl:value-of select="@name"/></xsl:attribute>
+    <xsl:attribute name="top:layout">verticalLayout(obj)</xsl:attribute>
+
+    <!-- assignment operation -->
+    <svg:rect class="background"/>
+    <svg:text class="filter">Start</svg:text>
+    <xsl:for-each select="step">
+      <xsl:call-template name="operand"/>
     </xsl:for-each>
   </xsl:element>
 </xsl:template>
@@ -334,9 +411,9 @@
 	 top:layout="horizontalLayout(obj)">
 
     <svg:rect class="background"/>
-    <xsl:call-template name="multiop">
-      <xsl:with-param name="count" select="@count"/>
-    </xsl:call-template>
+    <xsl:for-each select="step">
+      <xsl:call-template name="operand"/>
+    </xsl:for-each>
   </svg:g>
 </xsl:template>
 
@@ -424,7 +501,7 @@
 	 top:layout="verticalLayout(obj)">
 
     <svg:rect class="background"/>
-    <svg:text class="imgfilter" transform="translate(45,16)">Blur</svg:text>
+    <svg:text class="filter" transform="translate(45,16)">Blur</svg:text>
     <xsl:call-template name="layer"/>
     <svg:g top:role="result" display="none">
       <svg:rect width="60" height="60" class="frame"/>

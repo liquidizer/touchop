@@ -36,44 +36,6 @@ function plot(obj) {
     }
 }
 
-function addAxes(canvas) {
-    var size= eval(canvas.getAttributeNS(topns, "size"));
-    var xmin= eval(canvas.getAttributeNS(topns, "xmin"));
-    var xmax= eval(canvas.getAttributeNS(topns, "xmax"));
-    var ymin= eval(canvas.getAttributeNS(topns, "ymin"));
-    var ymax= eval(canvas.getAttributeNS(topns, "ymax"));
-    var yrange= ymax-ymin;
-    for (var i=0; i<=yrange; i++) {
-	var path= document.createElementNS(canvas.namespaceURI, "path");
-	var y= size - Math.ceil(i*size/yrange);
-	var d= "M "+size+","+y+" L -10,"+y;
-	path.setAttribute("d", d)
-	path.setAttribute("class", "axes")
-	canvas.parentNode.appendChild(path);
-	var text= document.createElementNS(canvas.namespaceURI, "text");
-	text.appendChild(document.createTextNode(i+ymin));
-	text.setAttribute("y", y+5);
-	text.setAttribute("x", -20);
-	text.setAttribute("class", "canvas");
-	canvas.parentNode.appendChild(text);
-    }
-    var xrange= xmax-xmin;
-    for (var i=0; i<=xrange; i++) {
-	var path= document.createElementNS(canvas.namespaceURI, "path");
-	var x= Math.ceil(i*size/xrange);
-	var d= "M "+x+","+0+" L "+x+","+(size+10);
-	path.setAttribute("d", d)
-	path.setAttribute("class", "axes")
-	canvas.parentNode.appendChild(path);
-	var text= document.createElementNS(canvas.namespaceURI, "text");
-	text.appendChild(document.createTextNode(i+xmin));
-	text.setAttribute("y", size+30);
-	text.setAttribute("x", x);
-	text.setAttribute("class", "canvas");
-	canvas.parentNode.appendChild(text);
-    }
-}
-
 function drawGraph(canvas, f) {
     var size= eval(canvas.getAttributeNS(topns, "size"));
     var xmin= eval(canvas.getAttributeNS(topns, "xmin"));
