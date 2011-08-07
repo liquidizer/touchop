@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <?xml-stylesheet type="text/xsl" href="touchop.xsl"?>
 <touchop>
-  <test domain="plot"/>
+  <test domain="turtle"/>
   <canvas plot="y" xy="50,100" size="180" xmin="-3" xmax="3" ymin="-3" ymax="3">
-    <point x="-1" y="2"/>
+    <point x="1" y="1"/>
     <turtle/>
   </canvas>
-  <program xy="300,100">
+  <program xy="500,150">
     <step/>
     <step/>
     <step/>
   </program>
-  <atom value="F" xy="400,100"/>
-  <atom value="F" xy="400,200"/>
-  <atom value="R" xy="400,300"/>
+  <move dir="R" xy="350,100"/>
+  <move dir="F" xy="350,200"/>
+  <move dir="F" xy="350,300"/>
 </touchop>

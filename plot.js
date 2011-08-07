@@ -15,19 +15,19 @@ function plot(obj) {
 	var f= function(x) { return computeValue(obj,x); }
 	
 	var win = true;
+	// remove old plot
+	var path= document.getElementById("plotpath");
+	path.setAttribute("d","");
+	// check if all objective nodes are traversed
 	for (var i=0; i<canvas.childNodes.length; i) {
 	    var child= canvas.childNodes[i];
-	    if (child.tagName=="path")
-		canvas.removeChild(child);
-	    else {
-		i= i+1;
-		var x= child.getAttributeNS(topns, "x");
-		var y= child.getAttributeNS(topns, "y");
-		if (x!="" && y!="") {
-		    x= eval(x);
-		    y= eval(y);
-		    win = win && (Math.abs(y- f(x)) < 1e-3)
-		}
+	    i= i+1;
+	    var x= child.getAttributeNS(topns, "x");
+	    var y= child.getAttributeNS(topns, "y");
+	    if (x!="" && y!="") {
+		x= eval(x);
+		y= eval(y);
+		win = win && (Math.abs(y- f(x)) < 1e-3)
 	    }
 	}
 	if (win) smile(1.0); else smile(0.0);
@@ -47,7 +47,7 @@ function drawGraph(canvas, f) {
     var yscale= size/(ymax-ymin);
 
     // create graph
-    var path= document.createElementNS(canvas.namespaceURI, "path");
+    var path= document.getElementById("plotpath");
     var delim="M"
     var d= "";
     var yOld=(ymax-ymin)/2.0;
@@ -65,10 +65,6 @@ function drawGraph(canvas, f) {
 	yOld= y;
     }
     path.setAttribute("d", d);
-    path.setAttribute("class","graph");
-
-    // add graph onto the canvas
-    canvas.appendChild(path);
 }
 
 // Exactract the formula for the user created value.

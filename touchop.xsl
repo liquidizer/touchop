@@ -283,14 +283,14 @@
       </xsl:element>
     </xsl:for-each>
     <xsl:for-each select="turtle">
-      <xsl:element name="svg:path">
-	<xsl:attribute name="id">turtle</xsl:attribute>
-	<xsl:attribute name="d">
-	  <xsl:value-of select="concat('M ',../@size div 2,',', ../@size div 2-5)"/>
-	  <xsl:text> l 12,5, -12,5 Z</xsl:text>
+      <xsl:element name="svg:g">
+	<xsl:attribute name="transform">
+	  <xsl:value-of select="concat('translate(',../@size div 2,',',../@size div 2,')')"/>
 	</xsl:attribute>
+	<svg:path id="turtle" d="M 0,-5 l 12,5, -12,5 Z"/>
       </xsl:element>
     </xsl:for-each>
+    <svg:path id="plotpath"/>
   </xsl:element>
   <xsl:call-template name="ygrid">
     <xsl:with-param name="pos" select="@ymin"/>
@@ -306,7 +306,7 @@
   <xsl:param name="pos"/>
   <xsl:param name="res"/>
   <xsl:if test="$pos &lt;= @ymax">
-    <xsl:variable name="y" select="($pos - @ymin) * @size div (@ymax - @ymin)"/>
+    <xsl:variable name="y" select="(@ymax - $pos) * @size div (@ymax - @ymin)"/>
     <xsl:element name="svg:path">
       <xsl:attribute name="class">axes</xsl:attribute>
       <xsl:attribute name="d">
@@ -357,22 +357,49 @@
 <xsl:template match="test[@domain='turtle']">
   <xsl:comment>Move a turtle to specified goal</xsl:comment>
   <svg:script type="text/javascript" xlink:href="turtle.js"/>
+  <defs>
+    <svg:path id="move-R" class="move"
+	      d="M 30 6 L 15 21 L 23 21 C 23 21 23 21 23 23 L 23 31 L 9 31 C 6 31 3 34 3 37 L 3 40 C 3 44 6 46 9 46 L 32 46 C 35 46 38 44 38 40 L 38 37 C 38 37 38 36 38 36 L 38 22 C 38 21 38 21 38 21 L 45 21 L 30 6 z "/>
+    <svg:path id="move-B" class="move"
+	      d="M 20,45 l 15,-15 -8,0 c 0,0 0,0 0,-2 l 0,-8 14,0 c 3,0 6,-3 6,-6 l 0,-3 c 0,-4 -3,-6 -6,-6 l -23,0 c -3,0 -6,2 -6,6 l 0,3 c 0,0 0,1 0,1 l 0,14 c 0,1 0,1 0,1 l -7,0 15,15 z"/>
+    <svg:path id="move-F" class="move"
+	      d="m 25,6 -15,15 8,0 c 0,0 0,0 0,2 0,0 -5,9 -6,14 0,1 0,3 0,3 0,4 3,6 6,6 l 15,0 c 3,0 6,-2 6,-6 0,0 0,-2 0,-3 -1,-5 -6,-15 -6,-15 0,-1 0,-1 0,-1 l 7,0 z"/>
+  </defs>  
 </xsl:template>
 
 <xsl:template match="program">
-  <xsl:comment>Program</xsl:comment>
-  <!-- variable definition is identified by def-@name -->
   <xsl:element name="svg:g">
-    <xsl:attribute name="id">def-<xsl:value-of select="@name"/></xsl:attribute>
-    <xsl:attribute name="top:def"><xsl:value-of select="@name"/></xsl:attribute>
-    <xsl:attribute name="top:layout">verticalLayout(obj)</xsl:attribute>
+    <xsl:attribute name="onmousedown">msDown(evt)</xsl:attribute>
+    <xsl:attribute name="class">program</xsl:attribute>
+    <xsl:attribute name="top:name"><xsl:value-of select="@name"/></xsl:attribute>
+    <xsl:attribute name="top:init"><xsl:value-of select="@init"/></xsl:attribute>
+    <xsl:attribute name="top:update"><xsl:value-of select="@update"/></xsl:attribute>
+    <xsl:attribute name="top:stop"><xsl:value-of select="@stop"/></xsl:attribute>
+    <xsl:attribute name="top:layout">horizontalLayout(obj)</xsl:attribute>
 
-    <!-- assignment operation -->
     <svg:rect class="background"/>
-    <svg:text class="filter">Start</svg:text>
-    <xsl:for-each select="step">
-      <xsl:call-template name="operand"/>
-    </xsl:for-each>
+    <xsl:if test="@name">
+      <svg:text class="filter"><xsl:value-of select="@name"/></svg:text>
+    </xsl:if>
+    <svg:g top:layout="verticalLayout(obj)">
+      <svg:rect class="background" display="none"/>
+      <xsl:for-each select="step">
+	<xsl:call-template name="operand"/>
+      </xsl:for-each>
+    </svg:g>
+  </xsl:element>
+</xsl:template>
+
+<xsl:template match="move">
+  <xsl:element name="svg:g">
+    <xsl:attribute name="onmousedown">msDown(evt)</xsl:attribute>
+    <xsl:attribute name="top:value"><xsl:value-of select="@dir"/></xsl:attribute>
+    <svg:rect class="background" height="60" width="60"/>
+    <svg:g transform="translate(5,5)">
+      <xsl:element name="svg:use">
+	<xsl:attribute name="xlink:href">#move-<xsl:value-of select="@dir"/></xsl:attribute>
+      </xsl:element>
+    </svg:g>
   </xsl:element>
 </xsl:template>
 
@@ -385,74 +412,21 @@
   <svg:script type="text/javascript" xlink:href="music.js"/>
 </xsl:template>
 
-<!-- fast play -->
-<xsl:template match="op[@name='fast']">
-  <xsl:comment>Fast play operator</xsl:comment>
-  <svg:g onmousedown="msDown(evt)"
-	 top:filter="speed(0.5,#)"
-	 top:padding="10"
-	 top:priority="200"
-	 transform="scale(0.5,1.0)"
-	 top:layout="horizontalLayout(obj)">
-    
-    <svg:rect class="background"/>
-    <svg:text>Fast</svg:text>
-    <xsl:call-template name="operand"/>
-    <xsl:call-template name="operand"/>
-  </svg:g>
-</xsl:template>
-
-<!-- Linked play -->
-<xsl:template match="op[@name='link']">
-  <xsl:comment>Linked play operator</xsl:comment>
-  <svg:g onmousedown="msDown(evt)"
-	 top:priority="100"
-	 top:padding="10"
-	 top:layout="horizontalLayout(obj)">
+<!-- Sound filter -->
+<xsl:template match="sound">
+  <xsl:element name="svg:g">
+    <xsl:attribute name="onmousedown">msDown(evt)</xsl:attribute>
+    <xsl:attribute name="top:filter"><xsl:value-of select="@filter"/></xsl:attribute>
+    <xsl:attribute name="top:padding">10</xsl:attribute>
+    <xsl:attribute name="top:priority">101</xsl:attribute>
+    <xsl:attribute name="top:layout">horizontalLayout(obj)</xsl:attribute>
 
     <svg:rect class="background"/>
+    <svg:text><xsl:value-of select="@name"/></svg:text>
     <xsl:for-each select="step">
       <xsl:call-template name="operand"/>
     </xsl:for-each>
-  </svg:g>
-</xsl:template>
-
-<!-- Pitch -->
-<xsl:template match="op[@name='pitch']">
-  <svg:g onmousedown="msDown(evt)"
-	 top:padding="10"
-	 top:layout="verticalLayout(obj)">
-
-    <svg:rect class="background"/>
-    <svg:text>Pitch</svg:text>
-    <xsl:call-template name="operand"/>
-  </svg:g>
-</xsl:template>
-
-<!-- Repeated play -->
-<xsl:template match="op[@name='repeat']">
-  <svg:g onmousedown="msDown(evt)"
-	 top:filter="repeat(3,#)"
-	 top:padding="10"
-	 top:layout="verticalLayout(obj)">
-
-    <svg:rect class="background"/>
-    <svg:text><xsl:value-of select="@times"/>&#215;</svg:text>
-    <xsl:call-template name="operand"/>
-  </svg:g>
-</xsl:template>
-
-<!-- Reverse play -->
-<xsl:template match="op[@name='reverse']">
-  <svg:g onmousedown="msDown(evt)"
-	 top:padding="10"
-	 top:filter="reverse(#)"
-	 top:layout="verticalLayout(obj)">
-
-    <svg:rect class="background"/>
-    <svg:text>Reverse</svg:text>
-    <xsl:call-template name="operand"/>
-  </svg:g>
+  </xsl:element>
 </xsl:template>
 
 <!-- TOUCHOP - IMAGE PROCESSING DOMAIN -->

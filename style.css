@@ -21,6 +21,11 @@ text {
     stroke-width: 1;
 }
 
+.program .background {
+    stroke: black;
+    stroke-width: 1;
+}    
+
 .shadow {
     fill: black;
     opacity: 0.4;
@@ -30,7 +35,7 @@ text {
     fill: #ffffe0;
 }
 
-path.graph {
+#plotpath {
     fill: none;
     stroke: blue;
     stroke-width: 3px;
@@ -72,4 +77,11 @@ text.filter {
     fill: red;
     stroke: #000000;
     stroke-width: 1px;
+}
+
+.move {
+    fill:white;
+    stroke:black;
+    stroke-width:2;
+    opacity: 0.5;
 }
