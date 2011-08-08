@@ -68,7 +68,7 @@ function msUp (evt) {
         }
         
 	// verify winning test after mouse release
-	verify(hand, true);
+	verify(findRoot(hand), true);
 	
         // delete reference to hand object.
         hand= null;
@@ -154,7 +154,7 @@ function dropOn(evt) {
 		hand.parentNode.setAttribute("blocked","true");
 	
 		// verify the winning test during mouse hover
-		verify(hand, false);
+		verify(findRoot(hand), false);
 	
 		// set snap treshold. Further mouse movements 
 		// are ignored until distance treshold is hit.
@@ -472,6 +472,18 @@ function setFloating(obj, doFloat) {
 	}
     }
 }
+
+// find the largest moveable group in which obj is contained
+function findRoot(obj) {
+    var root= obj;
+    while (obj.nodeType==1) {
+	if (obj.getAttribute("onmousedown")!=null)
+	    root= obj;
+	obj= obj.parentNode;
+    }
+    return root;
+}
+
 
 // sets the oppacitiy to show either of the two similies
 function smile(value) {

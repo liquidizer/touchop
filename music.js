@@ -7,15 +7,8 @@
  */
 
 var playQueue= [];
-function verify(obj, isFinal) {
+function verify(toplay, isFinal) {
     if (isFinal) {
-	var toplay= obj;
-	// find the top most group for playing
-	while (obj.nodeType==1) {
-	    if (obj.getAttributeNS(topns, "layout")!="")
-		toplay= obj;
-	    obj= obj.parentNode;
-	}
 	// check, if something is already playing
 	if (playQueue.length>0) {
 	    playQueue[0][0].setAttribute("class","");

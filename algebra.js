@@ -54,14 +54,8 @@ function checkIsValid(obj) {
 
 // verify whether the new object satisfies the winning test
 function verify(obj, isFinal) {
-    var test= obj;
-    while (obj.nodeType==1) {
-	if (obj.getAttributeNS(topns,"value")!="")
-	    test= obj;
-	obj= obj.parentNode;
-    }
     // extract the user created formula in json
-    var value= computeValue(test);
+    var value= computeValue(obj);
     var win= true;
 
     // construct the objective function

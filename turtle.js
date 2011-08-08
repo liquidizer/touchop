@@ -1,3 +1,4 @@
+
 /* Touchop - Touchable operators
  *           turtle graphics domain
  *
@@ -14,67 +15,55 @@ var winList= [];
 
 function verify(obj, isFinal) {
     if (isFinal) {
-	start= null;
-	// find the top most group for playing
-	while (obj.nodeType==1) {
-	    if (obj.getAttributeNS(topns, "layout")!="")
-		start= obj;
-	    obj= obj.parentNode;
-	}
-	// if this is a program, execute
-	if (start!=null) {
-	    // reset tutle
-	    turtle= document.getElementById("turtle");
-	    turtle.setAttribute("transform","");
-	    winList= [];
-	    // remove old plot
-	    var path= document.getElementById("plotpath");
-	    path.setAttribute("d","");
-	    checkPosition();
-	    // check, if something is already executed
-	    if (current==null) {
-		current= start;
-		setTimeout("executeNext()", 500);
-	    } else {
-		if (current.nodeType==1)
-		    current.setAttribute("class","");
-		current= start;
-	    }
+	start= obj;
+	resetTurtle();
+	// check, if something is already executed
+	if (current==null) {
+	    current= start;
+	    executeNext();
 	} else {
-	    current= null;
+	    current= start;
 	}
+    } else {
+	resetTurtle();
+	current=null;
     }
+}
+
+// reset the turtle animation to its initial position
+function resetTurtle() {
+    // reset coloring
+    if (current!=null && current.getAttribute("class")=="playback")
+	current.setAttribute("class","");
+    // reset tutle
+    turtle= document.getElementById("turtle");
+    turtle.setAttribute("transform","");
+    winList= [];
+    // remove old path
+    var path= document.getElementById("plotpath");
+    path.setAttribute("d","");
+    checkPosition();
 }
 
 // execute the next command
 function executeNext() {
-    if (current!=null && current.nodeType==1) {
+    if (current==null) return;
+    if (current.nodeType==1) {
 	var value= current.getAttributeNS(topns, "value");
 	if (value!="") {
 	    if (current.getAttribute("class")=="playback") {
-		// already executed
+		move(value);
 		current.setAttribute("class","")
 	    } else {
 		// execute the next command and pause
 		current.setAttribute("class","playback");
-		m= turtle.getTransformToElement(turtle.parentNode);
-		if (value=="F") {
-		    m= m.translate(30,0);
-		}
-		else if (value=="R") {
-		    m= m.rotate(-90);
-		}
-		else if (value=="B") {
-		    m= m.rotate(90);
-		}
-		setTransform(turtle,m);
-		checkPosition();
 		setTimeout("executeNext()", 500);
 		return;
 	    }
 	}
     }
     if (current.childNodes.length > 0) {
+	// recurse through child nodes
 	var init= current.getAttributeNS(topns, "init");
 	if (init!="")
 	    current.setAttribute("state", init);
@@ -117,6 +106,21 @@ function executeNext() {
 	    }
 	}
     }
+}
+
+function move(value) {
+    m= turtle.getTransformToElement(turtle.parentNode);
+    if (value=="F") {
+	m= m.translate(30,0);
+    }
+    else if (value=="R") {
+	m= m.rotate(-90);
+    }
+    else if (value=="B") {
+	m= m.rotate(90);
+    }
+    setTransform(turtle,m);
+    checkPosition();
 }
 
 // check if the position matches the level objective

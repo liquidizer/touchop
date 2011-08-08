@@ -112,12 +112,7 @@ function checkIsValid(obj) {
 
 // verify whether the new object satisfies the winning test
 function verify(obj, isFinal) {
-    var test= null;
-    while (obj.nodeType==1) {
-	if (obj.getAttributeNS(topns, "def")!="")
-	    test= obj;
-	obj= obj.parentNode;
-    }
-    if  (test!=null) plot(test);
+    var test= document.getElementById("def-y");
+    plot(test);
 }
 

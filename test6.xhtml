@@ -1,17 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type="text/xsl" href="touchop.xsl"?>
 <touchop>
-  <test domain="turtle"/>
-  <canvas plot="y" xy="50,100" size="180" xmin="-3" xmax="3" ymin="-3" ymax="3">
-    <point x="1" y="1"/>
-    <turtle/>
-  </canvas>
-  <program xy="500,150">
+  <test domain="music" win="4,1 8,1 8,2"/>
+  <sound filter="" name="" xy="400,200">
     <step/>
     <step/>
+  </sound>
+  <sound filter="speed(0.5,#)" name="fast" xy="300,100">
     <step/>
-  </program>
-  <move dir="R" xy="350,100"/>
-  <move dir="F" xy="350,200"/>
-  <move dir="F" xy="350,300"/>
+    <step/>
+  </sound>  
+  <sound filter="repeat(3,#)" name="3&#215;" xy="300,250">
+    <step/>
+  </sound>  
+  <atom value="O" xy="100,100"/>
+  <atom value="O" xy="100,200"/>
+  <atom value="O" xy="100,300"/>
 </touchop>
