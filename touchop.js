@@ -467,10 +467,16 @@ function setFloating(obj, doFloat) {
 	if (shadow.nodeType==1 && shadow.getAttribute("class")=="shadow") {
 	    obj.removeChild(shadow);
 	}
-	// create the shadow element of appropriate size
-	if (doFloat) {
+	// find the objects background element
+	var back= obj.childNodes[0];
+	while (back!=null && (
+	    back.nodeType!=1 || back.getAttribute("class")!="background")) {
+	    back= back.nextSibling;
+	}
+	// create the shadow element by cloning the background
+	if (doFloat && back!=null) {
 	    var box= obj.getBBox();
-	    shadow= document.createElementNS(obj.namespaceURI, "rect");
+	    shadow= back.cloneNode(false);
 	    scaleRect(shadow, 
 		      box.x + 3, box.x + box.width + 3, 
 		      box.y + 5, box.y + box.height + 5);

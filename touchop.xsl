@@ -68,7 +68,7 @@
 <xsl:template name="operand">
   <xsl:comment>Drop area for operands</xsl:comment>
   <svg:g onmousemove="dropOn(evt)" top:layout="snap(obj)">
-    <svg:rect height="50" width="50" class="operand"/>
+    <svg:rect height="50" width="50" rx="5" ry="5" class="operand"/>
   </svg:g>
 </xsl:template>
 
@@ -82,6 +82,8 @@
     <xsl:attribute name="height">60</xsl:attribute>
     <xsl:attribute name="width"><xsl:value-of select="30+30*$len"/></xsl:attribute>
     <xsl:attribute name="x"><xsl:value-of select="-15*$len"/></xsl:attribute>
+    <xsl:attribute name="rx">5</xsl:attribute>
+    <xsl:attribute name="ry">5</xsl:attribute>
   </xsl:element>
   <xsl:element name="svg:text">
     <xsl:attribute name="transform">translate(15,45)</xsl:attribute>
@@ -104,7 +106,7 @@
     <xsl:attribute name="top:layout">horizontalLayout(obj); validateDef(obj)</xsl:attribute>
 
     <!-- assignment operation -->
-    <svg:rect class="background"/>
+    <svg:rect class="background" rx="5" ry="5"/>
     <svg:text><xsl:value-of select="@name"/>=</svg:text>
     <xsl:call-template name="operand"/>
   </xsl:element>
@@ -155,7 +157,7 @@
 	   top:priority="91"
 	   top:layout="horizontalLayout(obj)">
       
-    <svg:rect class="background"/>
+    <svg:rect class="background" rx="5" ry="5"/>
     <xsl:call-template name="operand"/>
     <svg:g top:priority="80">
       <svg:rect y="50" width="1" height="1" style="opacity:0.0"/>
@@ -174,7 +176,7 @@
 	 top:priority="100"
 	 top:layout="horizontalLayout(obj)">
 
-    <svg:rect class="background"/>
+    <svg:rect class="background" rx="5" ry="5"/>
     <xsl:call-template name="operand"/>
     <svg:text>&#215;</svg:text>
     <xsl:call-template name="operand"/>
@@ -189,7 +191,7 @@
      top:priority="99"
      top:layout="verticalLayout(obj)">
 
-    <svg:rect class="background"/>
+    <svg:rect class="background" rx="5" ry="5"/>
     <svg:g transform="scale(0.8)" top:priority="100">
       <xsl:call-template name="operand"/>
     </svg:g>
@@ -207,7 +209,7 @@
      top:priority="120"
      top:value="#1 + #2">
 
-    <svg:rect class="background"/>
+    <svg:rect class="background" rx="5" ry="5"/>
     <xsl:call-template name="operand"/>
     <svg:text>+</svg:text>
     <xsl:call-template name="operand"/>
@@ -222,7 +224,7 @@
      top:priority="111"
      top:value="#1 - #2">
 
-    <svg:rect class="background"/>
+    <svg:rect class="background" rx="5" ry="5"/>
     <svg:g top:priority="110">
       <xsl:call-template name="operand"/>
     </svg:g>
@@ -238,7 +240,7 @@
      top:layout="horizontalLayout(obj)"
      top:priority="0">
 
-    <svg:rect class="background"/>
+    <svg:rect class="background" rx="5" ry="5"/>
     <svg:text transform="scale(0.71,1)"><xsl:value-of select="@name"/></svg:text>
     <xsl:element name="svg:g">
       <xsl:attribute name="top:priority">10</xsl:attribute>
@@ -399,7 +401,7 @@
     <xsl:attribute name="top:stop"><xsl:value-of select="@stop"/></xsl:attribute>
     <xsl:attribute name="top:layout">horizontalLayout(obj)</xsl:attribute>
 
-    <svg:rect class="background"/>
+    <svg:rect class="background" rx="5" ry="5"/>
     <xsl:if test="@name">
       <svg:text class="filter"><xsl:value-of select="@name"/></svg:text>
     </xsl:if>
@@ -416,7 +418,7 @@
   <xsl:element name="svg:g">
     <xsl:attribute name="onmousedown">msDown(evt)</xsl:attribute>
     <xsl:attribute name="top:value"><xsl:value-of select="@dir"/></xsl:attribute>
-    <svg:rect class="background" height="60" width="60"/>
+    <svg:rect class="background" rx="5" ry="5" height="60" width="60"/>
     <svg:g transform="translate(5,5)">
       <xsl:element name="svg:use">
 	<xsl:attribute name="xlink:href">#move-<xsl:value-of select="@dir"/></xsl:attribute>
@@ -443,7 +445,7 @@
     <xsl:attribute name="top:priority">101</xsl:attribute>
     <xsl:attribute name="top:layout">horizontalLayout(obj)</xsl:attribute>
 
-    <svg:rect class="background"/>
+    <svg:rect class="background" rx="5" ry="5"/>
     <svg:text><xsl:value-of select="@name"/></svg:text>
     <xsl:for-each select="step">
       <xsl:call-template name="operand"/>
@@ -480,7 +482,7 @@
 	 top:padding="10"
 	 top:layout="verticalLayout(obj)">
 
-    <svg:rect class="background"/>
+    <svg:rect class="background" rx="5" ry="5"/>
     <xsl:call-template name="layer"/>
     <xsl:call-template name="layer"/>
     <xsl:call-template name="layer"/>
@@ -496,7 +498,7 @@
 	 top:padding="10"
 	 top:layout="verticalLayout(obj)">
 
-    <svg:rect class="background"/>
+    <svg:rect class="background" rx="5" ry="5"/>
     <svg:text class="filter" transform="translate(45,16)">Blur</svg:text>
     <xsl:call-template name="layer"/>
     <svg:g top:role="result" display="none">
