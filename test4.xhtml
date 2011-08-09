@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <?xml-stylesheet type="text/xsl" href="touchop.xsl"?>
 <touchop>
-  <test domain="turtle"/>
-  <canvas plot="y" xy="50,100" size="180" xmin="-3" xmax="3" ymin="-3" ymax="3">
-    <point x="1" y="1"/>
-    <turtle/>
+  <test domain="plot"/>
+  <canvas xy="50,100" size="180" xmin="-6" xmax="6" ymin="-2" ymax="2">
+    <point x="-3" y="0.75680"/>
+    <point x="-2" y="-0.14112"/>
+    <point x="-1" y="-0.90930"/>
+    <point x="0" y="-0.84147"/>
+    <point x="1" y="0"/>
+    <point x="2" y="0.84147"/>
+    <point x="3" y="0.90930"/>
+    <point x="4" y="0.14112"/>
+    <point x="5" y="-0.75680"/>
   </canvas>
-  <program xy="300,100">
-    <step/>
-    <step/>
-    <step/>
-  </program>
-  <move dir="R" xy="400,100"/>
-  <move dir="F" xy="400,180"/>
-  <move dir="F" xy="400,260"/>
+  <def name="y" xy="350,100"/>
+  <op name="minus" xy="480,260"/>
+  <func name="sin" xy="280,260"/>
+  <atom value="x" xy="320,180"/>
+  <atom value="1" xy="400,180"/>
 </touchop>

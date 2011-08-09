@@ -96,8 +96,11 @@
   <!-- variable definition is identified by def-@name -->
   <xsl:element name="svg:g">
     <xsl:attribute name="class">invalid</xsl:attribute>
+    <xsl:attribute name="onmousedown">msDown(evt)</xsl:attribute>
     <xsl:attribute name="id">def-<xsl:value-of select="@name"/></xsl:attribute>
+    <xsl:attribute name="transform">scale(0.91)</xsl:attribute>
     <xsl:attribute name="top:def"><xsl:value-of select="@name"/></xsl:attribute>
+    <xsl:attribute name="top:drop">none</xsl:attribute>
     <xsl:attribute name="top:layout">horizontalLayout(obj); validateDef(obj)</xsl:attribute>
 
     <!-- assignment operation -->
@@ -225,6 +228,25 @@
     </svg:g>
     <svg:text>&#8211;</svg:text>
     <xsl:call-template name="operand"/>
+  </svg:g>
+</xsl:template>
+
+<!-- substraction operator -->
+<xsl:template match="func">
+  <xsl:comment>Substraction operator</xsl:comment>
+  <svg:g onmousedown="msDown(evt)"
+     top:layout="horizontalLayout(obj)"
+     top:priority="0">
+
+    <svg:rect class="background"/>
+    <svg:text transform="scale(0.71,1)"><xsl:value-of select="@name"/></svg:text>
+    <xsl:element name="svg:g">
+      <xsl:attribute name="top:priority">10</xsl:attribute>
+      <xsl:attribute name="top:value">
+	<xsl:value-of select="concat('Math.',@name,'(#1)')"/>
+      </xsl:attribute>
+      <xsl:call-template name="operand"/>
+    </xsl:element>
   </svg:g>
 </xsl:template>
 

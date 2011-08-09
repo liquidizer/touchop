@@ -40,10 +40,6 @@ function msDown (evt) {
         while (hand.getAttribute("onmousedown")==null)
             hand= hand.parentNode;
         
-        // bring object to front
-        parent= hand.parentNode;
-        parent.appendChild(hand);
-        
         // make underlying objects receive mouse events. Will be reverted after mouse up.
         hand.setAttribute("style","pointer-events:none");
         
@@ -93,8 +89,9 @@ function msMove (evt) {
         
         // if the mouse has moved more than a snap treshold "tresh"
         if (Math.abs(dx)+Math.abs(dy) > tresh) {
+            // bring object to front
 	    sendHome(hand);
-            tresh=0;
+	    tresh=0;
 
             // switch to screen coordinate system
             var m= hand.parentNode.getScreenCTM().inverse();
@@ -140,6 +137,9 @@ function dropOn(evt) {
         
 	// reset determines, if object can snap out
 	var reset= true;
+	if (hand.getAttributeNS(topns,"drop")=="none") {
+	    msMove(evt);
+	} else
         if (hand.parentNode!=target) {
 	    reset= false;
 	    // if target is not blocked
@@ -217,6 +217,12 @@ function deepLayout(obj, doFloat) {
 
 	// set Floating
 	setFloating(obj, doFloat);
+	if (doFloat && isObj) {
+	    var box= obj.getBBox();
+	    var m= obj.getTransformToElement(obj.parentNode);
+	    m= m.translate(-box.x, -box.y);
+	    setTransform(obj, m);
+	}
     }
 }
 
@@ -454,7 +460,8 @@ function scaleRect(obj, x0, x1, y0, y1) {
 // Makes or removes a little shadow below movable objects
 function setFloating(obj, doFloat) {
     var canMove= obj.getAttribute("onmousedown")!=null;
-    if (canMove) {
+    var canDrop= obj.getAttributeNS(topns, "drop")!="none";
+    if (canMove && canDrop) {
 	// the shadow is always the first child
 	var shadow= obj.childNodes[0];
 	if (shadow.nodeType==1 && shadow.getAttribute("class")=="shadow") {
