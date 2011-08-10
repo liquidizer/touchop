@@ -382,12 +382,13 @@
   <xsl:comment>Move a turtle to specified goal</xsl:comment>
   <svg:script type="text/javascript" xlink:href="turtle.js"/>
   <defs>
-    <svg:path id="move-R" class="move"
-	      d="M 30 6 L 15 21 L 23 21 C 23 21 23 21 23 23 L 23 31 L 9 31 C 6 31 3 34 3 37 L 3 40 C 3 44 6 46 9 46 L 32 46 C 35 46 38 44 38 40 L 38 37 C 38 37 38 36 38 36 L 38 22 C 38 21 38 21 38 21 L 45 21 L 30 6 z "/>
-    <svg:path id="move-B" class="move"
-	      d="M 20,45 l 15,-15 -8,0 c 0,0 0,0 0,-2 l 0,-8 14,0 c 3,0 6,-3 6,-6 l 0,-3 c 0,-4 -3,-6 -6,-6 l -23,0 c -3,0 -6,2 -6,6 l 0,3 c 0,0 0,1 0,1 l 0,14 c 0,1 0,1 0,1 l -7,0 15,15 z"/>
-    <svg:path id="move-F" class="move"
-	      d="m 25,6 -15,15 8,0 c 0,0 0,0 0,2 0,0 -5,9 -6,14 0,1 0,3 0,3 0,4 3,6 6,6 l 15,0 c 3,0 6,-2 6,-6 0,0 0,-2 0,-3 -1,-5 -6,-15 -6,-15 0,-1 0,-1 0,-1 l 7,0 z"/>
+    <svg:path id="turn-left" class="move"
+	      d="M 55,25 l -15,15 0,-8 c 0,0 0,0 -2,0 l -8,0 0,14 c 0,3 -3,6 -6,6 l -3,0 c -4,0 -6,-3 -6,-6 l 0,-23 c 0,-3 2,-6 6,-6 l 3,0 c 0,0 1,0 1,0 l 14,0 c 1,0 1,0 1,0 l 0,-7 15,15 z"/>
+    <svg:g id="turn-right"> 
+      <svg:use xlink:href="#turn-left" transform="matrix(-1,0,0,1,60,0)"/>
+    </svg:g>
+    <svg:path id="move-forward" class="move"
+	      d="m 30,11 -15,15 8,0 c 0,0 0,0 0,2 0,0 -5,9 -6,14 0,1 0,3 0,3 0,4 3,6 6,6 l 15,0 c 3,0 6,-2 6,-6 0,0 0,-2 0,-3 -1,-5 -6,-15 -6,-15 0,-1 0,-1 0,-1 l 7,0 z"/>
   </defs>  
 </xsl:template>
 
@@ -417,13 +418,11 @@
 <xsl:template match="move">
   <xsl:element name="svg:g">
     <xsl:attribute name="onmousedown">msDown(evt)</xsl:attribute>
-    <xsl:attribute name="top:value"><xsl:value-of select="@dir"/></xsl:attribute>
+    <xsl:attribute name="top:value"><xsl:value-of select="@value"/></xsl:attribute>
     <svg:rect class="background" rx="5" ry="5" height="60" width="60"/>
-    <svg:g transform="translate(5,5)">
-      <xsl:element name="svg:use">
-	<xsl:attribute name="xlink:href">#move-<xsl:value-of select="@dir"/></xsl:attribute>
-      </xsl:element>
-    </svg:g>
+    <xsl:element name="svg:use">
+      <xsl:attribute name="xlink:href"><xsl:value-of select="@img"/></xsl:attribute>
+    </xsl:element>
   </xsl:element>
 </xsl:template>
 

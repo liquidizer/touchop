@@ -3,7 +3,7 @@
 <touchop>
   <test domain="turtle"/>
   <canvas plot="y" xy="50,100" size="180" xmin="-3" xmax="3" ymin="-3" ymax="3">
-    <point x="1" y="1"/>
+    <point x="0" y="2"/>
     <turtle/>
   </canvas>
   <program xy="300,100">
@@ -11,7 +11,7 @@
     <step/>
     <step/>
   </program>
-  <move dir="R" xy="400,100"/>
-  <move dir="F" xy="400,180"/>
-  <move dir="F" xy="400,260"/>
+  <move value="rotate(-90)" img="#turn-right" xy="400,100"/>
+  <move value="translate(30,0)" img="#move-forward" xy="400,180"/>
+  <move value="translate(30,0)" img="#move-forward" xy="400,260"/>
 </touchop>

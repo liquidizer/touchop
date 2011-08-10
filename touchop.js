@@ -90,6 +90,7 @@ function msMove (evt) {
         // if the mouse has moved more than a snap treshold "tresh"
         if (Math.abs(dx)+Math.abs(dy) > tresh) {
             // bring object to front
+	    hand.parentNode.appendChild(hand);
 	    sendHome(hand);
 	    tresh=0;
 
@@ -174,29 +175,27 @@ function dropOn(evt) {
 // The draged object is inserted into its home group and the transformation is adjusted
 function sendHome() {
     startCTM=null;
-    if (hand!=null) {
-	
-        // move this object to the root element
-        var target= hand.ownerDocument.childNodes[0];
-	if (hand.parentNode != target) {
+    
+    // move this object to the root element
+    var target= hand.ownerDocument.childNodes[0];
+    if (hand.parentNode != target) {
 
-	    // store the current location
-	    var m1= target.getScreenCTM().inverse();
-	    var m2= hand.getScreenCTM();
+	// store the current location
+	var m1= target.getScreenCTM().inverse();
+	var m2= hand.getScreenCTM();
 
-	    // the object is inserted into its home group
-	    moveToGroup(hand, target);
+	// the object is inserted into its home group
+	moveToGroup(hand, target);
 
-	    // compute relative transformation matrix
-	    var m= hand.getScreenCTM();
-	    m.e= m2.e;
-	    m.f= m2.f;
-	    m= m1.multiply(m); 
+	// compute relative transformation matrix
+	var m= hand.getScreenCTM();
+	m.e= m2.e;
+	m.f= m2.f;
+	m= m1.multiply(m); 
 
-	    // update transformation
-	    setTransform(hand, m);
-   	    setFloating(hand, true);
-	}
+	// update transformation
+	setTransform(hand, m);
+   	setFloating(hand, true);
     }
 }
 

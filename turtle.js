@@ -109,16 +109,8 @@ function executeNext() {
 }
 
 function move(value) {
-    m= turtle.getTransformToElement(turtle.parentNode);
-    if (value=="F") {
-	m= m.translate(30,0);
-    }
-    else if (value=="R") {
-	m= m.rotate(-90);
-    }
-    else if (value=="B") {
-	m= m.rotate(90);
-    }
+    var m= turtle.getTransformToElement(turtle.parentNode);
+    m= eval("m."+value);
     setTransform(turtle,m);
     checkPosition();
 }
