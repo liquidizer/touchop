@@ -114,9 +114,8 @@ function msMove (evt) {
 // The object obj is inserted into a new group element target. Layouts are updated
 function moveToGroup(obj, target) {
     var oldContainer= obj.parentNode;
-    if (target!=oldContainer && oldContainer!=null) {
+    if (target!=oldContainer && obj !=target) {
         // move object from its current to the target container
-        oldContainer.removeChild(obj);
         target.appendChild(obj);
 
         // insert object to target group and layout new container
