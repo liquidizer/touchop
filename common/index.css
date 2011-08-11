@@ -18,11 +18,11 @@
 }
 
 .passed li {
-    background-color: green;
+    background: url(passed.png);
     color: white;
 }
 
 .pending li {
-    background-color: lightgray;
+    background: url(pending.png);
     color: black;
 }
