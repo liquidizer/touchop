@@ -113,9 +113,9 @@ function msMove (evt) {
 
 // The object obj is inserted into a new group element target. Layouts are updated
 function moveToGroup(obj, target) {
-    if (target!=obj.parentNode) {
+    var oldContainer= obj.parentNode;
+    if (target!=oldContainer && oldContainer!=null) {
         // move object from its current to the target container
-        var oldContainer= obj.parentNode;
         oldContainer.removeChild(obj);
         target.appendChild(obj);
 
@@ -489,7 +489,7 @@ function setFloating(obj, doFloat) {
 // find the largest moveable group in which obj is contained
 function findRoot(obj) {
     var root= obj;
-    while (obj.nodeType==1) {
+    while (obj!=null && obj.nodeType==1) {
 	if (obj.getAttribute("onmousedown")!=null)
 	    root= obj;
 	obj= obj.parentNode;
