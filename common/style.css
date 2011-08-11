@@ -20,6 +20,9 @@ text {
     stroke: gray;
     stroke-width: 1;
 }
+.valid .background {
+    fill: DarkSeaGreen;
+}
 
 .program .background {
     stroke: black;

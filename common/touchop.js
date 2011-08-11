@@ -90,7 +90,8 @@ function msMove (evt) {
         // if the mouse has moved more than a snap treshold "tresh"
         if (Math.abs(dx)+Math.abs(dy) > tresh) {
             // bring object to front
-	    hand.parentNode.appendChild(hand);
+	    if (hand.parentNode!=null)
+		hand.parentNode.appendChild(hand);
 	    sendHome(hand);
 	    tresh=0;
 

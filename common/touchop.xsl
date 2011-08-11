@@ -21,11 +21,11 @@
 	 viewBox="0 0 600 400">
 
   <!-- import the style sheet -->
-  <svg:style type="text/css">@import url('style.css');</svg:style>
+  <svg:style type="text/css">@import url('../../common/style.css');</svg:style>
 
   <!-- Drag and drop interface -->
-  <svg:script type="text/javascript" xlink:href="touchop.js"/>
-  <svg:script type="text/javascript" xlink:href="def.js"/>
+  <svg:script type="text/javascript" xlink:href="../../common/touchop.js"/>
+  <svg:script type="text/javascript" xlink:href="../../common/def.js"/>
 
   <!-- iterate over all xml elements in the source file -->
   <xsl:comment>List of operators</xsl:comment>
@@ -132,7 +132,7 @@
 <!-- construct the text element for the winning task -->
 <xsl:template match="test[@domain='algebra']">
   <xsl:comment>Winning test for the algebra domain</xsl:comment>
-  <svg:script type="text/javascript" xlink:href="algebra.js"/>
+  <svg:script type="text/javascript" xlink:href="../../common/algebra.js"/>
   <svg:g transform="translate(100,60)">
     <xsl:element name="svg:text">
       <xsl:attribute name="id">test</xsl:attribute>
@@ -268,7 +268,7 @@
 <!-- Import the verify function for the plotting domain -->
 <xsl:template match="test[@domain='plot']">
   <xsl:comment>Create formulas according to a reference plot</xsl:comment>
-  <svg:script type="text/javascript" xlink:href="plot.js"/>
+  <svg:script type="text/javascript" xlink:href="../../common/plot.js"/>
 </xsl:template>
 
 <!-- Create a canvas for the plotted graph -->
@@ -380,12 +380,16 @@
 <!-- Import the verify function for the plotting domain -->
 <xsl:template match="test[@domain='turtle']">
   <xsl:comment>Move a turtle to specified goal</xsl:comment>
-  <svg:script type="text/javascript" xlink:href="turtle.js"/>
+  <svg:script type="text/javascript" xlink:href="../../common/turtle.js"/>
   <defs>
     <svg:path id="turn-left" class="move"
 	      d="M 55,25 l -15,15 0,-8 c 0,0 0,0 -2,0 l -8,0 0,14 c 0,3 -3,6 -6,6 l -3,0 c -4,0 -6,-3 -6,-6 l 0,-23 c 0,-3 2,-6 6,-6 l 3,0 c 0,0 1,0 1,0 l 14,0 c 1,0 1,0 1,0 l 0,-7 15,15 z"/>
     <svg:g id="turn-right"> 
       <svg:use xlink:href="#turn-left" transform="matrix(-1,0,0,1,60,0)"/>
+    </svg:g>
+    <svg:g id="move-grow"> 
+      <svg:use xlink:href="#move-forward" transform="matrix(0.5,0,0,0.5,15,20)"/>
+      <svg:use xlink:href="#move-forward"/>
     </svg:g>
     <svg:path id="move-forward" class="move"
 	      d="m 30,11 -15,15 8,0 c 0,0 0,0 0,2 0,0 -5,9 -6,14 0,1 0,3 0,3 0,4 3,6 6,6 l 15,0 c 3,0 6,-2 6,-6 0,0 0,-2 0,-3 -1,-5 -6,-15 -6,-15 0,-1 0,-1 0,-1 l 7,0 z"/>
@@ -432,7 +436,7 @@
 <!-- construct the test for the music domain -->
 <xsl:template match="test[@domain='music']">
   <xsl:comment>Apply sound filters to match a reference sound</xsl:comment>
-  <svg:script type="text/javascript" xlink:href="music.js"/>
+  <svg:script type="text/javascript" xlink:href="../../common/music.js"/>
 </xsl:template>
 
 <!-- Sound filter -->
@@ -456,7 +460,7 @@
 <!-- Special operators for image processing and image synthesis -->
 <xsl:template match="test[@domain='image']">
   <xsl:comment>Image processing</xsl:comment>
-  <svg:script type="text/javascript" xlink:href="image.js"/>
+  <svg:script type="text/javascript" xlink:href="../../common/image.js"/>
   <svg:defs>
     <svg:filter id="filter-blur" x="-10" y="-10" width="70" height="70">
       <svg:feGaussianBlur stdDeviation="4"/>

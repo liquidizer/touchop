@@ -1,0 +1,28 @@
+#levels {
+    list-style-type: none;
+    display: inline;
+    width: 500px;
+} 
+
+#levels li {
+    border: 1px solid black;
+    width: 150px;
+    float: left;
+    height: 100px;
+    margin: 10px;
+    padding: 20px;
+}
+
+#levels a {
+    text-decoration: none;
+}
+
+.passed li {
+    background-color: green;
+    color: white;
+}
+
+.pending li {
+    background-color: lightgray;
+    color: black;
+}
