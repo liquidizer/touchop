@@ -27,6 +27,13 @@
   <svg:script type="text/javascript" xlink:href="../../common/touchop.js"/>
   <svg:script type="text/javascript" xlink:href="../../common/def.js"/>
 
+  <!-- blur effect for shadows -->
+  <svg:defs>
+    <svg:filter id="shadow-blur">
+      <svg:feGaussianBlur stdDeviation="2"/>
+    </svg:filter>
+  </svg:defs>
+
   <!-- iterate over all xml elements in the source file -->
   <xsl:comment>List of operators</xsl:comment>
   <xsl:for-each select="*">
