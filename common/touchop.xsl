@@ -52,7 +52,7 @@
   <!-- The emoticon indicates the winning status and links -->
   <!-- back to the index page -->
   <xsl:comment>Emoticon</xsl:comment>
-  <svg:a xlink:href="index.html#levels">
+  <svg:a xlink:href="index.html">
     <!-- Webkit  bug
     <use href="smiley.svg#smile" transform="translate(500,20)" id="top:win"/>
     <use href="smiley.svg#frown" transform="translate(500,20)" id="top:notwin"/>
