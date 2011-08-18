@@ -8,21 +8,20 @@
  */
 
 var current=null;
-var start=null;
 var turtle;
 var win= false;
 var winList= [];
 
 function verify(obj, isFinal) {
     if (isFinal) {
-	start= obj;
 	resetTurtle();
+	obj.setAttribute("next", "STOP");
 	// check, if something is already executed
 	if (current==null) {
-	    current= start;
+	    current= obj.firstChild;
 	    executeNext();
 	} else {
-	    current= start;
+	    current= obj.firstChild;
 	}
     } else {
 	resetTurtle();
@@ -33,8 +32,7 @@ function verify(obj, isFinal) {
 // reset the turtle animation to its initial position
 function resetTurtle() {
     // reset coloring
-    if (current!=null && current.getAttribute("class")=="playback")
-	current.setAttribute("class","");
+    resetPlaybackStyle(document.firstChild);
     // reset tutle
     turtle= document.getElementById("turtle");
     turtle.setAttribute("transform","");
@@ -45,10 +43,34 @@ function resetTurtle() {
     checkPosition();
 }
 
+// removes all playback styles and clears the implicit command stack
+function resetPlaybackStyle(obj) {
+    if (obj.getAttribute("class")=="playback")
+	obj.setAttribute("class","");
+    if (obj.getAttribute("next")!=null)
+	obj.removeAttribute("next");
+    for (var i=0; i<obj.childNodes.length; ++i) {
+	var child= obj.childNodes[i];
+	if (child.nodeType==1)
+	    resetPlaybackStyle(child);
+    }
+}
+
 // execute the next command
 function executeNext() {
     if (current==null) return;
     if (current.nodeType==1) {
+	alert("recurse "+current.nodeName);
+	var id= current.getAttribute("next");
+	if (id!=null) {
+	    current.removeAttribute("next");
+	    current= document.getElementById(id);
+	    if (current==null) {
+		if (!win)
+		    smile(0.0);
+		return;
+	    }
+	}
 	var value= current.getAttributeNS(topns, "value");
 	if (value!="") {
 	    if (current.getAttribute("class")=="playback") {
@@ -62,50 +84,37 @@ function executeNext() {
 	    }
 	}
     }
+    // recurse through child nodes
     if (current.childNodes.length > 0) {
-	// recurse through child nodes
+	current.setAttribute("next", getId(current.parentNode));
 	var init= current.getAttributeNS(topns, "init");
 	if (init!="")
 	    current.setAttribute("state", init);
 	current= current.firstChild;
-	executeNext();
     } else {
 	if (current.nextSibling!=null) {
 	    current= current.nextSibling;
 	    executeNext();
 	} else {
-	    while (current!=null && current.nextSibling==null) {
-		current= current.parentNode;
-		if (current!=null && current.nodeType==1) {
-		    var state= current.getAttribute("state");
-		    var update= current.getAttributeNS(topns,"update");
-		    if (update!="") {
-			state= eval(update.replace(/#/g, state));
-			current.setAttribute("state", state);
-		    }
-		    var stop= current.getAttributeNS(topns,"stop");
-		    if (stop!="") {
-			stop= eval(stop.replace(/#/g, state));
-			if (!stop) {
-			    current= current.firstChild;
-			    executeNext();
-			    return;
-			}
-		    }
-		}
-		if (current==start) {
-		    current=null;
-		    if (!win)
-			smile(0.0);
+	    current= current.parentNode;
+	    var state= current.getAttribute("state");
+	    var update= current.getAttributeNS(topns,"update");
+	    if (update!="") {
+		state= eval(update.replace(/#/g, state));
+		current.setAttribute("state", state);
+	    }
+	    var stop= current.getAttributeNS(topns,"stop");
+	    if (stop!="") {
+		stop= eval(stop.replace(/#/g, state));
+		if (!stop) {
+		    current= current.firstChild;
+		    executeNext();
 		    return;
 		}
 	    }
-	    if (current!=null) {
-		current= current.nextSibling;
-		executeNext();
-	    }
 	}
     }
+    executeNext();
 }
 
 function move(value) {

@@ -411,11 +411,23 @@
     <xsl:attribute name="top:init"><xsl:value-of select="@init"/></xsl:attribute>
     <xsl:attribute name="top:update"><xsl:value-of select="@update"/></xsl:attribute>
     <xsl:attribute name="top:stop"><xsl:value-of select="@stop"/></xsl:attribute>
-    <xsl:attribute name="top:layout">horizontalLayout(obj)</xsl:attribute>
+    <xsl:if test="not(@def)">
+      <xsl:attribute name="top:layout">horizontalLayout(obj)</xsl:attribute>
+    </xsl:if>
+    <xsl:if test="@def">
+      <xsl:attribute name="id">def-<xsl:value-of select="@name"/></xsl:attribute>
+      <xsl:attribute name="transform">scale(0.91)</xsl:attribute>
+      <xsl:attribute name="top:def"><xsl:value-of select="@name"/></xsl:attribute>
+      <xsl:attribute name="top:drop">none</xsl:attribute>
+      <xsl:attribute name="top:layout">verticalLayout(obj)</xsl:attribute>
+    </xsl:if>
 
     <svg:rect class="background" rx="5" ry="5"/>
     <xsl:if test="@name">
-      <svg:text class="filter"><xsl:value-of select="@name"/></svg:text>
+      <svg:text class="filter">
+	<xsl:value-of select="@name"/>
+	<xsl:if test="@def">=</xsl:if>
+      </svg:text>
     </xsl:if>
     <svg:g top:layout="verticalLayout(obj)">
       <svg:rect class="background" display="none"/>

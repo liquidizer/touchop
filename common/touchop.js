@@ -496,6 +496,14 @@ function findRoot(obj) {
     return root;
 }
 
+function getId(obj) {
+    var id= obj.getAttribute("id");
+    if (id==null) {
+	id= "autoid"+Math.random();
+	obj.setAttribute("id", id);
+    }
+    return id;
+}
 
 // sets the oppacitiy to show either of the two similies
 function smile(value) {
