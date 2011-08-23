@@ -13,7 +13,8 @@ def process(filename):
         if child.nodeType==1:
             name= child.nodeName
             if name=="atom":
-                universe.append(child.attributes["value"].value)
+                value=child.attributes["value"].value
+                universe.append(value+".0")
             elif name=="op":
                 op= child.attributes["name"].value
                 if op=="plus":
@@ -23,7 +24,7 @@ def process(filename):
                 elif op=="times":
                     universe.append("(#)*(#)")
                 elif op=="divide":
-                    universe.append("float(#)/(#)")
+                    universe.append("(#)/(#)")
                 elif op=="power":
                     universe.append("pow(#,#)")
                 else:
