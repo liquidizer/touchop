@@ -65,6 +65,8 @@ def process(filename):
     print "chance= "+ str(100.0 * nsucc / (nsucc + nfail))
     if nsucc==0:
         print "NO SOLUTION!"
+    else:
+        print success.pop()
     print ""
 
 
