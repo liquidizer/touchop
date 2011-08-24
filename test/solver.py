@@ -18,17 +18,23 @@ def process(filename):
             elif name=="op":
                 op= child.attributes["name"].value
                 if op=="plus":
-                    universe.append("(#)+(#)")
+                    universe.append("($)+($)")
                 elif op=="minus":
-                    universe.append("(#)-(#)")
+                    universe.append("($)-($)")
                 elif op=="times":
-                    universe.append("(#)*(#)")
+                    universe.append("($)*($)")
                 elif op=="divide":
-                    universe.append("(#)/(#)")
+                    universe.append("($)/($)")
                 elif op=="power":
-                    universe.append("pow(#,#)")
+                    universe.append("pow($,$)")
                 else:
                     print "Unknown operator: "+op
+            elif name=="def":
+                var="_"+child.attributes["name"].value
+                universe.append(var+":($)");
+            elif name=="use":
+                var="_"+child.attributes["name"].value
+                universe.append(var)
             elif name=="test":
                 win= eval(child.attributes["win"].value)
             else:
@@ -40,11 +46,37 @@ def process(filename):
     fails= set([])
 
     def solve(universe, current):
+        # check if already visited
         if current in visited:
             return
         visited.add(current)
-
-        if current.find("#")<0:
+        # check if definition is valid
+        coli= current.find(":")
+        if current.find(":",coli+1)>=0:
+            return
+        if current.find("_",1)>0:
+            return
+        if coli>0 and not(current[0:coli] in universe):
+            return
+        # check if definition is complete, recurse otherwise
+        if current.find("$")>=0:
+            for u in universe:
+                u2= universe[:]
+                u2.remove(u)
+                solve(u2, current.replace("$", u, 1))
+        elif coli>0:
+            # apply variable definition
+            endi= (current+"#").find("#")
+            var= current[0:coli]
+            val= current[coli+1:endi]
+            try:
+                eval(val)
+                universe= [[u, val][u==var] for u in universe]
+                solve(universe, "$ #"+var[1:]+"="+val+current[endi:]);
+            except:
+                pass
+        else:
+            # check winning test
             try:
                 if abs(eval(current)-win)<1e-8:
                     success.add(current)
@@ -54,19 +86,14 @@ def process(filename):
                     fails.add(current)
             except:
                 pass
-        else:
-            for u in universe:
-                u2= universe[:]
-                u2.remove(u)
-                solve(u2, current.replace("#", u, 1))
 
-    solve(universe, "#")
+    solve(universe, "$")
     nsucc= len(success)
     nfail= len(fails)
-    print "chance= "+ str(100.0 * nsucc / (nsucc + nfail))
     if nsucc==0:
         print "NO SOLUTION!"
     else:
+        print "chance= "+ str(100.0 * nsucc / (nsucc + nfail))
         print success.pop()
     print ""
 
