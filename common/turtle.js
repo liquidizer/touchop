@@ -60,7 +60,6 @@ function resetPlaybackStyle(obj) {
 function executeNext() {
     if (current==null) return;
     if (current.nodeType==1) {
-	alert("recurse "+current.nodeName);
 	var id= current.getAttribute("next");
 	if (id!=null) {
 	    current.removeAttribute("next");

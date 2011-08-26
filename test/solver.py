@@ -57,7 +57,7 @@ def process(filename):
                         abs(eval(x.replace("x",str(p[0])))-p[1])<1e-3
                     win= lambda x: len([p for p in points\
                                        if not testp(x, p)])==0
-                    istrivial= lambda u: len(u)>2
+                    istrivial= lambda u: len(u)>1
                 else:
                     raise SolverException("unknown domain: "+domain)
             elif name=="canvas":
