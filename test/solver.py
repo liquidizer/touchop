@@ -1,22 +1,32 @@
 from xml.dom import minidom
 import sys
 
+class SolverException(Exception): pass
+
 def process(filename):
     print "processing: "+filename
     doc= minidom.parse(filename)
 
     universe= []
-    win= ""
+    points= []
+    win= lambda x: false
+    istrivial= lambda u: len(u)>0
 
     parent= doc.documentElement
+    # root element must be <touchop>
     if parent.nodeName!="touchop":
-        raise Exception("Not a touchop file")
+        raise SolverException("Not a touchop file")
+    # process all file contents
     for child in parent.childNodes:
         if child.nodeType==1:
             name= child.nodeName
             if name=="atom":
                 value=child.attributes["value"].value
-                universe.append(value+".0")
+                try:
+                    value= str(float(value))
+                except:
+                    pass
+                universe.append(value)
             elif name=="op":
                 op= child.attributes["name"].value
                 if op=="plus":
@@ -38,7 +48,24 @@ def process(filename):
                 var="_"+child.attributes["name"].value
                 universe.append(var)
             elif name=="test":
-                win= eval(child.attributes["win"].value)
+                domain= child.attributes["domain"].value
+                if domain=="algebra":
+                    val= eval(child.attributes["win"].value)
+                    win= lambda x: abs(eval(x)-val)<1e-8
+                elif domain=="plot":
+                    testp= lambda x, p: \
+                        abs(eval(x.replace("x",str(p[0])))-p[1])<1e-3
+                    win= lambda x: len([p for p in points\
+                                       if not testp(x, p)])==0
+                    istrivial= lambda u: len(u)>2
+                else:
+                    raise SolverException("unknown domain: "+domain)
+            elif name=="canvas":
+                for point in child.childNodes:
+                    if point.nodeName=="point":
+                        x= eval(point.attributes["x"].value)
+                        y= eval(point.attributes["y"].value)
+                        points.append([x,y])
             else:
                 print "Unknown tag: "+name
 
@@ -52,13 +79,15 @@ def process(filename):
         if current in visited:
             return
         visited.add(current)
-        # check if definition is valid
-        coli= current.find(":")
-        if current.find(":",coli+1)>=0:
-            return
+        # check if undefined variables are used
         if current.find("_",1)>0:
             return
+        # check if definition affects any remaining elements
+        coli= current.find(":")
         if coli>0 and not(current[0:coli] in universe):
+            return
+        # check if definition has been dropped into current element
+        if current.find(":",coli+1)>=0:
             return
         # check if definition is complete, recurse otherwise
         if current.find("$")>=0:
@@ -71,25 +100,19 @@ def process(filename):
             endi= (current+"#").find("#")
             var= current[0:coli]
             val= current[coli+1:endi]
-            valid= 0
-            try:
-                eval(val)
-                valid= 1
-            except:
-                pass
-            if valid:
-                universe= [[u, val][u==var] for u in universe]
-                solve(universe, "$ #"+var[1:]+"="+val+current[endi:]);
+            universe= [[u, val][u==var] for u in universe]
+            solve(universe, "$ #"+var[1:]+"="+val+current[endi:]);
         else:
             # check winning test
             try:
-                iswin= abs(eval(current)-win) < 1e-8
+                iswin= win(current)
             except:
                 iswin= 0
             if iswin:
                 success.add(current)
-                if len(universe)>0:
-                    raise Exception("trivial solution: " + str(win) + " = " + current)
+                if istrivial(universe):
+                    msg= "trivial solution: " + current
+                    raise SolverException(msg)
             else:
                 fails.add(current)
 
@@ -107,8 +130,7 @@ def process(filename):
 for filename in sys.argv[1:]:
     try:
         process(filename)
-    except Exception, err:
-        print err
-        print
+    except SolverException, err:
+        print str(err)+"\n"
 
 
