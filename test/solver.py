@@ -9,6 +9,8 @@ def process(filename):
     win= ""
 
     parent= doc.documentElement
+    if parent.nodeName!="touchop":
+        raise Exception("Not a touchop file")
     for child in parent.childNodes:
         if child.nodeType==1:
             name= child.nodeName
@@ -69,23 +71,27 @@ def process(filename):
             endi= (current+"#").find("#")
             var= current[0:coli]
             val= current[coli+1:endi]
+            valid= 0
             try:
                 eval(val)
-                universe= [[u, val][u==var] for u in universe]
-                solve(universe, "$ #"+var[1:]+"="+val+current[endi:]);
+                valid= 1
             except:
                 pass
+            if valid:
+                universe= [[u, val][u==var] for u in universe]
+                solve(universe, "$ #"+var[1:]+"="+val+current[endi:]);
         else:
             # check winning test
             try:
-                if abs(eval(current)-win)<1e-8:
-                    success.add(current)
-                    if len(universe)>0:
-                        print "trivial solution: " + str(win) + " = " + current
-                else:
-                    fails.add(current)
+                iswin= abs(eval(current)-win) < 1e-8
             except:
-                pass
+                iswin= 0
+            if iswin:
+                success.add(current)
+                if len(universe)>0:
+                    raise Exception("trivial solution: " + str(win) + " = " + current)
+            else:
+                fails.add(current)
 
     solve(universe, "$")
     nsucc= len(success)
@@ -99,5 +105,10 @@ def process(filename):
 
 
 for filename in sys.argv[1:]:
-    process(filename)
+    try:
+        process(filename)
+    except Exception, err:
+        print err
+        print
+
 
