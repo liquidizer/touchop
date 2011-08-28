@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<?xml-stylesheet type="text/xsl" href="../../common/touchop.xsl"?>
+<touchop>
+  <test domain="turtle"/>
+  <canvas plot="y" xy="50,100" size="180" xmin="-4" xmax="4" ymin="-4" ymax="4">
+    <point x="2.5435893" y="1.1214830"/>
+    <point x="1.9042162" y="-2.9153741"/>
+    <point x="-1.9829217" y="-1.6523655"/>
+    <point x="-0.1273804" y="1.9893399"/>
+    <point x="3.1792216" y="-0.4130439"/>
+    <point x="0.2891479" y="-3.3031209"/>
+    <point x="-2.1132392" y="0.0034770"/>
+    <point x="1.5284688" y="1.8590244"/>
+    <point x="2.7914829" y="-2.0281196"/>
+    <point x="-1.2453803" y="-2.6675008"/>
+    <point x="-1.2453820" y="1.4196886"/>
+    <turtle/>
+  </canvas>
+  <program def="true" name="I" xy="350,130">
+    <step/>
+    <step/>
+  </program>
+  <program xy="420,130">
+    <step/>
+    <step/>
+  </program>
+  <program name=" 2&#215;" repeat="2" xy="240,60">
+    <step/>
+  </program>
+  <program name="5&#215;" repeat="5" xy="240,130">
+    <step/>
+    <step/>
+  </program>
+  <program name="11&#215;" repeat="11" xy="350,60">
+    <step/>
+  </program>
+  <move value="rotate(-90)" img="#turn-right" xy="500,200"/>
+  <move value="rotate(27)" img="#turn-left" xy="260,280"/>
+  <move value="translate(180.0/8,0)" img="#move-forward" xy="340,280"/>
+  <use name="I" xy="500,280"/>
+  <use name="I" xy="420,280"/>
+</touchop>
