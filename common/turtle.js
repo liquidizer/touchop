@@ -18,10 +18,10 @@ function verify(obj, isFinal) {
 	obj.setAttribute("next", "STOP");
 	// check, if something is already executed
 	if (current==null) {
-	    current= obj.firstChild;
+	    current= obj;
 	    executeNext();
 	} else {
-	    current= obj.firstChild;
+	    current= obj;
 	}
     } else {
 	resetTurtle();
@@ -45,30 +45,41 @@ function resetTurtle() {
 
 // removes all playback styles and clears the implicit command stack
 function resetPlaybackStyle(obj) {
-    if (obj.getAttribute("class")=="playback")
-	obj.setAttribute("class","");
-    if (obj.getAttribute("next")!=null)
-	obj.removeAttribute("next");
     for (var i=0; i<obj.childNodes.length; ++i) {
 	var child= obj.childNodes[i];
-	if (child.nodeType==1)
+	if (child.nodeType==1) {
+	    if (child.getAttribute("class")=="playback")
+		child.setAttribute("class","");
+	    child.removeAttribute("next");
+	    child.removeAttribute("state");
 	    resetPlaybackStyle(child);
+	}
     }
 }
 
 // execute the next command
 function executeNext() {
-    if (current==null) return;
+    if (current==null) {
+	if (!win) smile(0.0);
+	return;
+    }
     if (current.nodeType==1) {
-	var id= current.getAttribute("next");
-	if (id!=null) {
-	    current.removeAttribute("next");
-	    current= document.getElementById(id);
-	    if (current==null) {
-		if (!win)
-		    smile(0.0);
-		return;
+	var state= current.getAttribute("state");
+	if (state=="0") {
+	    var id= current.getAttribute("next");
+	    if (id!=null) {
+		current= document.getElementById(id);
+		if (current!=null)
+		    current.removeAttribute("class");
+	    } else {
+ 		if (current.nextSibling!=null) {
+		    current= current.nextSibling;
+		} else {
+		    current= current.parentNode;
+		}
 	    }
+	    executeNext();
+	    return;
 	}
 	var value= current.getAttributeNS(topns, "value");
 	if (value!="") {
@@ -82,35 +93,38 @@ function executeNext() {
 		return;
 	    }
 	}
+	// repetition
+	var rep= current.getAttributeNS(topns,"repeat");
+	if (state==null) {
+	    if (rep=="")
+		state= 1;
+	    else
+		state= rep;
+	}
+	current.setAttribute("state",state -1);
+
+	// function call
+	var use= current.getAttributeNS(topns, "use");
+	if (use!="") {
+	    var target= document.getElementById("def-"+use);
+	    current.setAttribute("class","playback");
+	    resetPlaybackStyle(target);
+	    target.removeAttribute("state");
+	    target.setAttribute("next",getId(current));
+	    current= target;
+	    executeNext();
+	    return;
+	}
     }
     // recurse through child nodes
     if (current.childNodes.length > 0) {
-	current.setAttribute("next", getId(current.parentNode));
-	var init= current.getAttributeNS(topns, "init");
-	if (init!="")
-	    current.setAttribute("state", init);
+	resetPlaybackStyle(current);
 	current= current.firstChild;
     } else {
-	if (current.nextSibling!=null) {
+ 	if (current.nextSibling!=null) {
 	    current= current.nextSibling;
-	    executeNext();
 	} else {
 	    current= current.parentNode;
-	    var state= current.getAttribute("state");
-	    var update= current.getAttributeNS(topns,"update");
-	    if (update!="") {
-		state= eval(update.replace(/#/g, state));
-		current.setAttribute("state", state);
-	    }
-	    var stop= current.getAttributeNS(topns,"stop");
-	    if (stop!="") {
-		stop= eval(stop.replace(/#/g, state));
-		if (!stop) {
-		    current= current.firstChild;
-		    executeNext();
-		    return;
-		}
-	    }
 	}
     }
     executeNext();

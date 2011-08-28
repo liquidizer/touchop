@@ -408,9 +408,7 @@
     <xsl:attribute name="onmousedown">msDown(evt)</xsl:attribute>
     <xsl:attribute name="class">program</xsl:attribute>
     <xsl:attribute name="top:name"><xsl:value-of select="@name"/></xsl:attribute>
-    <xsl:attribute name="top:init"><xsl:value-of select="@init"/></xsl:attribute>
-    <xsl:attribute name="top:update"><xsl:value-of select="@update"/></xsl:attribute>
-    <xsl:attribute name="top:stop"><xsl:value-of select="@stop"/></xsl:attribute>
+    <xsl:attribute name="top:repeat"><xsl:value-of select="@repeat"/></xsl:attribute>
     <xsl:if test="not(@def)">
       <xsl:attribute name="top:layout">horizontalLayout(obj)</xsl:attribute>
     </xsl:if>

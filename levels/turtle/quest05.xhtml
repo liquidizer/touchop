@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<?xml-stylesheet type="text/xsl" href="../../common/touchop.xsl"?>
+<touchop>
+  <test domain="turtle"/>
+  <canvas plot="y" xy="50,100" size="180" xmin="-3" xmax="3" ymin="-3" ymax="3">
+    <point x="0" y="0"/>
+    <point x="-1" y="0"/>
+    <point x="1" y="0"/>
+    <point x="0" y="1"/>
+    <turtle/>
+  </canvas>
+  <program def="true" name="A" xy="410,50">
+    <step/>
+    <step/>
+  </program>
+  <program def="true" name="B" xy="330,50">
+    <step/>
+    <step/>
+    <step/>
+  </program>
+  <program xy="250,50">
+    <step/>
+    <step/>
+    <step/>
+  </program>
+  <move value="rotate(-90)" img="#turn-right" xy="520,120"/>
+  <move value="rotate(-90)" img="#turn-right" xy="260,200"/>
+  <move value="translate(180.0/6,0)" img="#move-forward" xy="340,280"/>
+  <move value="translate(180.0/6,0)" img="#move-forward" xy="260,280"/>
+  <use name="A" xy="520,280"/>
+  <use name="A" xy="520,200"/>
+  <use name="B" xy="440,280"/>
+  <use name="B" xy="440,200"/>
+</touchop>
