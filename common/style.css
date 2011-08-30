@@ -1,8 +1,9 @@
 text {
-    text-anchor: middle;
     font-size: 48px;
 }
-
+.atom {
+    text-anchor: middle;
+}
 .background {
     fill: deepskyblue;
     stroke: #00B0E0;

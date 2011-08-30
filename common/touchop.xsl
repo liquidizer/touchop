@@ -83,7 +83,7 @@
 <xsl:template name="literal">
   <xsl:param name="name" select="@value"/>
   <xsl:comment>Literal</xsl:comment>
-  <xsl:variable name="len" select="string-length($name)"/>
+  <xsl:variable name="len" select="string-length(translate($name,' ',''))"/>
   <xsl:element name="svg:rect">
     <xsl:attribute name="class">background</xsl:attribute>
     <xsl:attribute name="height">60</xsl:attribute>
@@ -94,6 +94,7 @@
   </xsl:element>
   <xsl:element name="svg:text">
     <xsl:attribute name="transform">translate(15,45)</xsl:attribute>
+    <xsl:attribute name="class">atom</xsl:attribute>
     <xsl:value-of select="$name"/>
   </xsl:element>
 </xsl:template>
@@ -140,7 +141,7 @@
 <xsl:template match="test[@domain='algebra']">
   <xsl:comment>Winning test for the algebra domain</xsl:comment>
   <svg:script type="text/javascript" xlink:href="../../common/algebra.js"/>
-  <svg:g transform="translate(100,60)">
+  <svg:g transform="translate(50,60)">
     <xsl:element name="svg:text">
       <xsl:attribute name="id">test</xsl:attribute>
       <xsl:copy-of select="@win"/>
@@ -264,6 +265,7 @@
   <xsl:element name="svg:g">
     <xsl:attribute name="onmousedown">msDown(evt)</xsl:attribute>
     <xsl:attribute name="top:value"><xsl:value-of select="@value"/></xsl:attribute>
+    <xsl:attribute name="top:priority"><xsl:value-of select="@priority"/></xsl:attribute>
     <xsl:attribute name="top:play">500</xsl:attribute>
     <xsl:call-template name="literal"/>
   </xsl:element>

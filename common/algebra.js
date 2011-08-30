@@ -61,16 +61,21 @@ function verify(obj, isFinal) {
     // construct the objective function
     var goal= document.getElementById("test").getAttribute("win");
     goal= "("+value+") - ("+goal+")";
+    goal= goal.replace(/([0-9]) ([a-zA-Z])/g, '$1*($2)');
+
     // check for free variables
-    var vars= goal.match(/\([a-zA-Z]+\)/g);
+    var vars= goal.match(/[a-zA-Z]+([) ])/g);
     if (vars==null) vars=[];
-    
+
     try {
 	var tries= 1 + 10*vars.length;
 	for (var i=0; win && i<tries; ++i) {
 	    var eps= goal;
 	    for (var j=0; j<vars.length; ++j) {
-		eps= eps.replace(new RegExp(vars[j],"g"), Math.random()*6-3);
+		var no= "("+(Math.random()*6-3)+")";
+		var name= vars[j].substring(0,vars[j].length-1);
+		var term= vars[j].charAt(vars[j].length-1);
+		eps= eps.replace(new RegExp(name+"([ )])","g"), no + "$1");
 	    }
 	    // compare with the objective value
 	    win= win && Math.abs(eval(eps))<1e-12;
