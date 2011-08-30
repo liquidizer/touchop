@@ -32,16 +32,14 @@ var startCTM;
 // tresh is a mouse movement treshold, that lets objects snap into drop areas
 var tresh=0;
 
+// counter for long click action, after which the root is selected
+var longClick=0;
+
 // msDown is called whenever the mouse button is pressed anywhere on the root document.
 function msDown (evt) {
     if (hand==null && evt.target!=null) {
         // find signaling object
-        hand= evt.target;
-        while (hand.getAttribute("onmousedown")==null)
-            hand= hand.parentNode;
-        
-        // make underlying objects receive mouse events. Will be reverted after mouse up.
-        hand.setAttribute("style","pointer-events:none");
+	grab(evt.target);
         
         // store mouse position. Will be updated when mouse moves.
         startx= evt.clientX;
@@ -49,26 +47,39 @@ function msDown (evt) {
         
         // store initial position
         startCTM= hand.getAttribute("transform");
+	initLongClick();
     }
+}
+
+function grab(obj) {
+    hand= obj;
+    while (hand.getAttribute("onmousedown")==null)
+	hand= hand.parentNode;
+    
+    // make underlying objects receive mouse events. Will be reverted after mouse up.
+    hand.setAttribute("style","pointer-events:none");
 }
 
 // This function is called when the mouse button is released.
 function msUp (evt) {
     if (hand!=null) {
-        // make object receive mouse events again, release grip
-        hand.removeAttribute("style");
-        
-        // snap back if object was not dropped on a new place
-        if (startCTM!=null) {
-            hand.setAttribute("transform",startCTM);
-        }
-        
 	// verify winning test after mouse release
 	verify(findRoot(hand), true);
-	
-        // delete reference to hand object.
-        hand= null;
+	releaseHand();
     }
+}
+
+function releaseHand() {
+    // make object receive mouse events again, release grip
+    hand.removeAttribute("style");
+    
+    // snap back if object was not dropped on a new place
+    if (startCTM!=null) {
+	hand.setAttribute("transform",startCTM);
+    }
+    // delete reference to hand object.
+    hand= null;
+    tresh= 0;
 }
 
 // Applys the transformation matrix m to the SVG element obj
@@ -86,9 +97,11 @@ function msMove (evt) {
         // compute relative mouse movements since last call
         var dx=evt.clientX-startx;
         var dy=evt.clientY-starty;
-        
+	var dist=Math.abs(dx)+Math.abs(dy);
+
         // if the mouse has moved more than a snap treshold "tresh"
-        if (Math.abs(dx)+Math.abs(dy) > tresh) {
+	initLongClick();
+        if (dist > tresh) {
             // bring object to front
 	    if (hand.parentNode!=null)
 		hand.parentNode.appendChild(hand);
@@ -129,6 +142,8 @@ function moveToGroup(obj, target) {
 
 // this method is called when the mouse is moved over a region on which object can be dropped.
 function dropOn(evt) {
+    initLongClick();
+
     // check if an object is beeing dragged
     var target= evt.target;
     if (target!=null && hand!=null) {
@@ -485,6 +500,21 @@ function setFloating(obj, doFloat) {
     }
 }
 
+// select root expression after 500ms stable click on sub expression
+function initLongClick() {
+    longClick+=1;
+    setTimeout("longClickAction("+longClick+")", 500);
+}
+
+// select the root element in case of long clicks
+function longClickAction(counter) {
+    if (counter==longClick) {
+	root= findRoot(hand);
+	releaseHand();
+	grab(root);
+    }
+}
+
 // find the largest moveable group in which obj is contained
 function findRoot(obj) {
     var root= obj;
@@ -496,6 +526,7 @@ function findRoot(obj) {
     return root;
 }
 
+// get and create an id for an element
 function getId(obj) {
     var id= obj.getAttribute("id");
     if (id==null) {

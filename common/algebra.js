@@ -58,13 +58,21 @@ function verify(obj, isFinal) {
     var value= computeValue(obj);
     var win= true;
 
+    // break if formula is incomplete
+    if (value.indexOf("#")>=0)
+	return;
+
     // construct the objective function
     var goal= document.getElementById("test").getAttribute("win");
+
+    // standard pattern
     goal= "("+value+") - ("+goal+")";
     goal= goal.replace(/([0-9]) ([a-zA-Z])/g, '$1*($2)');
+    goal= goal.replace(/([0-9a-zA-Z]+)\u00b2/g, 'Math.pow($1,2)');
+    goal= goal.replace(/([0-9a-zA-Z]+)\u00b3/g, 'Math.pow($1,3)');
 
     // check for free variables
-    var vars= goal.match(/[a-zA-Z]+([) ])/g);
+    var vars= goal.match(/[a-zA-Z]+([,) ])/g);
     if (vars==null) vars=[];
 
     try {
@@ -75,7 +83,7 @@ function verify(obj, isFinal) {
 		var no= "("+(Math.random()*6-3)+")";
 		var name= vars[j].substring(0,vars[j].length-1);
 		var term= vars[j].charAt(vars[j].length-1);
-		eps= eps.replace(new RegExp(name+"([ )])","g"), no + "$1");
+		eps= eps.replace(new RegExp(name+"([, )])","g"), no + "$1");
 	    }
 	    // compare with the objective value
 	    win= win && Math.abs(eval(eps))<1e-12;
