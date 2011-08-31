@@ -44,7 +44,11 @@ function msDown (evt) {
         // store mouse position. Will be updated when mouse moves.
         startx= evt.clientX;
         starty= evt.clientY;
-        
+
+	// create a drag treshold if object is a part
+        if (hand!=findRoot(hand))
+	    tresh=30;
+
         // store initial position
         startCTM= hand.getAttribute("transform");
 	initLongClick();
