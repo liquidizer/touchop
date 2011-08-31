@@ -86,7 +86,7 @@ function verify(obj, isFinal) {
 		eps= eps.replace(new RegExp(name+"([, )])","g"), no + "$1");
 	    }
 	    // compare with the objective value
-	    win= win && Math.abs(eval(eps))<1e-12;
+	    win= win && Math.abs(eval(eps))<1e-10;
 	}
     } catch(e) {
 	win= false;
