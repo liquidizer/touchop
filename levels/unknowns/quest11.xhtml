@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../../common/touchop.xsl"?>
+<touchop>
+  <test domain="algebra" win="(n + o)*(n + o) - 6">
+    (n + o)&#x00b2; - 6 = ?
+  </test>
+  <op name="minus" xy="50,100"/>
+  <op name="minus" xy="50,180"/>
+  <op name="times" xy="50,260"/>
+  <def name="&#x3b4;" xy="220,100"/>
+  <op name="divide" xy="460,220"/>
+  <atom value="n" xy="220,260"/>
+  <atom value="o" xy="300,260"/>
+  <atom value="6" xy="380,260"/>
+  <atom value="n&#x00b2; - o&#x00b2;" priority="120" xy="220,180"/>
+  <use name="&#x3b4;" xy="340,100"/>
+  <use name="&#x3b4;" xy="420,100"/>
+</touchop>
