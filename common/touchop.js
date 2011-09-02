@@ -512,7 +512,7 @@ function initLongClick() {
 
 // select the root element in case of long clicks
 function longClickAction(counter) {
-    if (counter==longClick) {
+    if (hand!=null && counter==longClick) {
 	root= findRoot(hand);
 	releaseHand();
 	grab(root);
