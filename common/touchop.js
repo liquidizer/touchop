@@ -49,8 +49,7 @@ function msDown (evt) {
         if (hand!=findRoot(hand))
 	    tresh=30;
 
-        // store initial position
-        startCTM= hand.getAttribute("transform");
+	// mark root after time out
 	initLongClick();
     }
 }
@@ -62,14 +61,19 @@ function grab(obj) {
     
     // make underlying objects receive mouse events. Will be reverted after mouse up.
     hand.setAttribute("style","pointer-events:none");
+
+    // store initial position
+    startCTM= hand.getAttribute("transform");
 }
 
 // This function is called when the mouse button is released.
 function msUp (evt) {
     if (hand!=null) {
-	// verify winning test after mouse release
-	verify(findRoot(hand), true);
+	var root= findRoot(hand);
 	releaseHand();
+
+	// verify winning test after mouse release
+	verify(root, true);
     }
 }
 
