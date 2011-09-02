@@ -6,7 +6,7 @@
  * of the GPL (http://www.gnu.org/licenses/gpl.html)
  */
 
-function plot(obj) {
+function plot(elt_x, elt_y) {
     var canvasId= "canvas";
     var canvas= document.getElementById(canvasId);
 
@@ -15,8 +15,17 @@ function plot(obj) {
     var path= document.getElementById("plotpath");
     path.setAttribute("d","");
 
+    // build plot function
+    if (elt_x==null) {
+	var range= [0,128,1];
+	var fx= null
+	var fy= function(t) { return computeValue(elt_y, "x", t); }
+    } else {
+	var fx= function(t) { return computeValue(elt_x, "t", t); }
+	var fy= function(t) { return computeValue(elt_y, "t", t); }
+    }
+
     // check if all objective nodes are traversed
-    var f= function(x) { return computeValue(obj,x); }
     for (var i=0; i<canvas.childNodes.length; i) {
 	var child= canvas.childNodes[i];
 	i= i+1;
@@ -25,15 +34,15 @@ function plot(obj) {
 	if (x!="" && y!="") {
 	    x= eval(x);
 	    y= eval(y);
-	    win = win && (Math.abs(y- f(x)) < 1e-3)
+	    win = win && (Math.abs(y- fy(x)) < 1e-3)
 	}
     }
     if (win) smile(1.0); else smile(0.0);
 
-    drawGraph(canvas,f);
+    drawGraph(canvas, fx, fy);
 }
 
-function drawGraph(canvas, f) {
+function drawGraph(canvas, fx, fy) {
     var size= eval(canvas.getAttributeNS(topns, "size"));
     var xmin= eval(canvas.getAttributeNS(topns, "xmin"));
     var xmax= eval(canvas.getAttributeNS(topns, "xmax"));
@@ -50,13 +59,20 @@ function drawGraph(canvas, f) {
     var yOld=(ymax-ymin)/2.0;
 
     for (var i=0; i<=128; ++i) {
-	var xf= i/128.0;
-	var x= xf*(xmax-xmin)+xmin;
-	var y= f(x);
+	if (fx==null) {
+	    var t= i/128.0;
+	    var x= t*(xmax-xmin)+xmin;
+	    var y= fy(x);
+	} else {
+	    var pi= 3.14159;
+	    var t= i/128.0 * 35*pi -3;
+	    var x= fx(t);
+	    var y= fy(t);
+	}
 	if (y==undefined || isNaN(y-y) || Math.abs(y-yOld)>(ymax-ymin)) {
 	    delim=" M";
 	} else {
-	    d= d + delim + " " + size*xf + "," + yscale*(ymax-y);
+	    d= d + delim + " " + (x-xmin)*yscale + "," + yscale*(ymax-y);
 	    delim= " L";
 	}
 	yOld= y;
@@ -65,7 +81,7 @@ function drawGraph(canvas, f) {
 }
 
 // Exactract the formula for the user created value.
-function computeValue(obj, x) {
+function computeValue(obj, varname, x) {
     // check for redirections
     var use= obj.getAttributeNS(topns, "use");
     if (use!="") {
@@ -76,7 +92,7 @@ function computeValue(obj, x) {
 
     // The top:value attribute contains the formula
     var value= obj.getAttributeNS(topns, "value");
-    if (value=="x") {
+    if (value==varname) {
 	return x;
     } else {
 	// recurse through child elements to find open arguments
@@ -85,7 +101,7 @@ function computeValue(obj, x) {
 	    if (obj.childNodes[i].nodeType==1) {
 		// if the child node has a value, compute it and 
 		// store in the argument list.
-		var sub= computeValue(obj.childNodes[i], x);
+		var sub= computeValue(obj.childNodes[i], varname, x);
 		if (sub!=null) {
 		    if (value=="") {
 			return sub;
@@ -103,13 +119,18 @@ function computeValue(obj, x) {
 
 // check if the expression is syntactically complete
 function checkIsValid(obj) {
-    var y= computeValue(obj, 0);
+    var elt_x= document.getElementById("def-x");
+    if (elt_x==null)
+	var y= computeValue(obj, "x", 0);
+    else 
+	var y= computeValue(obj, "t", 0);
     return y!=undefined;
 }
 
 // verify whether the new object satisfies the winning test
 function verify(obj, isFinal) {
-    var test= document.getElementById("def-y");
-    plot(test);
+    var elt_x= document.getElementById("def-x");
+    var elt_y= document.getElementById("def-y");
+    plot(elt_x, elt_y);
 }
 
