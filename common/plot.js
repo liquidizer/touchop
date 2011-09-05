@@ -72,7 +72,7 @@ function drawGraph(canvas, fx, fy) {
 	if (y==undefined || isNaN(y-y) || Math.abs(y-yOld)>(ymax-ymin)) {
 	    delim=" M";
 	} else {
-	    d= d + delim + " " + (x-xmin)*yscale + "," + yscale*(ymax-y);
+	    d= d + delim + " " + (x-xmin)*xscale + "," + yscale*(ymax-y);
 	    delim= " L";
 	}
 	yOld= y;
