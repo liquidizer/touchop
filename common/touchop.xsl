@@ -326,11 +326,11 @@
     <svg:path id="plotpath"/>
   </xsl:element>
   <xsl:call-template name="ygrid">
-    <xsl:with-param name="pos" select="@ymin"/>
+    <xsl:with-param name="pos" select="ceiling(@ymin)"/>
     <xsl:with-param name="res" select="1"/>
   </xsl:call-template>
   <xsl:call-template name="xgrid">
-    <xsl:with-param name="pos" select="@xmin"/>
+    <xsl:with-param name="pos" select="ceiling(@xmin)"/>
     <xsl:with-param name="res" select="1"/>
   </xsl:call-template>
 </xsl:template>
