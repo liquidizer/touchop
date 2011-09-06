@@ -305,6 +305,8 @@ function insertParenthesis(obj) {
                         // reuse previous node for speed up, if possible
                         if (lastpar!=null) {
                             obj.insertBefore(lastpar, child);
+			    var lpar= lastpar;
+			    var rpar= child.nextSibling;
                         } else {
                             // create new parenthesis objects
                             var lpar= document.createElementNS(obj.namespaceURI, "text");
@@ -315,13 +317,13 @@ function insertParenthesis(obj) {
                             rpar.appendChild(document.createTextNode(")"));
                             rpar.setAttribute("name","parenthesis");
                             obj.insertBefore(rpar, child.nextSibling);
-			    // scale the parenthesis to full height
-			    var cbox= child.getBBox();
-			    var parbox= lpar.getBBox();
-			    var scale= cbox.height / parbox.height;
-			    lpar.setAttribute("transform","scale(1,"+scale+")");
-			    rpar.setAttribute("transform","scale(1,"+scale+")");
                         }
+			// scale the parenthesis to full height
+			var cbox= child.getBBox();
+			var parbox= lpar.getBBox();
+			var scale= cbox.height / parbox.height;
+			lpar.setAttribute("transform","scale(1,"+scale+")");
+			rpar.setAttribute("transform","scale(1,"+scale+")");
                         i+=2;
                     }
                     lastpar=null;
