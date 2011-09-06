@@ -68,7 +68,7 @@ function drawGraph(canvas, samples, fx, fy) {
 	    yOld= NaN;
 	} else {
 	    var delim= isFinite(xOld) ? " L" : " M";
-	    d= d + delim + " " + x + "," + y;
+	    d= d + delim + " " + x.toFixed(1) + "," + y.toFixed(1);
 	    delim= " L";
 
 	    // check if all objective nodes are traversed

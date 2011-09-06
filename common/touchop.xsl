@@ -400,7 +400,7 @@
   <svg:script type="text/javascript" xlink:href="../../common/turtle.js"/>
   <defs>
     <svg:path id="half-right" class="move"
-	      d="m 46.90,32 -7.09,-6.61 c 0,0 -4.70,2.41 -6.18,5.92 -1.48,3.51 0,14.69 0,14.69 0,3 -3.98,6 -7.96,6 l -3.99,0 C 16.39,52 13.73,49 13.73,46 13.29,37.06 12.09,27.08 19.71,21.34 l 6.63,-4.99 -7.46,-6.74 c 1.33,0 27.78,0 27.78,0 L 46.90,32 z"/>
+	      d="m 47,32 -7,-7 c 0,0 -5,2 -6,6 -1,4 0,15 0,15 0,3 -4,6 -8,6 l -4,0 C 16,52 14,49 14,46 13,37 12,27 20,21 l 7,-5 -7,-7 c 1,0 28,0 28,0 L 47,32 z"/>
     <svg:path id="turn-left" class="move"
 	      d="M 55,25 l -15,15 0,-8 c 0,0 0,0 -2,0 l -8,0 0,14 c 0,3 -3,6 -6,6 l -3,0 c -4,0 -6,-3 -6,-6 l 0,-23 c 0,-3 2,-6 6,-6 l 3,0 c 0,0 1,0 1,0 l 14,0 c 1,0 1,0 1,0 l 0,-7 15,15 z"/>
     <svg:g id="turn-right"> 
@@ -459,32 +459,6 @@
   </xsl:element>
 </xsl:template>
 
-<!-- TouchOp MUSIC DOMAIN -->
-<!-- Special operators for the music domain -->
-
-<!-- construct the test for the music domain -->
-<xsl:template match="test[@domain='music']">
-  <xsl:comment>Apply sound filters to match a reference sound</xsl:comment>
-  <svg:script type="text/javascript" xlink:href="../../common/music.js"/>
-</xsl:template>
-
-<!-- Sound filter -->
-<xsl:template match="sound">
-  <xsl:element name="svg:g">
-    <xsl:attribute name="onmousedown">msDown(evt)</xsl:attribute>
-    <xsl:attribute name="top:filter"><xsl:value-of select="@filter"/></xsl:attribute>
-    <xsl:attribute name="top:padding">10</xsl:attribute>
-    <xsl:attribute name="top:priority">101</xsl:attribute>
-    <xsl:attribute name="top:layout">horizontalLayout(obj)</xsl:attribute>
-
-    <svg:rect class="background" rx="5" ry="5"/>
-    <svg:text><xsl:value-of select="@name"/></svg:text>
-    <xsl:for-each select="step">
-      <xsl:call-template name="operand"/>
-    </xsl:for-each>
-  </xsl:element>
-</xsl:template>
-
 <!-- TOUCHOP - IMAGE PROCESSING DOMAIN -->
 <!-- Special operators for image processing and image synthesis -->
 <xsl:template match="test[@domain='image']">
@@ -515,9 +489,9 @@
 	 top:layout="verticalLayout(obj)">
 
     <svg:rect class="background" rx="5" ry="5"/>
-    <xsl:call-template name="layer"/>
-    <xsl:call-template name="layer"/>
-    <xsl:call-template name="layer"/>
+    <xsl:for-each select="layer">
+      <xsl:call-template name="layer"/>
+    </xsl:for-each>
     <svg:g top:role="result" display="none">
       <svg:rect width="60" height="60" class="frame"/>
       <svg:g/>
@@ -545,6 +519,15 @@
   <svg:g onmousedown="msDown(evt)" top:role="image">
     <svg:rect width="60" height="60" class="frame"/>
     <svg:g top:role="content">
+      <xsl:if test="@src">
+	<xsl:element name="svg:image">
+	  <xsl:attribute name="width">60</xsl:attribute>
+	  <xsl:attribute name="height">60</xsl:attribute>
+	  <xsl:attribute name="xlink:href">
+	    <xsl:value-of select="@src"/>
+	  </xsl:attribute>
+	</xsl:element>
+      </xsl:if>
       <xsl:copy-of select="*"/>
     </svg:g>
   </svg:g>

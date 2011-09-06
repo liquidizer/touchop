@@ -14,7 +14,6 @@ function isValid(obj) {
 	    return true;
     } catch(e) {
 	// definition is cyclic
-	alert(e);
 	if (e!="cycle")
 	    throw e;
     }
