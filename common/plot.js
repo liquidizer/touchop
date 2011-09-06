@@ -17,7 +17,7 @@ function plot(elt_x, elt_y) {
 
     // build plot function
     if (elt_x==null) {
-	var samples= 384;
+	var samples= 240;
 	var fx= null
 	var fy= function(t) { return computeValue(elt_y, "x", t); }
     } else {
@@ -49,13 +49,12 @@ function drawGraph(canvas, samples, fx, fy) {
     var winList= [];
     var win= false;
     for (var i=0; i<=samples; ++i) {
-	    var t= i/samples;
 	if (fx==null) {
-	    var x= t*(xmax-xmin)+xmin;
+	    var x= i*(xmax-xmin)/samples+xmin;
 	    var y= fy(x);
 	} else {
-	    var x= fx(t);
-	    var y= fy(t);
+	    var x= fx(i/samples);
+	    var y= fy(i/samples);
 	}
 	// scale to screen
 	x= (x-xmin)*xscale;
@@ -80,7 +79,6 @@ function drawGraph(canvas, samples, fx, fy) {
 		    var cx= child.getAttribute("cx");
 		    var cy= child.getAttribute("cy");
 		    if (Math.abs((xOld-x)*(cy-y)-(cx-x)*(yOld-y))<1) {
-			//		    if (Math.abs(cx-x) + Math.abs(cy-y) < 1) {
 			winList[j]= true;
 		    }
 		    win= win && winList[j];
