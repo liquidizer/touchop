@@ -65,6 +65,7 @@ rect.canvas {
 
 text.axes {
     font-size: 10pt;
+    text-anchor: middle;
 }
 
 rect.frame {

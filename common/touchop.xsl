@@ -325,13 +325,21 @@
     </xsl:for-each>
     <svg:path id="plotpath"/>
   </xsl:element>
+  <!-- compute grid resolution -->
+  <xsl:variable name="res">
+    <xsl:choose>
+      <xsl:when test="(@xmax - @xmin)&lt;11">1</xsl:when>
+      <xsl:otherwise>5</xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+  <!-- call grid creation -->
   <xsl:call-template name="ygrid">
     <xsl:with-param name="pos" select="ceiling(@ymin)"/>
-    <xsl:with-param name="res" select="1"/>
+    <xsl:with-param name="res" select="$res"/>
   </xsl:call-template>
   <xsl:call-template name="xgrid">
     <xsl:with-param name="pos" select="ceiling(@xmin)"/>
-    <xsl:with-param name="res" select="1"/>
+    <xsl:with-param name="res" select="$res"/>
   </xsl:call-template>
 </xsl:template>
 

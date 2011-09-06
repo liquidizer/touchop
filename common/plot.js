@@ -22,9 +22,9 @@ function plot(elt_x, elt_y) {
 	var fy= function(t) { return computeValue(elt_y, "x", t); }
     } else {
 	var samples= 1024;
-	var ft= function(t) { return (t-12)*48*3.14159; }
-	var fx= function(t) { return computeValue(elt_x, "t", t); }
-	var fy= function(t) { return computeValue(elt_y, "t", t); }
+	var ft= function(t) { return (t-0.5)*48*3.14159; }
+	var fx= function(t) { return computeValue(elt_x, "t", ft(t)); }
+	var fy= function(t) { return computeValue(elt_y, "t", ft(t)); }
     }
 
     win= drawGraph(canvas, samples, fx, fy);
@@ -49,13 +49,11 @@ function drawGraph(canvas, samples, fx, fy) {
     var winList= [];
     var win= false;
     for (var i=0; i<=samples; ++i) {
-	if (fx==null) {
 	    var t= i/samples;
+	if (fx==null) {
 	    var x= t*(xmax-xmin)+xmin;
 	    var y= fy(x);
 	} else {
-	    var pi= 3.14159;
-	    var t= i/samples * 35*pi -3;
 	    var x= fx(t);
 	    var y= fy(t);
 	}
@@ -111,6 +109,7 @@ function computeValue(obj, varname, x) {
 
     // The top:value attribute contains the formula
     var value= obj.getAttributeNS(topns, "value");
+    value= value.replace(/\u03c0/, "(3.14159)");
     if (value==varname) {
 	return x;
     } else {
