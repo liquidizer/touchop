@@ -145,7 +145,6 @@ function checkPosition() {
     for (var i=0; i<canvas.childNodes.length; i++) {
 	var child= canvas.childNodes[i];
 	if (child.nodeName=="svg:circle") {
-	    var m2= child.getTransformToElement(canvas);
 	    var x= child.getAttribute("cx");
 	    var y= child.getAttribute("cy");
 	    if (Math.abs(m1.e-x) + Math.abs(m1.f-y) < 1) {

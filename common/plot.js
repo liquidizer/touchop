@@ -17,32 +17,20 @@ function plot(elt_x, elt_y) {
 
     // build plot function
     if (elt_x==null) {
-	var range= [0,128,1];
+	var samples= 384;
 	var fx= null
 	var fy= function(t) { return computeValue(elt_y, "x", t); }
     } else {
+	var samples= 1024;
+	var ft= function(t) { return (t-12)*48*3.14159; }
 	var fx= function(t) { return computeValue(elt_x, "t", t); }
 	var fy= function(t) { return computeValue(elt_y, "t", t); }
     }
 
-    // check if all objective nodes are traversed
-    for (var i=0; i<canvas.childNodes.length; i) {
-	var child= canvas.childNodes[i];
-	i= i+1;
-	var x= child.getAttributeNS(topns, "x");
-	var y= child.getAttributeNS(topns, "y");
-	if (x!="" && y!="") {
-	    x= eval(x);
-	    y= eval(y);
-	    win = win && (Math.abs(y- fy(x)) < 1e-3)
-	}
-    }
-    if (win) smile(1.0); else smile(0.0);
-
-    drawGraph(canvas, fx, fy);
+    win= drawGraph(canvas, samples, fx, fy);
 }
 
-function drawGraph(canvas, fx, fy) {
+function drawGraph(canvas, samples, fx, fy) {
     var size= eval(canvas.getAttributeNS(topns, "size"));
     var xmin= eval(canvas.getAttributeNS(topns, "xmin"));
     var xmax= eval(canvas.getAttributeNS(topns, "xmax"));
@@ -54,31 +42,62 @@ function drawGraph(canvas, fx, fy) {
 
     // create graph
     var path= document.getElementById("plotpath");
-    var delim="M"
     var d= "";
-    var yOld=(ymax-ymin)/2.0;
+    var yOld= NaN;
+    var xOld= NaN;
 
-    for (var i=0; i<=128; ++i) {
+    var winList= [];
+    var win= false;
+    for (var i=0; i<=samples; ++i) {
 	if (fx==null) {
-	    var t= i/128.0;
+	    var t= i/samples;
 	    var x= t*(xmax-xmin)+xmin;
 	    var y= fy(x);
 	} else {
 	    var pi= 3.14159;
-	    var t= i/128.0 * 35*pi -3;
+	    var t= i/samples * 35*pi -3;
 	    var x= fx(t);
 	    var y= fy(t);
 	}
-	if (y==undefined || isNaN(y-y) || Math.abs(y-yOld)>(ymax-ymin)) {
-	    delim=" M";
+	// scale to screen
+	x= (x-xmin)*xscale;
+	y= yscale*(ymax-y);
+
+	// draw line or move cursor
+	if (!isFinite(x) || !isFinite(y) 
+	    || Math.abs(y-yOld) > size
+	    || Math.abs(x-xOld) > size) {
+	    xOld= NaN;
+	    yOld= NaN;
 	} else {
-	    d= d + delim + " " + (x-xmin)*xscale + "," + yscale*(ymax-y);
+	    var delim= isFinite(xOld) ? " L" : " M";
+	    d= d + delim + " " + x + "," + y;
 	    delim= " L";
+
+	    // check if all objective nodes are traversed
+	    win= true;
+	    for (var j=0; j<canvas.childNodes.length; j++) {
+		var child= canvas.childNodes[j];
+		if (child.nodeName=="svg:circle") {
+		    var cx= child.getAttribute("cx");
+		    var cy= child.getAttribute("cy");
+		    if (Math.abs((xOld-x)*(cy-y)-(cx-x)*(yOld-y))<1) {
+			//		    if (Math.abs(cx-x) + Math.abs(cy-y) < 1) {
+			winList[j]= true;
+		    }
+		    win= win && winList[j];
+		}
+	    }
+
+	    // store old coordinates
+	    yOld= y;
+	    xOld= x;
 	}
-	yOld= y;
     }
     path.setAttribute("d", d);
+    if (win) smile(1.0); else smile(0.0);
 }
+
 
 // Exactract the formula for the user created value.
 function computeValue(obj, varname, x) {
@@ -111,7 +130,7 @@ function computeValue(obj, varname, x) {
 		}
 	    }
 	}
-	if (value.match(/#/)) return undefined
+	if (value.match(/#/)) throw "incomplete";
 	return eval(value);
     }
     return null;
@@ -120,17 +139,28 @@ function computeValue(obj, varname, x) {
 // check if the expression is syntactically complete
 function checkIsValid(obj) {
     var elt_x= document.getElementById("def-x");
-    if (elt_x==null)
-	var y= computeValue(obj, "x", 0);
-    else 
-	var y= computeValue(obj, "t", 0);
-    return y!=undefined;
+    try {
+	if (elt_x==null)
+	    var y= computeValue(obj, "x", 0);
+	else 
+	    var y= computeValue(obj, "t", 0);
+	return y!=undefined;
+    } catch (e) {
+	if (e=="incomplet") return false;
+	throw e;
+    }
 }
 
 // verify whether the new object satisfies the winning test
 function verify(obj, isFinal) {
-    var elt_x= document.getElementById("def-x");
-    var elt_y= document.getElementById("def-y");
-    plot(elt_x, elt_y);
+    if (isFinal && obj.getAttributeNS(topns, "def")!="") {
+	var elt_x= document.getElementById("def-x");
+	var elt_y= document.getElementById("def-y");
+	try {
+	    plot(elt_x, elt_y);
+	} catch (e) {
+	    if (e!="incomplete") throw e;
+	}
+    }
 }
 
