@@ -21,7 +21,7 @@ function verify(obj, isFinal) {
 		    // clicked, not dragged
 		    if (state || Math.abs(x-ctm.e) + Math.abs(y-ctm.f) < 1) {
 			state=!state;
-			if (state || checkIsValid(obj)) {
+			if (state || isValid(obj)) {
 			    // set new layer vs. result state
 			    setState(obj, state);
 			}
@@ -66,21 +66,6 @@ function setDisplay(obj, state) {
 	obj.removeAttribute("display");
     else
 	obj.setAttribute("display","none");
-}
-
-function checkIsValid(obj) {
-    if (obj.getAttributeNS(topns, "role")=="layer") {
-	return findImage(obj, false)!=null;
-    } else {
-	var valid= true;
-	for (var i=0; i<obj.childNodes.length; ++i) {
-	    var child= obj.childNodes[i];
-	    if (child.nodeType==1) {
-		valid = valid && checkIsValid(child);
-	    }
-	}
-	return valid;
-    }
 }
 
 function findImage(obj, hidden) {
