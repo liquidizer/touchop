@@ -133,21 +133,6 @@ function computeValue(obj, varname, x) {
     return null;
 }
 
-// check if the expression is syntactically complete
-function checkIsValid(obj) {
-    var elt_x= document.getElementById("def-x");
-    try {
-	if (elt_x==null)
-	    var y= computeValue(obj, "x", 0);
-	else 
-	    var y= computeValue(obj, "t", 0);
-	return y!=undefined;
-    } catch (e) {
-	if (e=="incomplet") return false;
-	throw e;
-    }
-}
-
 // verify whether the new object satisfies the winning test
 function verify(obj, isFinal) {
     if (isFinal && obj.getAttributeNS(topns, "def")!="") {

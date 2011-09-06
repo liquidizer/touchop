@@ -165,8 +165,3 @@ function checkPosition() {
     }
     path.setAttribute("d", d);
 }
-
-// check if the expression is syntactically complete
-function checkIsValid(obj) {
-    return true;
-}

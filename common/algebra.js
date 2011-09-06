@@ -12,7 +12,7 @@ function computeValue(obj) {
     var use= obj.getAttributeNS(topns, "use");
     if (use!="") {
 	obj= document.getElementById("def-"+use);
-	if (isCyclicDef(obj, use)) 
+	if (obj.getAttribute("class")!="valid")
 	    return null;
     }
 
@@ -46,12 +46,6 @@ function computeValue(obj) {
     return value;
 }
 
-// check if the expression is syntactically complete
-function checkIsValid(obj) {
-    var value= computeValue(obj);
-    return value.length>0 && value.indexOf("#") < 0;
-}
-
 // verify whether the new object satisfies the winning test
 function verify(obj, isFinal) {
     // extract the user created formula in json
@@ -59,7 +53,7 @@ function verify(obj, isFinal) {
     var win= true;
 
     // break if formula is incomplete
-    if (value.indexOf("#")>=0)
+    if (value==null || value.indexOf("#")>=0)
 	return;
 
     // construct the objective function

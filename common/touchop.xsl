@@ -74,8 +74,8 @@
 <!-- Generic drop area for operator arguments -->
 <xsl:template name="operand">
   <xsl:comment>Drop area for operands</xsl:comment>
-  <svg:g onmousemove="dropOn(evt)" top:layout="snap(obj)">
-    <svg:rect height="50" width="50" rx="5" ry="5" class="operand"/>
+  <svg:g onmousemove="dropOn(evt)" top:layout="snap(obj)" class="operand">
+    <svg:rect height="50" width="50" rx="5" ry="5" class="background"/>
   </svg:g>
 </xsl:template>
 
@@ -400,7 +400,7 @@
   <svg:script type="text/javascript" xlink:href="../../common/turtle.js"/>
   <defs>
     <svg:path id="half-right" class="move"
-	      d="m 46.902938,32 -7.089379,-6.610169 c 0,0 -4.703321,2.41472 -6.178611,5.923728 -1.475291,3.509009 0,14.686441 0,14.686441 0,3 -3.980398,6 -7.960795,6 l -3.980397,0 C 16.38656,52 13.732961,49 13.732961,46 13.287178,37.062206 12.09228,27.079792 19.709179,21.338983 l 6.625729,-4.99377 -7.45779,-6.735044 c 1.326799,0 27.778451,0 27.778451,0 L 46.902938,32 z"/>
+	      d="m 46.90,32 -7.09,-6.61 c 0,0 -4.70,2.41 -6.18,5.92 -1.48,3.51 0,14.69 0,14.69 0,3 -3.98,6 -7.96,6 l -3.99,0 C 16.39,52 13.73,49 13.73,46 13.29,37.06 12.09,27.08 19.71,21.34 l 6.63,-4.99 -7.46,-6.74 c 1.33,0 27.78,0 27.78,0 L 46.90,32 z"/>
     <svg:path id="turn-left" class="move"
 	      d="M 55,25 l -15,15 0,-8 c 0,0 0,0 -2,0 l -8,0 0,14 c 0,3 -3,6 -6,6 l -3,0 c -4,0 -6,-3 -6,-6 l 0,-23 c 0,-3 2,-6 6,-6 l 3,0 c 0,0 1,0 1,0 l 14,0 c 1,0 1,0 1,0 l 0,-7 15,15 z"/>
     <svg:g id="turn-right"> 
