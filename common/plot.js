@@ -78,7 +78,7 @@ function drawGraph(canvas, samples, fx, fy) {
 		if (child.nodeName=="svg:circle") {
 		    var cx= child.getAttribute("cx");
 		    var cy= child.getAttribute("cy");
-		    if (Math.abs((xOld-x)*(cy-y)-(cx-x)*(yOld-y))<1) {
+		    if (isBetween(xOld, yOld, x, y, cx, cy)) {
 			winList[j]= true;
 		    }
 		    win= win && winList[j];
@@ -94,6 +94,19 @@ function drawGraph(canvas, samples, fx, fy) {
     if (win) smile(1.0); else smile(0.0);
 }
 
+function isBetween(ax, ay, bx, by, cx, cy) {
+    var crossproduct = (cy - ay) * (bx - ax) - (cx - ax) * (by - ay);
+    if (Math.abs(crossproduct) < 2) {
+	var dotproduct = (cx - ax) * (bx - ax) + (cy - ay)*(by - ay);
+	if (dotproduct > -2) {
+	    var squaredlengthba = (bx - ax)*(bx - ax) + (by - ay)*(by - ay);
+	    if (dotproduct < squaredlengthba + 2) {
+		return true;
+	    }
+	}
+    }
+    return false;
+}
 
 // Exactract the formula for the user created value.
 function computeValue(obj, varname, x) {
