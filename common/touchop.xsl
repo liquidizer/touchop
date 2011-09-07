@@ -471,15 +471,7 @@
   </svg:defs>
 </xsl:template>
 
-<xsl:template name="layer">
-    <svg:g transform="matrix(1, 0, 0.5 ,0.5, 0, 0)" 
-	   top:role="layer" 
-	   top:layout="layerLayout(obj)">
-      <xsl:call-template name="operand"/>
-    </svg:g>
-</xsl:template>
-
-<!-- SVG filter applied to an image -->
+<!-- SVG filter object -->
 <xsl:template match="image">
   <svg:g onmousedown="msDown(evt)"
 	 class="image"
@@ -511,8 +503,19 @@
       </xsl:for-each>
     </xsl:element>
 
+    <!-- argument number -->
+    <xsl:variable name="args" select="*/@in | */@in2"/>
+
+    <!-- filter name -->
+    <xsl:if test="@name">
+      <svg:text><xsl:value-of select="@name"/></svg:text>
+    </xsl:if>
+
     <!-- apply the result filter to an empty region -->
     <xsl:element name="svg:g">
+      <xsl:if test="$args">
+	<xsl:attribute name="display">none</xsl:attribute>
+      </xsl:if>
       <xsl:attribute name="filter">
 	<xsl:value-of select="concat('url(#',generate-id(),')')"/>
       </xsl:attribute>
@@ -520,8 +523,10 @@
     </xsl:element>
 
     <!-- create drop areas for arguments -->
-    <xsl:for-each select="*/@in | */@in2">
-      <xsl:call-template name="layer"/>
+    <xsl:for-each select="$args">
+      <svg:g top:layout="layerLayout(obj)">
+	<xsl:call-template name="operand"/>
+      </svg:g>
     </xsl:for-each>
 
   </svg:g>

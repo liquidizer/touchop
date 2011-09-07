@@ -40,6 +40,10 @@ text {
     fill:white;
 }    
 
+.image > text {
+    font-size: 12pt;
+}
+
 .shadow {
     fill: black;
     opacity: 0.4;

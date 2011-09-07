@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type="text/xsl" href="../../common/touchop.xsl"?>
-<touchop xmlns:svg="http://www.w3.org/2000/svg"
-	 xmlns:xlink="http://www.w3.org/1999/xlink">
+<touchop>
   <test domain="image"/>
 
-  <image xy="200,100">
+  <image name="Blur" xy="200,100">
     <feGaussianBlur stdDeviation="3" in="arg1"/>
+  </image>
+
+  <image name="Blur" xy="200,250">
+    <feGaussianBlur stdDeviation="3" in="arg1"/>
+  </image>
+
+  <image name="Atop" xy="300,100">
+    <feComposite stdDeviation="3" in="arg1" in2="arg2"/>
   </image>
 
   <image xy="100,100" src="img/tri_blue.png"/>
