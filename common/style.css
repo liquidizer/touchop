@@ -27,7 +27,17 @@ text {
 
 .program .background {
     stroke: black;
-    stroke-width: 1;
+    stroke-width: 1px;
+}    
+
+.program > text {
+    font-size: 12pt;
+}
+
+.image .background {
+    stroke: black;
+    stroke-width: 1px;
+    fill:white;
 }    
 
 .shadow {
@@ -66,16 +76,6 @@ rect.canvas {
 text.axes {
     font-size: 10pt;
     text-anchor: middle;
-}
-
-rect.frame {
-    fill: white;
-    stroke: black;
-    stroke-width: 1px;
-}
-
-text.filter {
-    font-size: 12pt;
 }
 
 #turtle {

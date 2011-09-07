@@ -434,7 +434,7 @@
 
     <svg:rect class="background" rx="5" ry="5"/>
     <xsl:if test="@name">
-      <svg:text class="filter">
+      <svg:text>
 	<xsl:value-of select="@name"/>
 	<xsl:if test="@def">=</xsl:if>
       </svg:text>
@@ -465,13 +465,9 @@
   <xsl:comment>Image processing</xsl:comment>
   <svg:script type="text/javascript" xlink:href="../../common/image.js"/>
   <svg:defs>
-    <svg:filter id="filter-blur" x="-10" y="-10" width="70" height="70">
-      <svg:feGaussianBlur stdDeviation="4"/>
-    </svg:filter>
-    <svg:filter id="filter-atop" x="0" y="0" width="60" height="60">
-      <!-- not working. No browser supports the enable-background attribute -->
-      <svg:feComposite operator="xor" in="SourceGraphic" in2="BackgroundImage"/>
-    </svg:filter>
+    <svg:clipPath id="filterFrame">
+      <svg:rect width="60" height="60"/>
+    </svg:clipPath>
   </svg:defs>
 </xsl:template>
 
@@ -483,53 +479,51 @@
     </svg:g>
 </xsl:template>
 
-<xsl:template match="op[@name='stack']">
-  <svg:g onmousedown="msDown(evt)"
-	 top:padding="10"
-	 top:layout="verticalLayout(obj)">
-
-    <svg:rect class="background" rx="5" ry="5"/>
-    <xsl:for-each select="layer">
-      <xsl:call-template name="layer"/>
-    </xsl:for-each>
-    <svg:g top:role="result" display="none">
-      <svg:rect width="60" height="60" class="frame"/>
-      <svg:g/>
-    </svg:g>
-  </svg:g>
-</xsl:template>
-
-<xsl:template match="op[@name='blur']">
-  <svg:g onmousedown="msDown(evt)"
-	 top:padding="10"
-	 top:layout="verticalLayout(obj)">
-
-    <svg:rect class="background" rx="5" ry="5"/>
-    <svg:text class="filter" transform="translate(45,16)">Blur</svg:text>
-    <xsl:call-template name="layer"/>
-    <svg:g top:role="result" display="none">
-      <svg:rect width="60" height="60" class="frame"/>
-      <svg:g filter="url(#filter-blur)"/>
-    </svg:g>
-  </svg:g>
-</xsl:template>
-
-<!-- Image -->
+<!-- SVG filter applied to an image -->
 <xsl:template match="image">
-  <svg:g onmousedown="msDown(evt)" top:role="image">
-    <svg:rect width="60" height="60" class="frame"/>
-    <svg:g top:role="content">
+  <svg:g onmousedown="msDown(evt)"
+	 class="image"
+	 top:padding="7"
+	 top:layout="updateFilter(obj);verticalLayout(obj)">
+
+    <!-- background image -->
+    <svg:rect class="background" rx="5" ry="5"/>
+
+    <!-- filter area -->
+    <xsl:element name="svg:filter">
+      <xsl:attribute name="display">none</xsl:attribute>
+      <xsl:attribute name="id">
+	<xsl:value-of select="generate-id()"/>
+      </xsl:attribute>
+      <!-- short cut for the feImage filter -->
       <xsl:if test="@src">
-	<xsl:element name="svg:image">
-	  <xsl:attribute name="width">60</xsl:attribute>
-	  <xsl:attribute name="height">60</xsl:attribute>
+	<xsl:element name="svg:feImage">
 	  <xsl:attribute name="xlink:href">
 	    <xsl:value-of select="@src"/>
 	  </xsl:attribute>
 	</xsl:element>
       </xsl:if>
-      <xsl:copy-of select="*"/>
-    </svg:g>
+      <!-- copy filter elements to the svg name space -->
+      <xsl:for-each select="*">
+	<xsl:element name="{concat('svg:',name())}">
+	  <xsl:copy-of select="@*"/>
+	</xsl:element>
+      </xsl:for-each>
+    </xsl:element>
+
+    <!-- apply the result filter to an empty region -->
+    <xsl:element name="svg:g">
+      <xsl:attribute name="filter">
+	<xsl:value-of select="concat('url(#',generate-id(),')')"/>
+      </xsl:attribute>
+      <svg:rect width="60" height="60"/>
+    </xsl:element>
+
+    <!-- create drop areas for arguments -->
+    <xsl:for-each select="*/@in | */@in2">
+      <xsl:call-template name="layer"/>
+    </xsl:for-each>
+
   </svg:g>
 </xsl:template>
 

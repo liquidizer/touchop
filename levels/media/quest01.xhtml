@@ -3,11 +3,11 @@
 <touchop xmlns:svg="http://www.w3.org/2000/svg"
 	 xmlns:xlink="http://www.w3.org/1999/xlink">
   <test domain="image"/>
-  <op name="stack" xy="300,100">
-    <layer/>
-    <layer/>
-  </op>
-  <op name="blur" xy="350,250"/>
+
+  <image xy="200,100">
+    <feGaussianBlur stdDeviation="3" in="arg1"/>
+  </image>
+
   <image xy="100,100" src="img/tri_blue.png"/>
   <image xy="100,200" src="img/tri_red.png"/>
 </touchop>

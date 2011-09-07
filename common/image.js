@@ -88,7 +88,54 @@ function findImage(obj, hidden) {
     return null;
 }
 
+function updateFilter(obj) {
+    var filter= null;
+    for (var i=0; i<obj.childNodes.length; ++i) {
+	var child= obj.childNodes[i];
+	if (child.nodeType==1) {
+	    if (filter!=null)
+		fillFilter(filter, child);
+	    if (child.nodeName=="svg:filter") {
+		filter= child;
+		for (var j=0; j<child.childNodes.length; ++j) {
+		    var layer= child.childNodes[j];
+		    var result= layer.getAttribute("result");
+		    if (result!=null && result.match(/^arg/))
+			child.removeChild(layer);
+		}
+	    }
+	}
+    }
+}
+
+function fillFilter(filter, obj) {
+    for (var i=0; i<obj.childNodes.length; ++i) {
+	var child= obj.childNodes[i];
+	if (child.nodeType==1) {
+	    if (child.nodeName=="svg:filter") {
+		for (var j=0; j<child.childNodes.length; ++j) {
+		    var layer= child.childNodes[j];
+		    if (layer.nodeType==1) {
+			layer= layer.cloneNode(true);
+			var result= layer.getAttribute("result");
+			if (result==null)
+			    layer.setAttribute("result", "arg1");
+			else 
+			    layer.setAttribute("result", "arg1_"+result);
+			filter.insertBefore(layer, filter.lastChild);
+		    }
+		}
+		break;
+	    } else {
+		fillFilter(filter, child);
+	    }
+	}
+    }
+    
+}
+
 function layerLayout(obj) {
+    return;
     var img= findImage(obj, true);
     if (img==null) {
 	// obj is undefined
