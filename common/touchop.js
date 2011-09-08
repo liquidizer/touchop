@@ -218,6 +218,7 @@ function sendHome() {
 
 	// update transformation
 	setTransform(hand, m);
+	layout(hand);
    	setFloating(hand, true);
     }
 }
@@ -357,19 +358,24 @@ function getPriority(obj) {
 // Layouts the content centered to its first child element
 // Creates a snap-in like effect what dropping operands
 function snap(obj) {
+    var back= null;
     var box1= null;
     for (var i=0; i<obj.childNodes.length; ++i) {
         child= obj.childNodes[i];
-        if (child.nodeType==1 && child.getAttribute("display")!="none") {
-	    if (box1==null) {
+        if (child.nodeType==1) {
+	    if (child.getAttribute("class")=="background") {
 		// The first element is the reference position
+		back= child;
+		back.removeAttribute("opacity");
 		box1= child.getBBox();
-	    } else {
+	    }
+	    else if (box1!=null) {
 		var m= child.getTransformToElement(child.parentNode);
 		var box2= child.getBBox();
 		m.e = box1.x - box2.x - 0.5*box2.width + 0.5*box1.width;
 		m.f = box1.y - box2.y - 0.5*box2.height + 0.5*box1.width;
 		setTransform(child, m);
+		back.setAttribute("opacity","0.0");
 	    }
 	}
     }
@@ -406,10 +412,11 @@ function boxLayout(obj, horizontal) {
 	    var opt= child.getAttributeNS(topns, "layoutOpt");
             if (child.getAttribute("class")=="background") {
                 back= child;
-            } else if (back!=null && child.getAttribute("display")!="none") {
+            } else if (back!=null && child.getAttribute("display")!="none" 
+		       && child.transform!=undefined) {
                 // find local coordinate system
-                m= child.getTransformToElement(obj);
-                box= child.getBBox();
+		var m= child.getTransformToElement(obj);
+		var box= child.getBBox();
 
                 if (n==0) {
                     // use first element as reference for alignment
@@ -450,7 +457,7 @@ function boxLayout(obj, horizontal) {
 		}
                 n++;
             }
-        }
+       }
     }
     
     // strech object

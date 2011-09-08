@@ -7,35 +7,6 @@
  */
 
 function verify(obj, isFinal) {
-    if (isFinal) {
-	var ctm=obj.getCTM();
-	var x= obj.getAttribute("img-x");
-	var y= obj.getAttribute("img-y");
-
-	// clicked, not dragged
-	var toggle= Math.abs(x-ctm.e) + Math.abs(y-ctm.f) < 1;
-	var show= isValid(obj);
-
-	var filter= null;
-	for (var i=0; i<obj.childNodes.length; ++i) {
-	    var child= obj.childNodes[i];
-	    if (child.nodeType==1) {
-		if (filter!=null) {
-		    setDisplay(child, !show);
-		}
-		if (child.getAttribute("filter")!=null) {
-		    filter= child;
-		    if (toggle)
-			show= show && child.getAttribute("display")=="none";
-		    setDisplay(child, show);
-		}
-	    }
-	}
-	ctm= obj.getCTM();
-	obj.setAttribute("img-x",ctm.e);
-	obj.setAttribute("img-y",ctm.f);
-	layout(obj);
-    }
 }
 
 function setDisplay(obj, state) {
@@ -50,17 +21,25 @@ function updateFilter(obj) {
     for (var i=0; i<obj.childNodes.length; ++i) {
 	var child= obj.childNodes[i];
 	if (child.nodeType==1) {
+	    // search for filter components recursively
 	    if (filter!=null)
 		fillFilter(filter, child);
+	    // reset the filter root
 	    if (child.nodeName=="svg:filter") {
 		filter= child;
 		filter.setAttribute("arg_no",1);
 		for (var j=0; j<child.childNodes.length; ++j) {
 		    var layer= child.childNodes[j];
 		    var result= layer.getAttribute("result");
-		    if (result!=null && result.match(/^arg/))
+		    if (result!=null && result.match(/^arg.*/)) {
 			child.removeChild(layer);
+			j= j-1;
+		    }
 		}
+	    }
+	    // control visibility of the result
+	    if (child.getAttribute("filter")!=null) {
+	     	setDisplay(child, isValid(obj) && obj==findRoot(obj));
 	    }
 	}
     }
@@ -70,7 +49,18 @@ function fillFilter(filter, obj) {
     for (var i=0; i<obj.childNodes.length; ++i) {
 	var child= obj.childNodes[i];
 	if (child.nodeType==1) {
-	    if (child.nodeName=="svg:filter") {
+	    // hide recursive results
+	    if (child.getAttribute("filter")!=null) {
+		if (child.getAttribute("display")!="none") {
+		    var ctm= obj.getCTM();
+		    if (Math.abs(ctm.c)<0.1) {
+			child.setAttribute("display","none");
+			layout(obj);
+		    }
+		}
+	    }
+	    // copy filter elements to root filter
+	    if (filter!=null && child.nodeName=="svg:filter") {
 		var arg_no= filter.getAttribute("arg_no");
 		var argId= "arg" + arg_no;
 		var insAt= filter.firstChild;
@@ -85,9 +75,10 @@ function fillFilter(filter, obj) {
 		    }
 		}
 		filter.setAttribute("arg_no", eval(arg_no) + 1);
-		break;
+		filter= null;
 	    } else {
-		fillFilter(filter, child);
+		if (filter!=null)
+		    fillFilter(filter, child);
 	    }
 	}
     }
@@ -104,7 +95,7 @@ function updateFeId(obj, name, argId) {
 
 function layerLayout(obj) {
     if (isSheered(obj)) {
-	obj.setAttribute("transform","scale(1, 0.8)");
+	obj.setAttribute("transform","scale(1, 0.9)");
     } else {
 	obj.setAttribute("transform","matrix(1, 0, -0.3 ,0.5, 0, 0)");
     }
@@ -114,9 +105,10 @@ function isSheered(obj) {
     var result= false;
     for (var i=0; i<obj.childNodes.length; ++i) {
 	var child= obj.childNodes[i];
-	if (child.nodeType==1 && child.getAttribute("display")!="none") {
+	if (child.nodeType==1 && child.getAttribute("display")!="none" &&
+	    child.transform!=undefined) {
 	    var ctm= child.getTransformToElement(obj);
-	    result= result || Math.abs(ctm.c) > 0.2;
+	    result= result || Math.abs(ctm.c) > 0.1;
 	    result= result || isSheered(child);
 	}
     }

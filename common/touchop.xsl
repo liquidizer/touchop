@@ -476,14 +476,17 @@
   <svg:g onmousedown="msDown(evt)"
 	 class="image"
 	 top:padding="7"
-	 top:layout="updateFilter(obj);verticalLayout(obj)">
+	 top:layout="updateFilter(obj);horizontalLayout(obj)">
 
     <!-- background image -->
     <svg:rect class="background" rx="5" ry="5"/>
 
     <!-- filter area -->
     <xsl:element name="svg:filter">
-      <xsl:attribute name="display">none</xsl:attribute>
+      <xsl:attribute name="x">0</xsl:attribute>
+      <xsl:attribute name="y">0</xsl:attribute>
+      <xsl:attribute name="width">100%</xsl:attribute>
+      <xsl:attribute name="height">100%</xsl:attribute>
       <xsl:attribute name="id">
 	<xsl:value-of select="generate-id()"/>
       </xsl:attribute>
@@ -496,11 +499,7 @@
 	</xsl:element>
       </xsl:if>
       <!-- copy filter elements to the svg name space -->
-      <xsl:for-each select="*">
-	<xsl:element name="{concat('svg:',name())}">
-	  <xsl:copy-of select="@*"/>
-	</xsl:element>
-      </xsl:for-each>
+      <xsl:call-template name="toSVG"/>
     </xsl:element>
 
     <!-- argument number -->
@@ -508,28 +507,45 @@
 
     <!-- filter name -->
     <xsl:if test="@name">
-      <svg:text><xsl:value-of select="@name"/></svg:text>
+      <svg:g>
+	<svg:text transform="rotate(-90)"><xsl:value-of select="@name"/></svg:text>
+      </svg:g>
+    </xsl:if>
+
+    <!-- create drop areas for arguments -->
+    <xsl:if test="$args">
+      <svg:g top:layout="verticalLayout(obj)">
+	<svg:rect class="background" display="none"/>
+	<xsl:for-each select="$args">
+	  <svg:g top:layout="layerLayout(obj)">
+	    <xsl:call-template name="operand"/>
+	  </svg:g>
+	</xsl:for-each>
+      </svg:g>
     </xsl:if>
 
     <!-- apply the result filter to an empty region -->
-    <xsl:element name="svg:g">
+    <xsl:element name="svg:rect">
       <xsl:if test="$args">
 	<xsl:attribute name="display">none</xsl:attribute>
       </xsl:if>
       <xsl:attribute name="filter">
 	<xsl:value-of select="concat('url(#',generate-id(),')')"/>
       </xsl:attribute>
-      <svg:rect width="60" height="60"/>
+      <xsl:attribute name="width">70</xsl:attribute>
+      <xsl:attribute name="height">70</xsl:attribute>
     </xsl:element>
 
-    <!-- create drop areas for arguments -->
-    <xsl:for-each select="$args">
-      <svg:g top:layout="layerLayout(obj)">
-	<xsl:call-template name="operand"/>
-      </svg:g>
-    </xsl:for-each>
-
   </svg:g>
+</xsl:template>
+
+<xsl:template name="toSVG">
+  <xsl:for-each select="*">
+    <xsl:element name="{concat('svg:',name())}">
+      <xsl:copy-of select="@*"/>
+      <xsl:call-template name="toSVG"/>
+    </xsl:element>
+  </xsl:for-each>
 </xsl:template>
 
 </xsl:stylesheet>

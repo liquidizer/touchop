@@ -37,10 +37,10 @@ text {
 .image .background {
     stroke: black;
     stroke-width: 1px;
-    fill:white;
+    fill: lightgray;
 }    
 
-.image > text {
+.image text {
     font-size: 12pt;
 }
 
