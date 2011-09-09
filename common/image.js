@@ -7,22 +7,41 @@
  */
 
 function verify(obj, isFinal) {
+    var filter= null;
+    if (isFinal && isValid(obj)) {
+	for (var i=0; i<obj.childNodes.length; ++i) {
+	    var child= obj.childNodes[i];
+	    if (child.nodeType==1) {
+		if (child.nodeName=="svg:filter") {
+		    filter= child;
+		    break;
+		}
+	    }
+	}
+	if (filter!=null) {
+	    // evaluate the winning pattern
+	    var test= document.getElementById("test");
+	    var exp= test.getAttributeNS(topns, "test");
+	    exp= exp.replace(/ /g,".*");
+	    var serializer = new XMLSerializer ();
+	    var str = serializer.serializeToString (filter);
+	    if (str.match(new RegExp(exp)))
+		smile(1.0);
+	    else
+		smile(0.0);
+	}
+    }
 }
 
-function setDisplay(obj, state) {
-    if (state)
-	obj.removeAttribute("display");
-    else
-	obj.setAttribute("display","none");
-}
 
 function updateFilter(obj) {
     var filter= null;
+    var isvalid= isValid(obj);
     for (var i=0; i<obj.childNodes.length; ++i) {
 	var child= obj.childNodes[i];
 	if (child.nodeType==1) {
 	    // search for filter components recursively
-	    if (filter!=null)
+	    if (isvalid && filter!=null)
 		fillFilter(filter, child);
 	    // reset the filter root
 	    if (child.nodeName=="svg:filter") {
@@ -39,11 +58,14 @@ function updateFilter(obj) {
 	    }
 	    // control visibility of the result
 	    if (child.getAttribute("filter")!=null) {
-	     	setDisplay(child, isValid(obj) && obj==findRoot(obj));
+		if (isvalid && obj==findRoot(obj))
+		    child.removeAttribute("display");
+		else
+		    child.setAttribute("display","none");
 	    }
 	}
     }
-}
+ }
 
 function fillFilter(filter, obj) {
     for (var i=0; i<obj.childNodes.length; ++i) {

@@ -466,6 +466,8 @@
   <svg:script type="text/javascript" xlink:href="../../common/image.js"/>
   <svg:g transform="translate(10,10)">
     <xsl:element name="svg:image">
+      <xsl:attribute name="id">test</xsl:attribute>
+      <xsl:attribute name="top:test"><xsl:value-of select="@exp"/></xsl:attribute>
       <xsl:attribute name="width">70</xsl:attribute>
       <xsl:attribute name="height">70</xsl:attribute>
       <xsl:attribute name="xlink:href">
