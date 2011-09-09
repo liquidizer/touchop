@@ -1,68 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type="text/xsl" href="../../common/touchop.xsl"?>
 <touchop>
-  <test domain="image"/>
-
+  <test domain="image" win="img/quest01_result.png"/>
 
   <!-- base images -->
-  <image xy="50,10">
-    <feFlood flood-color="limegreen"/>
+  <image xy="150,100">
+    <feFlood flood-color="gold"/>
   </image>
 
-  <image xy="50,100" src="img/tri_blue.png"/>
-  <image xy="50,190" src="img/tri_red.png"/>
+  <image xy="280,100" src="../../common/smiley.svg"/>
 
-  <image xy="280,10" src="img/images.jpg"/>
-  <image xy="280,100" src="img/circle.png"/>
-  <image xy="280,190" src="img/circle.png"/>
-
-  <image xy="50,280">
-    <feTurbulence type="fractalNoise" baseFrequency="0.1,0.1" numOctaves="4" seed='1'/>
-  </image>
-
-  <!-- single arg operators --> 
-
-  <image name="offset" xy="380,10">
-    <feOffset dx="5" dy="8" in="arg1"/>
-  </image>
-
-  <image name="Blur" xy="380,80">
-    <feGaussianBlur stdDeviation="3" in="arg1"/>
-  </image>
-
-  <image name="Light" xy="380,150">
-    <feSpecularLighting in="arg1" surfaceScale="10" specularConstant=".75" 
-                        specularExponent="1" lighting-color="#bbbbbb">
-      <fePointLight x=".5" y="-.1" z=".5"/>
-    </feSpecularLighting>
-  </image>
-
-  <image name="Hue+90" xy="380,220">
-    <feColorMatrix type="hueRotate" in="arg1" values="90"/>
-  </image>
-
-  <image name="ToAlpha" xy="280,290">
+  <image name="Mask" xy="280,200">
     <feColorMatrix type="luminanceToAlpha" in="arg1"/>
   </image>
 
-
-
-  <!-- double arg operators -->
-
-  <image name="Atop" xy="150,10">
+  <image name="Atop" xy="150,200">
     <feComposite in="arg1" in2="arg2"/>
-  </image>
-
-  <image name="In" xy="150,100">
-    <feComposite operator="in" in="arg1" in2="arg2"/>
-  </image>
-
-  <image name="Out" xy="150,190">
-    <feComposite operator="out" in="arg1" in2="arg2"/>
-  </image>
-
-  <image name="Displace" xy="150,280">
-    <feDisplacementMap in="arg1" in2="arg2" scale="10"/>
   </image>
 
 </touchop>

@@ -464,11 +464,17 @@
 <xsl:template match="test[@domain='image']">
   <xsl:comment>Image processing</xsl:comment>
   <svg:script type="text/javascript" xlink:href="../../common/image.js"/>
-  <svg:defs>
-    <svg:clipPath id="filterFrame">
-      <svg:rect width="60" height="60"/>
-    </svg:clipPath>
-  </svg:defs>
+  <svg:g transform="translate(10,10)">
+    <xsl:element name="svg:image">
+      <xsl:attribute name="width">70</xsl:attribute>
+      <xsl:attribute name="height">70</xsl:attribute>
+      <xsl:attribute name="xlink:href">
+	<xsl:value-of select="@win"/>
+      </xsl:attribute>
+    </xsl:element>
+    <svg:rect width="70" height="70" fill="none" stroke="black" stroke-width="1"/>
+    <svg:text y="50" x="85">= ?</svg:text>
+  </svg:g>
 </xsl:template>
 
 <!-- SVG filter object -->
@@ -529,11 +535,12 @@
       <xsl:if test="$args">
 	<xsl:attribute name="display">none</xsl:attribute>
       </xsl:if>
+      <xsl:attribute name="transform">scale(0.5)</xsl:attribute>
       <xsl:attribute name="filter">
 	<xsl:value-of select="concat('url(#',generate-id(),')')"/>
       </xsl:attribute>
-      <xsl:attribute name="width">70</xsl:attribute>
-      <xsl:attribute name="height">70</xsl:attribute>
+      <xsl:attribute name="width">140</xsl:attribute>
+      <xsl:attribute name="height">140</xsl:attribute>
     </xsl:element>
 
   </svg:g>
