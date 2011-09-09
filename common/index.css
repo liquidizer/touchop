@@ -17,6 +17,12 @@
     text-decoration: none;
 }
 
+img.result {
+    width: 60px;
+    height: 60px;
+    border: solid 1px  black;
+}
+
 .passed li {
     background: url(passed.png);
     color: white;

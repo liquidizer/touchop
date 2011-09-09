@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../../common/touchop.xsl"?>
+<touchop>
+  <test domain="image"/>
+
+
+  <!-- base images -->
+  <image xy="50,10">
+    <feFlood flood-color="black"/>
+  </image>
+
+  <image xy="50,100" src="img/tri_blue.png"/>
+  <image xy="50,190" src="../../common/smiley.svg"/>
+
+  <image xy="280,10" src="img/sunset.jpg"/>
+  <image xy="280,100" src="img/circle.svg"/>
+  <image xy="280,190" src="img/circle.svg"/>
+
+  <image xy="50,280">
+    <feTurbulence baseFrequency="0.05,0.05" numOctaves="2"/>
+  </image>
+
+  <!-- single arg operators --> 
+
+  <image name="offset" xy="380,10">
+    <feOffset dx="5" dy="8" in="arg1"/>
+  </image>
+
+  <image name="Blur" xy="380,80">
+    <feGaussianBlur stdDeviation="3" in="arg1"/>
+  </image>
+
+  <image name="Light" xy="380,150">
+    <feSpecularLighting in="arg1" surfaceScale="10" specularExponent="10">
+      <fePointLight/>
+    </feSpecularLighting>
+  </image>
+
+  <image name="Hue+90" xy="380,220">
+    <feColorMatrix type="hueRotate" in="arg1" values="90"/>
+  </image>
+
+  <image name="Mask" xy="270,290">
+    <feColorMatrix type="luminanceToAlpha" in="arg1"/>
+  </image>
+
+  <image name="Erode" xy="380,320">
+    <feMorphology operator="erode" in="arg1" radius="1"/>
+  </image>
+
+  <image name="Dilate" xy="500,120">
+    <feMorphology operator="dilate" in="arg1" radius="2"/>
+  </image>
+
+
+  <!-- double arg operators -->
+
+  <image name="Atop" xy="150,10">
+    <feComposite in="arg1" in2="arg2"/>
+  </image>
+
+  <image name="In" xy="150,100">
+    <feComposite operator="in" in="arg1" in2="arg2"/>
+  </image>
+
+  <image name="Out" xy="150,190">
+    <feComposite operator="out" in="arg1" in2="arg2"/>
+  </image>
+
+  <image name="Displace" xy="150,280">
+    <feDisplacementMap in="arg1" in2="arg2" scale="10"/>
+  </image>
+
+</touchop>
