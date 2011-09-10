@@ -325,22 +325,39 @@
     </xsl:for-each>
     <svg:path id="plotpath"/>
   </xsl:element>
+
   <!-- compute grid resolution -->
-  <xsl:variable name="res">
-    <xsl:choose>
-      <xsl:when test="(@xmax - @xmin)&lt;11">1</xsl:when>
-      <xsl:otherwise>5</xsl:otherwise>
-    </xsl:choose>
+  <xsl:variable name="yres">
+    <xsl:call-template name="resolution">
+      <xsl:with-param name="span" select="@ymax - @ymin"/>
+    </xsl:call-template>
   </xsl:variable>
   <!-- call grid creation -->
   <xsl:call-template name="ygrid">
     <xsl:with-param name="pos" select="ceiling(@ymin)"/>
-    <xsl:with-param name="res" select="$res"/>
+    <xsl:with-param name="res" select="$yres"/>
   </xsl:call-template>
+
+  <!-- compute grid resolution -->
+  <xsl:variable name="xres">
+    <xsl:call-template name="resolution">
+      <xsl:with-param name="span" select="@xmax - @xmin"/>
+    </xsl:call-template>
+  </xsl:variable>
+  <!-- call grid creation -->
   <xsl:call-template name="xgrid">
     <xsl:with-param name="pos" select="ceiling(@xmin)"/>
-    <xsl:with-param name="res" select="$res"/>
+    <xsl:with-param name="res" select="$xres"/>
   </xsl:call-template>
+</xsl:template>
+
+<xsl:template name="resolution">
+  <xsl:param name="span"/>
+  <xsl:choose>
+    <xsl:when test="$span &lt; 11">1</xsl:when>
+    <xsl:when test="$span &lt; 41">5</xsl:when>
+    <xsl:otherwise>10</xsl:otherwise>
+  </xsl:choose>
 </xsl:template>
 
 <xsl:template name="ygrid">
