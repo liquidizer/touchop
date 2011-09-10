@@ -304,7 +304,7 @@
     <xsl:for-each select="point">
       <xsl:element name="svg:circle">
 	<xsl:attribute name="class">graph</xsl:attribute>
-	<xsl:attribute name="r">5</xsl:attribute>
+	<xsl:attribute name="r">4</xsl:attribute>
 	<xsl:attribute name="cx">
 	  <xsl:value-of select="(@x - ../@xmin)*$xscale"/>
 	</xsl:attribute>

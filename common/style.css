@@ -68,6 +68,7 @@ path.axes {
 circle.graph {
     fill: green;
     stroke: #000000;
+    opacity: 0.9;
     stroke-width: 1px;
 }
 
