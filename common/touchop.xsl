@@ -355,6 +355,7 @@
 <xsl:template name="resolution">
   <xsl:param name="span"/>
   <xsl:choose>
+    <xsl:when test="$span &lt; 2.1">0.5</xsl:when>
     <xsl:when test="$span &lt; 11">1</xsl:when>
     <xsl:when test="$span &lt; 41">5</xsl:when>
     <xsl:otherwise>10</xsl:otherwise>
