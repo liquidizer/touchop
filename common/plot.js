@@ -7,9 +7,6 @@
  */
 
 function plot(elt_x, elt_y) {
-    var canvasId= "canvas";
-    var canvas= document.getElementById(canvasId);
-
     // remove old plot
     var win = true;
     var path= document.getElementById("plotpath");
@@ -27,10 +24,13 @@ function plot(elt_x, elt_y) {
 	var fy= eval(init + computeValue(elt_y)+" };" )
     }
 
-    win= drawGraph(canvas, samples, fx, fy);
+    win= drawGraph(samples, fx, fy);
 }
 
-function drawGraph(canvas, samples, fx, fy) {
+function drawGraph(samples, fx, fy) {
+    var canvasId= "canvas";
+    var canvas= document.getElementById(canvasId);
+
     var size= eval(canvas.getAttributeNS(topns, "size"));
     var xmin= eval(canvas.getAttributeNS(topns, "xmin"));
     var xmax= eval(canvas.getAttributeNS(topns, "xmax"));
@@ -95,17 +95,22 @@ function drawGraph(canvas, samples, fx, fy) {
 }
 
 function isBetween(ax, ay, bx, by, cx, cy) {
-    if (Math.abs(ax-bx)+Math.abs(ay-by)>0.1) {
+    var eps=0.1;
+    var scale= Math.abs(ax-bx)+Math.abs(ay-by);
+    if (scale > eps) {
 	var crossproduct = (cy - ay) * (bx - ax) - (cx - ax) * (by - ay);
-	if (Math.abs(crossproduct) < 2) {
+	if (Math.abs(crossproduct) < 1/scale) {
 	    var dotproduct = (cx - ax) * (bx - ax) + (cy - ay)*(by - ay);
-	    if (dotproduct > -2) {
+	    var scale2= scale*scale;
+	    if (dotproduct > -scale2) {
 		var squaredlengthba = (bx - ax)*(bx - ax) + (by - ay)*(by - ay);
-		if (dotproduct < squaredlengthba + 2) {
+		if (dotproduct < squaredlengthba + scale2) {
 		    return true;
 		}
 	    }
 	}
+    } else {
+	return Math.abs((ax+bx)/2-cx)+Math.abs((ay+by)/2-cy) < eps;
     }
     return false;
 }
