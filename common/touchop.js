@@ -142,9 +142,6 @@ function moveToGroup(obj, target) {
         // insert object to target group and layout new container
         layout(oldContainer);
         layout(target);
-
-        // if previous container was blocked, it will accept drops again
-        oldContainer.setAttribute("blocked",null);
     }
 }
 
@@ -175,7 +172,6 @@ function dropOn(evt) {
 		sendHome(hand);
 		setFloating(hand, false);
 		moveToGroup(hand, target);
-		hand.parentNode.setAttribute("blocked","true");
 	
 		// verify the winning test during mouse hover
 		verify(findRoot(hand), false);
@@ -359,7 +355,7 @@ function getPriority(obj) {
 // Creates a snap-in like effect what dropping operands
 function snap(obj) {
     var back= null;
-    var box1= null;
+    obj.removeAttribute("blocked");
     for (var i=0; i<obj.childNodes.length; ++i) {
         child= obj.childNodes[i];
         if (child.nodeType==1) {
@@ -367,15 +363,20 @@ function snap(obj) {
 		// The first element is the reference position
 		back= child;
 		back.removeAttribute("opacity");
-		box1= child.getBBox();
 	    }
-	    else if (box1!=null) {
+	    else if (back!=null) {
 		var m= child.getTransformToElement(child.parentNode);
+		var box1= back.getBBox();
 		var box2= child.getBBox();
 		m.e = box1.x - box2.x - 0.5*box2.width + 0.5*box1.width;
 		m.f = box1.y - box2.y - 0.5*box2.height + 0.5*box1.width;
 		setTransform(child, m);
+
+		// make drop area opaque
 		back.setAttribute("opacity","0.0");
+		
+		if (child.getAttribute("onmousedown")!=null)
+		    obj.setAttribute("blocked","true");
 	    }
 	}
     }

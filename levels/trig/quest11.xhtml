@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<?xml-stylesheet type="text/xsl" href="../../common/touchop.xsl"?>
+<touchop>
+  <test domain="plot"/>
+  <canvas xy="50,20" size="150" xmin="-5" xmax="5" ymin="-5" ymax="5">
+    <point x="4.00000" y="0.00000"/>
+    <point x="1.61803" y="1.17557"/>
+    <point x="1.23607" y="3.80423"/>
+    <point x="-0.61803" y="1.90211"/>
+    <point x="-3.23607" y="2.35114"/>
+    <point x="-2.00000" y="0.00000"/>
+    <point x="-3.23607" y="-2.35114"/>
+    <point x="-0.61803" y="-1.90211"/>
+    <point x="1.23607" y="-3.80423"/>
+    <point x="1.61803" y="-1.17557"/>
+  </canvas>
+
+  <def name="x" xy="220,40">
+    <arg>
+      <op name="times" xy="40,300"/>
+    </arg>
+  </def>
+
+  <def name="y" xy="220,120">
+    <arg>
+      <op name="times" xy="40,300"/>
+    </arg>
+  </def>
+
+  <def name="&#x03b5;" xy="220,200">
+    <arg>
+      <op name="plus"/>
+    </arg>
+  </def>
+
+  <func name="cos" xy="10,300">
+    <arg>
+      <atom value="t"/>
+    </arg>
+  </func>
+
+  <func name="cos" xy="210,300">
+    <arg>
+      <atom value="t"/>
+    </arg>
+  </func>
+
+  <func name="sin" xy="410,300">
+    <arg>
+      <atom value="t"/>
+    </arg>
+  </func>
+
+  <op name="times" xy="20,220"/>
+  
+  <use name="&#x03b5;" xy="450,120"/>
+  <use name="&#x03b5;" xy="525,200"/>
+  <atom value="5" xy="450,200"/>
+  <atom value="3" xy="525,120"/>
+
+</touchop>

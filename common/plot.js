@@ -21,7 +21,7 @@ function plot(elt_x, elt_y) {
 	var fx= null
 	var fy= eval("function(x) { return "+computeValue(elt_y)+" };" )
     } else {
-	var samples= 1024;
+	var samples= 16*9*25;
 	var init= "function(t) { t= (t-0.5)*48*3.14159; return"
 	var fx= eval(init + computeValue(elt_x)+" };" )
 	var fy= eval(init + computeValue(elt_y)+" };" )
@@ -116,8 +116,6 @@ function computeValue(obj) {
     var use= obj.getAttributeNS(topns, "use");
     if (use!="") {
 	obj= document.getElementById("def-"+use);
-	if (!isValid(obj)) 
-	    return null;
     }
 
     // The top:value attribute contains the formula
@@ -150,7 +148,9 @@ function verify(obj, isFinal) {
 	var elt_x= document.getElementById("def-x");
 	var elt_y= document.getElementById("def-y");
 	try {
-	    plot(elt_x, elt_y);
+	    if ((elt_x==null || isValid(elt_x))
+		&& isValid(elt_y))
+		plot(elt_x, elt_y);
 	} catch (e) {
 	    if (e!="incomplete") throw e;
 	}

@@ -76,6 +76,7 @@
   <xsl:comment>Drop area for operands</xsl:comment>
   <svg:g onmousemove="dropOn(evt)" top:layout="snap(obj)" class="operand">
     <svg:rect height="50" width="50" rx="5" ry="5" class="background"/>
+    <xsl:apply-templates/>
   </svg:g>
 </xsl:template>
 
