@@ -19,12 +19,12 @@ function plot(elt_x, elt_y) {
     if (elt_x==null) {
 	var samples= 240;
 	var fx= null
-	var fy= function(t) { return computeValue(elt_y, "x", t); }
+	var fy= eval("function(x) { return "+computeValue(elt_y)+" };" )
     } else {
 	var samples= 1024;
-	var ft= function(t) { return (t-0.5)*48*3.14159; }
-	var fx= function(t) { return computeValue(elt_x, "t", ft(t)); }
-	var fy= function(t) { return computeValue(elt_y, "t", ft(t)); }
+	var init= "function(t) { t= (t-0.5)*48*3.14159; return"
+	var fx= eval(init + computeValue(elt_x)+" };" )
+	var fy= eval(init + computeValue(elt_y)+" };" )
     }
 
     win= drawGraph(canvas, samples, fx, fy);
@@ -95,13 +95,15 @@ function drawGraph(canvas, samples, fx, fy) {
 }
 
 function isBetween(ax, ay, bx, by, cx, cy) {
-    var crossproduct = (cy - ay) * (bx - ax) - (cx - ax) * (by - ay);
-    if (Math.abs(crossproduct) < 2) {
-	var dotproduct = (cx - ax) * (bx - ax) + (cy - ay)*(by - ay);
-	if (dotproduct > -2) {
-	    var squaredlengthba = (bx - ax)*(bx - ax) + (by - ay)*(by - ay);
-	    if (dotproduct < squaredlengthba + 2) {
-		return true;
+    if (Math.abs(ax-bx)+Math.abs(ay-by)>0.1) {
+	var crossproduct = (cy - ay) * (bx - ax) - (cx - ax) * (by - ay);
+	if (Math.abs(crossproduct) < 2) {
+	    var dotproduct = (cx - ax) * (bx - ax) + (cy - ay)*(by - ay);
+	    if (dotproduct > -2) {
+		var squaredlengthba = (bx - ax)*(bx - ax) + (by - ay)*(by - ay);
+		if (dotproduct < squaredlengthba + 2) {
+		    return true;
+		}
 	    }
 	}
     }
@@ -109,41 +111,37 @@ function isBetween(ax, ay, bx, by, cx, cy) {
 }
 
 // Exactract the formula for the user created value.
-function computeValue(obj, varname, x) {
+function computeValue(obj) {
     // check for redirections
     var use= obj.getAttributeNS(topns, "use");
     if (use!="") {
 	obj= document.getElementById("def-"+use);
-	if (isCyclicDef(obj, use)) 
+	if (!isValid(obj)) 
 	    return null;
     }
 
     // The top:value attribute contains the formula
     var value= obj.getAttributeNS(topns, "value");
-    value= value.replace(/\u03c0/, "(3.14159)");
-    if (value==varname) {
-	return x;
-    } else {
-	// recurse through child elements to find open arguments
-	var args= [];
-	for (var i=0; i<obj.childNodes.length; ++i) {
-	    if (obj.childNodes[i].nodeType==1) {
-		// if the child node has a value, compute it and 
-		// store in the argument list.
-		var sub= computeValue(obj.childNodes[i], varname, x);
-		if (sub!=null) {
-		    if (value=="") {
-			return sub;
-		    } else {
-			value= value.replace(/#[0-9]/,""+sub);
-		    }
+
+    // recurse through child elements to find open arguments
+    var args= [];
+    for (var i=0; i<obj.childNodes.length; ++i) {
+	if (obj.childNodes[i].nodeType==1) {
+	    // if the child node has a value, compute it and 
+	    // store in the argument list.
+	    var sub= computeValue(obj.childNodes[i]);
+	    if (sub!="") {
+		sub= "("+sub+")";
+		if (value=="") {
+		    return sub;
+		} else {
+		    value= value.replace(/#[0-9]/,""+sub);
 		}
 	    }
 	}
-	if (value.match(/#/)) throw "incomplete";
-	return eval(value);
     }
-    return null;
+    if (value.match(/#/)) throw "incomplete";
+    return value;
 }
 
 // verify whether the new object satisfies the winning test
