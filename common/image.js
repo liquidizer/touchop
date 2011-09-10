@@ -41,18 +41,19 @@ function updateFilter(obj) {
 	var child= obj.childNodes[i];
 	if (child.nodeType==1) {
 	    // search for filter components recursively
-	    if (isvalid && filter!=null)
-		fillFilter(filter, child);
+	    fillFilter(child, filter, true);
 	    // reset the filter root
 	    if (child.nodeName=="svg:filter") {
-		filter= child;
-		filter.setAttribute("arg_no",1);
-		for (var j=0; j<child.childNodes.length; ++j) {
-		    var layer= child.childNodes[j];
-		    var result= layer.getAttribute("result");
-		    if (result!=null && result.match(/^arg.*/)) {
-			child.removeChild(layer);
-			j= j-1;
+		if (isvalid) {
+		    filter= child;
+		    filter.setAttribute("arg_no",1);
+		    for (var j=0; j<child.childNodes.length; ++j) {
+			var layer= child.childNodes[j];
+			var result= layer.getAttribute("result");
+			if (result!=null && result.match(/^arg.*/)) {
+			    child.removeChild(layer);
+			    j= j-1;
+			}
 		    }
 		}
 	    }
@@ -67,12 +68,20 @@ function updateFilter(obj) {
     }
  }
 
-function fillFilter(filter, obj) {
+function fillFilter(obj, filter, hide) {
+    if (filter!=null) {
+	var use= obj.getAttributeNS(topns,"use");
+	if (use!="") {
+	    obj= document.getElementById("def-"+use);
+	    fillFilter(obj, filter, false);
+	    return;
+	}
+    }
     for (var i=0; i<obj.childNodes.length; ++i) {
 	var child= obj.childNodes[i];
 	if (child.nodeType==1) {
 	    // hide recursive results
-	    if (child.getAttribute("filter")!=null) {
+	    if (hide && child.getAttribute("filter")!=null) {
 		if (child.getAttribute("display")!="none") {
 		    var ctm= obj.getCTM();
 		    if (Math.abs(ctm.c)<0.1) {
@@ -99,8 +108,7 @@ function fillFilter(filter, obj) {
 		filter.setAttribute("arg_no", eval(arg_no) + 1);
 		filter= null;
 	    } else {
-		if (filter!=null)
-		    fillFilter(filter, child);
+		fillFilter(child, filter, hide);
 	    }
 	}
     }

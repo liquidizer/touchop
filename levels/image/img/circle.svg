@@ -4,5 +4,5 @@
      width="120"
      height="120">
 
-  <circle cx="60" cy="60" r="40" fill="darkblue"/>
+  <circle cx="60" cy="60" r="40" fill="magenta"/>
 </svg>
