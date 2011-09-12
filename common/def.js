@@ -41,8 +41,10 @@ function validateDef(obj) {
 // find all variable uses by name and set the validity flag
 function setValidDef(obj, name, flag) {
     var use= obj.getAttributeNS(topns, "use");
-    if (use==name)
+    if (use==name) {
 	obj.setAttribute("class", flag);
+	layout(obj);
+    }
     // recurse over all child elements
     for (var i=0; i<obj.childNodes.length; ++i) {
         var child= obj.childNodes[i];

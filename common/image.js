@@ -73,7 +73,8 @@ function fillFilter(obj, filter, hide) {
 	var use= obj.getAttributeNS(topns,"use");
 	if (use!="") {
 	    obj= document.getElementById("def-"+use);
-	    fillFilter(obj, filter, false);
+	    if (isValid(obj))
+		fillFilter(obj, filter, false);
 	    return;
 	}
     }
