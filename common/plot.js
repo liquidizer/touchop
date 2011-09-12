@@ -15,13 +15,13 @@ function plot(elt_x, elt_y) {
     // build plot function
     if (elt_x==null) {
 	var samples= 240;
-	var fx= null
-	var fy= eval("function(x) { return "+computeValue(elt_y)+" };" )
+	var fx= null;
+	var fy= function(x) { return eval(computeValue(elt_y)); };
     } else {
 	var samples= 16*9*25;
-	var init= "function(t) { t= (t-0.5)*48*3.14159; return"
-	var fx= eval(init + computeValue(elt_x)+" };" )
-	var fy= eval(init + computeValue(elt_y)+" };" )
+	var init= "t=(t-0.5)*48*3.14159; return";
+	var fx= new Function("t", init + computeValue(elt_x));
+	var fy= new Function("t", init + computeValue(elt_y));
     }
 
     win= drawGraph(samples, fx, fy);
