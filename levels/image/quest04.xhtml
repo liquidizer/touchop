@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../../common/touchop.xsl"?>
+<touchop>
+  <test domain="image"
+	win="img/quest04_result.png"
+	exp="face Blur face feColor type = matrix feComposite feComponent exp = 0.5"/> -->
+
+  <def name="&#x2460;" xy="80,100"/>
+  <use name="&#x2460;" xy="80,180"/>
+  <use name="&#x2460;" xy="80,260"/>
+
+  <!-- base images -->
+
+  <image xy="240,70" src="img/face.jpg"/>
+
+  <!-- single arg operators --> 
+  <image name="Invert" xy="420,260">
+    <feColorMatrix type="matrix" in="arg1" 
+		   values="-1 0 0 0 1
+			   0 -1 0 0 1
+			   0 0 -1 0 1
+			   0 0 0 1 0"/>
+  </image>
+
+
+  <image name="Light" xy="290,180">
+    <feComponentTransfer in="arg1">
+      <feFuncR type="gamma" exponent="0.5"/>
+      <feFuncG type="gamma" exponent="0.5"/>
+      <feFuncB type="gamma" exponent="0.5"/>
+      <feFuncA type="gamma" exponent="0.5"/>
+    </feComponentTransfer>
+  </image>
+
+  <image name="Blur" xy="420,180">
+    <feGaussianBlur stdDeviation="1.5" in="arg1"/>
+  </image>
+
+  <image name="Mask" xy="170,260">
+    <feColorMatrix type="luminanceToAlpha" in="arg1"/>
+  </image>
+
+  <!-- double arg operators -->
+
+  <image name="Atop" xy="170,180">
+    <feComposite in="arg1" in2="arg2"/>
+  </image>
+
+</touchop>

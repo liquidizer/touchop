@@ -22,7 +22,7 @@ function verify(obj, isFinal) {
 	    // evaluate the winning pattern
 	    var test= document.getElementById("test");
 	    var exp= test.getAttributeNS(topns, "test");
-	    exp= exp.replace(/ /g,".*");
+	    exp= exp.replace(/\s/g,".*");
 	    var serializer = new XMLSerializer ();
 	    var str = serializer.serializeToString (filter);
 	    if (str.match(new RegExp(exp)))
