@@ -3,7 +3,7 @@
 <touchop>
   <test domain="image"
 	win="img/quest03_result.png"
-	exp="blue tiger feColor ToAlpha blue (feColor matrix feComp op = in | fe Comp op = in feColor matrix) feComp"/>
+	exp="blue tiger feColor ToAlpha blue (feColor matrix feComp op = atop | fe Comp op = atop feColor matrix) feComp"/>
 
   <def name="&#x2460;" xy="100,100"/>
   <use name="&#x2460;" xy="100,200"/>
@@ -32,7 +32,7 @@
 
   <!-- double arg operators -->
 
-  <image name="Atop" xy="220,200">
+  <image name="Over" xy="220,200">
     <feComposite in="arg1" in2="arg2"/>
   </image>
 
