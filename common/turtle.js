@@ -13,7 +13,7 @@ var win= false;
 var winList= [];
 
 function verify(obj, isFinal) {
-    if (isFinal) {
+    if (isFinal && isValid(obj)) {
 	resetTurtle();
 	obj.setAttribute("next", "STOP");
 	// check, if something is already executed
