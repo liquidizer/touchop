@@ -58,6 +58,16 @@
     <feMorphology operator="dilate" in="arg1" radius="2"/>
   </image>
 
+  <image name="Lighter" xy="290,180">
+    <feComponentTransfer in="arg1">
+      <feFuncR type="gamma" exponent="0.5"/>
+      <feFuncG type="gamma" exponent="0.5"/>
+      <feFuncB type="gamma" exponent="0.5"/>
+      <feFuncA type="gamma" exponent="1"/>
+    </feComponentTransfer>
+  </image>
+
+
 
   <!-- double arg operators -->
 
