@@ -3,40 +3,26 @@
 <touchop>
   <test domain="image"
 	win="img/quest03_result.png"
-	exp="blue tiger feColor ToAlpha blue (feColor matrix feComp op = in | fe Comp op = atop feColor matrix) feComp"/>
+	exp="black A.svg (Blur vgrad feComp | vgrad feComp Blur) A.svg feComp feComp"/>
 
-  <def name="&#x2460;" xy="100,100"/>
-  <use name="&#x2460;" xy="100,200"/>
-  <use name="&#x2460;" xy="100,300"/>
-
-  <!-- base images -->
-  <image xy="270,80">
-    <feFlood flood-color="blue"/>
+  <image xy="200,200">
+    <feFlood flood-color="black"/>
   </image>
 
-  <image name="Invert" xy="350,200">
-    <feColorMatrix type="matrix" in="arg1" 
-		   values="-1 0 0 0 1
-			   0 -1 0 0 1
-			   0 0 -1 0 1
-			   0 0 0 1 0"/>
+  <image xy="100,100" src="img/A.svg"/>
+  <image xy="100,200" src="img/A.svg"/>
+  <image xy="200,100" src="img/vgrad.svg"/>
+
+  <image name="Blur" xy="300,100">
+    <feGaussianBlur stdDeviation="4" in="arg1"/>
   </image>
 
-  <image xy="380,80" src="img/tiger.jpg"/>
-
-  <!-- single arg operators --> 
-
-  <image name="Mask" xy="350,300">
-    <feColorMatrix type="luminanceToAlpha" in="arg1"/>
+  <image name="Over" xy="300,180">
+    <feComposite in="arg1" in2="arg2" result="tmp"/>
+    <feComposite in="tmp" in2="arg3"/>
   </image>
 
-  <!-- double arg operators -->
-
-  <image name="Over" xy="220,200">
-    <feComposite in="arg1" in2="arg2"/>
-  </image>
-
-  <image name="In" xy="220,300">
+  <image name="In" xy="190,300">
     <feComposite operator="in" in="arg1" in2="arg2"/>
   </image>
 
