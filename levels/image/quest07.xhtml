@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../../common/touchop.xsl"?>
+<touchop>
+  <test domain="image"
+	win="img/quest07_result.png"
+	exp="black flower feColor 1_-.5_-.5 feColor -1_0_0_0_1 flower feColor 1_-.5_-.5 flower feComposite op = in feComp feComp"/>
+
+  <def name="&#x2460;" xy="80,100"/>
+  <def name="&#x2461;" xy="80,170"/>
+  <use name="&#x2460;" xy="80,240"/>
+  <use name="&#x2460;" xy="80,310"/>
+  <use name="&#x2461;" xy="150,240"/>
+  <use name="&#x2461;" xy="150,310"/>
+
+  <image xy="240,100" src="img/flower.jpg"/>
+  <image xy="240,200">
+    <feFlood flood-color="black"/>
+  </image>
+
+  <image name="Red" xy="350,100">
+    <feColorMatrix type="matrix" in="arg1" 
+		   values="0 0 0 0 1
+			   0 0 0 0 0
+			   0 0 0 0 0
+			   1 -.5 -.5 0 0"/>
+  </image>
+
+  <image name="Invert" xy="350,180">
+    <feColorMatrix type="matrix" in="arg1" 
+		   values="-1 0 0 0 1
+			   0 -1 0 0 1
+			   0 0 -1 0 1
+			   0 0 0 1 0"/>
+  </image>
+
+  <image name="Over" xy="370,270">
+    <feComposite in="arg1" in2="arg2" result="tmp"/>
+    <feComposite in="tmp" in2="arg3"/>
+  </image>
+
+  <image name="In" xy="240,300">
+    <feComposite operator="in" in="arg1" in2="arg2"/>
+  </image>
+
+</touchop>

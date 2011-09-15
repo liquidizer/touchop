@@ -23,6 +23,7 @@ function verify(obj, isFinal) {
 	    var test= document.getElementById("test");
 	    var exp= test.getAttributeNS(topns, "test");
 	    exp= exp.replace(/\s/g,".*");
+	    exp= exp.replace(/_/g,"\\s+");
 	    var serializer = new XMLSerializer ();
 	    var str = serializer.serializeToString (filter);
 	    if (str.match(new RegExp(exp)))
@@ -40,8 +41,6 @@ function updateFilter(obj) {
     for (var i=0; i<obj.childNodes.length; ++i) {
 	var child= obj.childNodes[i];
 	if (child.nodeType==1) {
-	    // search for filter components recursively
-	    fillFilter(child, filter, true);
 	    // reset the filter root
 	    if (child.nodeName=="svg:filter") {
 		if (isvalid) {
@@ -56,6 +55,9 @@ function updateFilter(obj) {
 			}
 		    }
 		}
+	    } else {
+		// search for filter components recursively
+		fillFilter(child, filter, true);
 	    }
 	    // control visibility of the result
 	    if (child.getAttribute("filter")!=null) {
