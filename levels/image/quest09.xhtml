@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../../common/touchop.xsl"?>
+<touchop>
+  <test domain="image"
+	win="img/quest09_result.png"
+	exp="grad monkey feColorMatrix ToAlpha brown feComp op = in (circle monkey feColorMatrix ToAlpha|monkey feColorMatrix ToAlpha circle) feComp op = in monkey feComp op = in feComp feComp"/>
+
+  <def name="&#x2460;" xy="80,100"/>
+  <def name="&#x2461;" xy="80,170"/>
+  <use name="&#x2460;" xy="80,240"/>
+  <use name="&#x2460;" xy="80,310"/>
+  <use name="&#x2461;" xy="150,240"/>
+  <use name="&#x2461;" xy="150,310"/>
+
+  <!-- base images -->
+  <image xy="230,100" src="img/circle2.svg"/>
+  <image xy="230,200" src="img/monkey.jpg"/>
+  <image xy="230,300" src="img/vgrad.svg"/>
+  <image xy="340,300">
+    <feFlood flood-color="brown"/>
+  </image>
+
+  <!-- single arg operators --> 
+
+  <image name="Mask" xy="340,230">
+    <feColorMatrix type="luminanceToAlpha" in="arg1"/>
+  </image>
+
+  <image name="Invert" xy="340,150">
+    <feColorMatrix type="matrix" in="arg1" 
+		   values="-1 0 0 0 1
+			   0 -1 0 0 1
+			   0 0 -1 0 1
+			   0 0 0 1 0"/>
+  </image>
+
+  <image name="Over" xy="470,285">
+    <feComposite in="arg1" in2="arg2" result="tmp"/>
+    <feComposite in="tmp" in2="arg3"/>
+  </image>
+
+  <image name="In" xy="340,65">
+    <feComposite operator="in" in="arg1" in2="arg2"/>
+  </image>
+
+  <image name="In" xy="470,200">
+    <feComposite operator="in" in="arg1" in2="arg2"/>
+  </image>
+
+  <image name="In" xy="470,120">
+    <feComposite operator="in" in="arg1" in2="arg2"/>
+  </image>
+
+</touchop>
