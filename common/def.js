@@ -70,11 +70,10 @@ function checkIsValid(obj, list) {
 	for (i=0; i<list.length; ++i) {
 	    if (use==list[i]) {
 		throw "cycle";
-	    } else {
-		var def= document.getElementById("def-"+use);
-		value= value && checkIsValid(def, list);
 	    }
 	}
+	var def= document.getElementById("def-"+use);
+	value= value && checkIsValid(def, list);
     }
 
     // check definitions for cycles

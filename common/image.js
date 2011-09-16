@@ -43,9 +43,9 @@ function updateFilter(obj) {
 	if (child.nodeType==1) {
 
 	    // reset the filter root
-	    if (child.nodeName=="svg:filter" && 
-	    child.getAttribute("display")!="none") {
-		if (isvalid) {
+	    if (child.nodeName=="svg:filter") {
+		if (isvalid && 
+		    child.getAttribute("display")!="none") {
 		    filter= child;
 
 		    // stop iterative visits
