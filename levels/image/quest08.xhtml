@@ -3,7 +3,7 @@
 <touchop>
   <test domain="image"
 	win="img/quest08_result.png"
-	exp="tree (tree feColor sky feComponent feComposite ){2} feComposite feComposite"/>
+	exp="tree (tree feColor sky feComposite ){2} feComposite feComposite"/>
 
   <def name="&#x2460;" xy="80,100"/>
   <def name="&#x2461;" xy="80,170"/>
@@ -12,24 +12,14 @@
   <use name="&#x2461;" xy="150,240"/>
   <use name="&#x2461;" xy="150,310"/>
 
-  <image name="Lighter" xy="240,210">
-    <feComponentTransfer in="arg1">
-      <feFuncR type="gamma" exponent="0.5"/>
-      <feFuncG type="gamma" exponent="0.5"/>
-      <feFuncB type="gamma" exponent="0.5"/>
-      <feFuncA type="gamma" exponent="1"/>
-    </feComponentTransfer>
-  </image>
-
-  <image name="Mask" xy="370,200">
+  <image name="Mask" xy="240,220">
     <feColorMatrix type="luminanceToAlpha" in="arg1"/>
   </image>
-
 
   <image xy="240,100" src="img/sky.jpg"/>
   <image xy="340,100" src="img/tree2.png"/>
 
-  <image name="Over" xy="370,270">
+  <image name="Over" xy="370,220">
     <feComposite in="arg1" in2="arg2" result="tmp"/>
     <feComposite in="tmp" in2="arg3"/>
   </image>
