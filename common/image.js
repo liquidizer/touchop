@@ -41,10 +41,17 @@ function updateFilter(obj) {
     for (var i=0; i<obj.childNodes.length; ++i) {
 	var child= obj.childNodes[i];
 	if (child.nodeType==1) {
+
 	    // reset the filter root
-	    if (child.nodeName=="svg:filter") {
+	    if (child.nodeName=="svg:filter" && 
+	    child.getAttribute("display")!="none") {
 		if (isvalid) {
 		    filter= child;
+
+		    // stop iterative visits
+		    filter.setAttribute("display","none");
+
+		    // clear current filter
 		    filter.setAttribute("arg_no",1);
 		    for (var j=0; j<child.childNodes.length; ++j) {
 			var layer= child.childNodes[j];
@@ -68,6 +75,8 @@ function updateFilter(obj) {
 	    }
 	}
     }
+    if (filter!=null)
+	filter.removeAttribute("display");
  }
 
 function fillFilter(obj, filter, hide) {

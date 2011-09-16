@@ -106,7 +106,6 @@
   <xsl:comment>Variable definition</xsl:comment>
   <!-- variable definition is identified by def-@name -->
   <xsl:element name="svg:g">
-    <xsl:attribute name="class">invalid</xsl:attribute>
     <xsl:attribute name="onmousedown">msDown(evt)</xsl:attribute>
     <xsl:attribute name="id">def-<xsl:value-of select="@name"/></xsl:attribute>
     <xsl:attribute name="transform">scale(0.91)</xsl:attribute>
@@ -124,7 +123,6 @@
 <!-- variable usage -->
 <xsl:template match="use">
     <xsl:element name="svg:g">
-    <xsl:attribute name="class">invalid</xsl:attribute>
     <xsl:attribute name="onmousedown">msDown(evt)</xsl:attribute>
     <xsl:attribute name="top:use"><xsl:value-of select="@name"/></xsl:attribute>
     
