@@ -11,6 +11,8 @@
     height: 100px;
     margin: 10px;
     padding: 20px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
 }
 
 #levels a {
@@ -24,11 +26,21 @@ img.result {
 }
 
 .passed li {
-    background: url(passed.png);
+    background: url(background-smile.svg);
     color: white;
 }
 
-.pending li {
-    background: url(pending.png);
+.untouched li {
+    background: url(background-frown.svg);
+    color: black;
+}
+
+.started li {
+    background: url(background-warm.svg);
+    color: black;
+}
+
+.progress li {
+    background: url(background-hot.svg);
     color: black;
 }

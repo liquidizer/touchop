@@ -1,37 +1,50 @@
+var passed= 0;
+var total= 0;
+
 function update(evt) {
     // show persistent success emoticons if the page is delivered as html5
     if (document.domain!="") {
 	var levels= document.getElementById("levels");
-	var passed= updateStyle(levels);
-	var key= window.location.pathname;
-	if (passed)
-	    window.localStorage.setItem(key,"PASSED");
+	
+	// refresh level state
+	passed=0;
+	total=0;
+	updateStyle(levels);
+	if (passed==total)
+	    passed="PASSED";
 	else
-	    window.localStorage.removeItem(key,"PASSED");
+	    passed=passed+"/"+total;
+
+	// persist level state
+	var key= window.location.pathname;
+	window.localStorage.setItem(key,passed);
     }
 }
 
 function updateStyle(obj) {
-    var allTrue= true;
     if (obj.nodeName=="A") {
         var href= obj.getAttribute("href");
         var key= window.location.pathname.replace(/[^/]*$/, href);
         var state= window.localStorage.getItem(key);
-        if (state!=null)
+        if (state=="PASSED" || eval(state)>=1) {
+	    passed= passed + 1;
 	    obj.setAttribute("class", "passed");
-        else {
-	    obj.setAttribute("class", "pending");
-	    allTrue= false;
+	} else if (eval(state) >= 8/12) {
+	    obj.setAttribute("class", "progress");
+	} else if (eval(state) >= 4/12) {
+	    obj.setAttribute("class", "started");
+        } else {
+	    obj.setAttribute("class", "untouched");
 	}
+	total= total+1;
     } else if (obj.nodeType==1) {
 	for (var i=0; i<obj.childNodes.length; ++i) {
 	    var child= obj.childNodes[i];
 	    if (child.nodeType==1) {
-		allTrue= allTrue & updateStyle(child);
+		updateStyle(child);
 	    }
 	}
     }
-    return allTrue;
 }
 
 function setSmiley(obj, passed) {
