@@ -522,7 +522,7 @@
     </xsl:element>
 
     <!-- argument number -->
-    <xsl:variable name="args" select="*//@in[starts-with(.,'arg')] | *//@in2"/>
+    <xsl:variable name="args" select="*//@*[starts-with(.,'arg')]"/>
 
     <!-- filter name -->
     <xsl:if test="@name">
