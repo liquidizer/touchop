@@ -15,7 +15,7 @@
    height="140"
    id="svg2510"
    inkscape:version="0.47 r22583"
-   sodipodi:docname="background-frown.svg">
+   sodipodi:docname="background-warm.svg">
   <metadata
      id="metadata2960">
     <rdf:RDF>
@@ -24,7 +24,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -34,11 +34,11 @@
        inkscape:collect="always"
        id="linearGradient3754">
       <stop
-         style="stop-color:#786721;stop-opacity:1"
+         style="stop-color:#806600;stop-opacity:1"
          offset="0"
          id="stop3756" />
       <stop
-         style="stop-color:#d4aa00;stop-opacity:1"
+         style="stop-color:#ffcc00;stop-opacity:1"
          offset="1"
          id="stop3758" />
     </linearGradient>
