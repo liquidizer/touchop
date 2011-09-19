@@ -136,6 +136,7 @@ function computeValue(obj) {
 	    if (sub!="") {
 		sub= "("+sub+")";
 		if (value=="") {
+		    sub= sub.replace(/\u03c0/,Math.PI);
 		    return sub;
 		} else {
 		    value= value.replace(/#[0-9]/,""+sub);
