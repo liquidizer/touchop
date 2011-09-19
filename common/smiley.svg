@@ -8,40 +8,6 @@
    height="81"
    id="svg2510">
 
-  <g id="frown">
-    <circle
-       cx="0"
-       cy="0"
-       r="40"
-       transform="translate(40.5,40.5)"
-       id="circle"
-       style="fill:#ffffe0;stroke:#000000;stroke-width:1" />
-    <path
-       d="M 9.520516,30.043839 C 12.942862,30.426984 29.40177,29.484898 29.40177,29.484898 C 27.631182,39.79233 11.870809,40.312331 9.520516,30.043839 z"
-       id="path2382"
-       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.88699472px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-    <path
-       d="M 39.016299,29.635536 L 66.073279,31.960711 C 56.930115,44.953179 40.266671,39.965166 39.016299,29.635536 z"
-       id="path2384"
-       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.88699472px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-    <path
-       d="M 17.14027,60.03529 L 53.2487,61.3365"
-       id="path3158"
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-    <path
-       d="M 18.72009,31.39186 C 16.48216,31.39186 14.65759,33.21643 14.65759,35.45436 C 14.65759,35.8352 14.71552,36.19857 14.81384,36.54811 C 17.17052,37.60813 19.93842,37.75608 22.43884,37.04811 C 22.64408,36.56313 22.75134,36.01384 22.75134,35.45436 C 22.75134,33.21643 20.95801,31.39184 18.72009,31.39186 z"
-       id="circle3162"
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1" />
-    <path
-       d="M 48.47009,32.54811 C 46.23216,32.54811 44.40758,34.37268 44.40759,36.61061 C 44.40759,36.93645 44.45989,37.24445 44.53259,37.54811 C 46.39488,38.69651 48.76529,38.81089 51.10149,39.14751 C 52.0674,38.40625 52.53258,37.92136 52.53259,36.61061 C 52.53259,34.37268 50.70802,32.54809 48.47009,32.54811 z"
-       id="circle3164"
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1" />
-    <path
-       d="M 24.459549,48.649752 C 22.833039,51.089512 22.833039,53.366622 23.971599,54.667822 C 25.110149,55.969032 26.248709,53.529272 27.387259,54.342522 C 28.525809,55.155772 30.314969,56.294332 31.290869,55.481072 C 32.266779,54.667822 33.567979,55.155772 35.194489,55.806372 C 36.820989,56.456982 37.796899,55.481072 39.260749,55.318422 C 40.724609,55.155772 40.887259,54.993122 40.887259,54.993122 L 40.887259,54.993122"
-       id="path3174"
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-  </g>
-
   <g id="smile">
     <circle
        cx="0"

@@ -53,23 +53,17 @@
   <!-- back to the index page -->
   <xsl:comment>Emoticon</xsl:comment>
   <svg:a xlink:href="index.html">
-    <!-- Webkit  bug
-    <use href="smiley.svg#smile" transform="translate(500,20)" id="top:win"/>
-    <use href="smiley.svg#frown" transform="translate(500,20)" id="top:notwin"/>
-    -->
     <svg:g transform="translate(500,20)" id="top:notwin">
-      <xsl:call-template name="frown"/>
+      <svg:image xlink:href="../../common/frowny.svg" 
+		 width="81" height="81"/>
     </svg:g>
     <svg:g transform="translate(500,20)" id="top:win">
-      <xsl:call-template name="smile"/>
+      <svg:image xlink:href="../../common/smiley.svg" 
+		 width="81" height="81"/>
     </svg:g>
   </svg:a>
 </svg:svg>
 </xsl:template>
-
-<!-- Webkit work around: Wrap smiley.svg  -->
-<xsl:include href="smiley.xsl"/>
-
 
 <!-- Generic drop area for operator arguments -->
 <xsl:template name="operand">
