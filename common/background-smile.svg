@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -14,8 +13,10 @@
    width="190"
    height="140"
    id="svg2510"
-   inkscape:version="0.47 r22583"
-   sodipodi:docname="background-smile.svg">
+   inkscape:version="0.46"
+   sodipodi:docname="background-smile.svg"
+   sodipodi:version="0.32"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
   <metadata
      id="metadata2960">
     <rdf:RDF>
@@ -73,10 +74,10 @@
      id="namedview2956"
      showgrid="false"
      inkscape:zoom="2.0602123"
-     inkscape:cx="62.41352"
+     inkscape:cx="80.93451"
      inkscape:cy="47.197088"
-     inkscape:window-x="0"
-     inkscape:window-y="24"
+     inkscape:window-x="110"
+     inkscape:window-y="41"
      inkscape:window-maximized="0"
      inkscape:current-layer="smile" />
   <rect
@@ -95,7 +96,7 @@
        r="40"
        transform="translate(40.5,40.5)"
        id="circle3178"
-       style="fill:#ffffe0;stroke:#000000;stroke-width:1;opacity:0.53138075"
+       style="fill:#ffffe0;stroke:#000000;stroke-width:1;opacity:0.77403846"
        sodipodi:cx="0"
        sodipodi:cy="0"
        sodipodi:rx="40"
