@@ -3,23 +3,23 @@
 <touchop>
   <test domain="image"
 	win="img/quest02_result.png"
-	exp="black circle Blur sunset feComp operator= in feComp"/>
+	exp="black circle Blur sunset feComp feComp"/>
 
 
   <image xy="380,200">
     <feFlood flood-color="black"/>
   </image>
 
-  <image name="In" xy="380,100">
-    <feComposite operator="in" in="arg1" in2="arg2"/>
+  <image name="Over" xy="230,100">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
-  <image name="Blur" xy="230,100">
+  <image name="Blur" xy="380,100">
     <feGaussianBlur stdDeviation="5" in="arg1"/>
   </image>
 
-  <image name="Over" xy="230,180">
-    <feComposite in="arg1" in2="arg2"/>
+  <image name="Over" xy="230,200">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
   <image xy="100,100" src="img/sunset.jpg"/>

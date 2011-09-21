@@ -53,11 +53,11 @@
     <feMorphology operator="erode" in="arg1" radius="1"/>
   </image>
 
-  <image name="Dilate" xy="500,120">
+  <image name="Dilate" xy="150,100">
     <feMorphology operator="dilate" in="arg1" radius="2"/>
   </image>
 
-  <image name="Lighter" xy="290,180">
+  <image name="Lighter" xy="150,180">
     <feComponentTransfer in="arg1">
       <feFuncR type="gamma" exponent="0.5"/>
       <feFuncG type="gamma" exponent="0.5"/>
@@ -70,16 +70,16 @@
 
   <!-- double arg operators -->
 
-  <image name="Atop" xy="150,10">
-    <feComposite in="arg1" in2="arg2"/>
+  <image name="Over" xy="470,285">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
-  <image name="In" xy="150,100">
-    <feComposite operator="in" in="arg1" in2="arg2"/>
+  <image name="Over" xy="470,110">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
-  <image name="Out" xy="150,190">
-    <feComposite operator="out" in="arg1" in2="arg2"/>
+  <image name="Over" xy="470,200">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
   <image name="Displace" xy="150,280">

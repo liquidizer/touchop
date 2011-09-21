@@ -20,12 +20,12 @@
   <image xy="340,100" src="img/tree2.png"/>
 
   <image name="Over" xy="370,220">
-    <feComposite in="arg1" in2="arg2" result="tmp"/>
-    <feComposite in="tmp" in2="arg3"/>
+    <feComposite operator="atop" in="arg2" in2="arg3" result="tmp"/>
+    <feComposite operator="atop" in="arg1" in2="tmp"/>
   </image>
 
-  <image name="In" xy="240,300">
-    <feComposite operator="in" in="arg1" in2="arg2"/>
+  <image name="Over" xy="240,300">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
 </touchop>

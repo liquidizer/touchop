@@ -3,7 +3,7 @@
 <touchop>
   <test domain="image"
 	win="img/quest09_result.png"
-	exp="monkey feColorMatrix ( circle monkey feColorMatrix ToAlpha | monkey feColorMatrix ToAlpha circle) feComp op = in monkey feComp op = in feComp"/>
+	exp="monkey feColorMatrix circle monkey feColorMatrix feComp ToAlpha monkey feComp feComp"/>
 
   <def name="&#x2460;" xy="80,100"/>
   <def name="&#x2461;" xy="80,200"/>
@@ -31,15 +31,15 @@
   </image>
 
   <image name="Over" xy="470,285">
-    <feComposite in="arg1" in2="arg2"/>
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
-  <image name="In" xy="470,110">
-    <feComposite operator="in" in="arg1" in2="arg2"/>
+  <image name="Over" xy="470,110">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
-  <image name="In" xy="470,200">
-    <feComposite operator="in" in="arg1" in2="arg2"/>
+  <image name="Over" xy="470,200">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
 </touchop>

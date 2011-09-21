@@ -3,7 +3,7 @@
 <touchop>
   <test domain="image"
 	win="img/quest07_result.png"
-	exp="black flower feColor 1_-.5_-.5 feColor -1_0_0_0_1 flower feColor 1_-.5_-.5 flower feComposite op = in feComp feComp"/>
+	exp="black flower feColor 1_-.5_-.5 feColor -1_0_0_0_1 flower feColor 1_-.5_-.5 flower feComp feComp feComp"/>
 
   <def name="&#x2460;" xy="80,100"/>
   <def name="&#x2461;" xy="80,170"/>
@@ -34,12 +34,12 @@
   </image>
 
   <image name="Over" xy="370,270">
-    <feComposite in="arg1" in2="arg2" result="tmp"/>
-    <feComposite in="tmp" in2="arg3"/>
+    <feComposite operator="atop" in="arg2" in2="arg3" result="tmp"/>
+    <feComposite operator="atop" in="arg1" in2="tmp"/>
   </image>
 
-  <image name="In" xy="240,300">
-    <feComposite operator="in" in="arg1" in2="arg2"/>
+  <image name="Over" xy="240,300">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
 </touchop>

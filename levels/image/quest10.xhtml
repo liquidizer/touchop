@@ -10,34 +10,50 @@
   <use name="&#x2461;" xy="260,310"/>
   <use name="&#x2461;" xy="350,310"/>
 
-  <image xy="240,100" src="img/monkey.jpg"/>
-  <image xy="240,200" src="img/hgrad.svg"/>
-  <image xy="420,200" src="img/vgrad2.svg"/>
-
-
-  <image name="Y-Displace" xy="340,200">
-    <feDisplacementMap in="arg1" in2="arg2" scale="70"
-      xChannelSelector="G"
-      yChannelSelector="A"/>
+  <image xy="200,200">
+    <feFlood flood-color="black"/>
   </image>
-
-  <image name="X-Displace" xy="340,100">
-    <feDisplacementMap in="arg1" in2="arg2" scale="70" result="tmp"
-      xChannelSelector="A"
-      yChannelSelector="G"/>
-    <feOffset in="tmp" dy="-20"/>
-  </image>
+  <image xy="240,100" src="img/face.jpg"/>
 
   <image name="Over" xy="470,285">
-    <feComposite in="arg1" in2="arg2"/>
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
-  <image name="In" xy="470,110">
-    <feComposite operator="in" in="arg1" in2="arg2"/>
+  <image name="Over" xy="470,110">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
-  <image name="In" xy="470,200">
-    <feComposite operator="in" in="arg1" in2="arg2"/>
+  <image name="Over" xy="470,200">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
+  </image>
+
+  <image name="Invert" xy="420,260">
+    <feColorMatrix type="matrix" in="arg1" 
+		   values="-1 0 0 0 1
+			   0 -1 0 0 1
+			   0 0 -1 0 1
+			   0 0 0 1 0"/>
+  </image>
+  <image name="Invert" xy="420,260">
+    <feColorMatrix type="matrix" in="arg1" 
+		   values="-1 0 0 0 1
+			   0 -1 0 0 1
+			   0 0 -1 0 1
+			   0 0 0 1 0"/>
+  </image>
+
+  <image name="Dilate" xy="400,180">
+    <feMorphology operator="dilate" in="arg1" radius="1"/>
+  </image>
+  <image name="Dilate" xy="400,180">
+    <feMorphology operator="dilate" in="arg1" radius="1"/>
+  </image>
+
+  <image name="Mask" xy="170,260">
+    <feColorMatrix type="luminanceToAlpha" in="arg1"/>
+  </image>
+  <image name="Mask" xy="170,260">
+    <feColorMatrix type="luminanceToAlpha" in="arg1"/>
   </image>
 
 </touchop>
