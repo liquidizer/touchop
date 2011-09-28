@@ -137,7 +137,11 @@ function moveToGroup(obj, target) {
     var oldContainer= obj.parentNode;
     if (target!=oldContainer && obj !=target) {
         // move object from its current to the target container
-        target.appendChild(obj);
+	try {
+            target.appendChild(obj);
+	}  catch (e) {
+	    // ignore circular insertion due to event race
+	}
 
         // insert object to target group and layout new container
         layout(oldContainer);
@@ -157,15 +161,11 @@ function dropOn(evt) {
             target= target.parentNode;
         
 	// reset determines, if object can snap out
-	var reset= true;
-	if (hand.getAttributeNS(topns,"drop")=="none") {
-	    msMove(evt);
-	} else
-        if (hand.parentNode!=target) {
-	    reset= false;
+	msMove(evt);
+        if (hand.parentNode!=target &&
+	    hand.getAttributeNS(topns,"drop")!="none") {
 	    // if target is not blocked
 	    if (target.getAttribute("blocked")!="true") {
-		reset= true
 		startCTM=null;
 
 		// insert grabbed object into mouse pointer target group
@@ -182,11 +182,6 @@ function dropOn(evt) {
 		tresh= 30;
 	    }
         }
-	// reset moving treshold
-	if (reset) {
-	    startx= evt.clientX;
-	    starty= evt.clientY;
-	}
     }
 }
 
