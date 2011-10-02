@@ -3,55 +3,38 @@
 <touchop>
   <test domain="image"/>
 
-  <def name="&#x2460;" xy="80,100"/>
-  <def name="&#x2461;" xy="80,200"/>
-  <use name="&#x2460;" xy="80,310"/>
-  <use name="&#x2460;" xy="170,310"/>
-  <use name="&#x2461;" xy="260,310"/>
-  <use name="&#x2461;" xy="350,310"/>
+  <image xy="200,100" src="img/vgrad2.svg"/>
+  <image xy="240,100" src="img/hk.jpg"/>
+  <image xy="240,200" src="img/ufo.gif"/>
+  <image xy="100,100" src="img/ufo.gif"/>
 
-  <image xy="200,200">
-    <feFlood flood-color="black"/>
+  <image xy="150,100">
+    <feFlood flood-color="red"/>
   </image>
-  <image xy="240,100" src="img/face.jpg"/>
+
+  <image name="Over" xy="470,285">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
+  </image>
+  <image name="Over" xy="470,285">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
+  </image>
 
   <image name="Over" xy="470,285">
     <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
-  <image name="Over" xy="470,110">
+  <image name="Over" xy="470,285">
     <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
-  <image name="Over" xy="470,200">
-    <feComposite operator="atop" in="arg1" in2="arg2"/>
-  </image>
-
-  <image name="Invert" xy="420,260">
-    <feColorMatrix type="matrix" in="arg1" 
-		   values="-1 0 0 0 1
-			   0 -1 0 0 1
-			   0 0 -1 0 1
-			   0 0 0 1 0"/>
-  </image>
-  <image name="Invert" xy="420,260">
-    <feColorMatrix type="matrix" in="arg1" 
-		   values="-1 0 0 0 1
-			   0 -1 0 0 1
-			   0 0 -1 0 1
-			   0 0 0 1 0"/>
-  </image>
-
-  <image name="Dilate" xy="400,180">
-    <feMorphology operator="dilate" in="arg1" radius="1"/>
-  </image>
-  <image name="Dilate" xy="400,180">
-    <feMorphology operator="dilate" in="arg1" radius="1"/>
+  <image name="Blur" xy="380,100">
+    <feGaussianBlur stdDeviation="5" in="arg1"/>
   </image>
 
   <image name="Mask" xy="170,260">
     <feColorMatrix type="luminanceToAlpha" in="arg1"/>
   </image>
+
   <image name="Mask" xy="170,260">
     <feColorMatrix type="luminanceToAlpha" in="arg1"/>
   </image>
