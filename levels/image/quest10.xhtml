@@ -1,41 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type="text/xsl" href="../../common/touchop.xsl"?>
 <touchop>
-  <test domain="image"/>
+  <test domain="image"
+	win="img/quest10_result.svg"
+	/>
 
-  <image xy="200,100" src="img/vgrad2.svg"/>
-  <image xy="240,100" src="img/hk.jpg"/>
-  <image xy="240,200" src="img/ufo.gif"/>
-  <image xy="100,100" src="img/ufo.gif"/>
+  <def name="&#x2460;" xy="50,100"/>
+  <use name="&#x2460;" xy="50,200"/>
+  <use name="&#x2460;" xy="50,300"/>
 
-  <image xy="150,100">
+  <image xy="220,80" src="img/vgrad2.svg"/>
+  <image xy="320,80" src="img/hk.jpg"/>
+  <image xy="150,190" src="img/ufo.gif"/>
+
+  <image xy="250,190">
     <feFlood flood-color="red"/>
   </image>
 
-  <image name="Over" xy="470,285">
+  <image name="Over" xy="410,300">
     <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
-  <image name="Over" xy="470,285">
-    <feComposite operator="atop" in="arg1" in2="arg2"/>
-  </image>
-
-  <image name="Over" xy="470,285">
+  <image name="Over" xy="350,200">
     <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
-  <image name="Over" xy="470,285">
+  <image name="Over" xy="280,300">
     <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
-  <image name="Blur" xy="380,100">
+  <image name="Over" xy="470,200">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
+  </image>
+
+  <image name="Blur" xy="420,120">
     <feGaussianBlur stdDeviation="5" in="arg1"/>
   </image>
 
-  <image name="Mask" xy="170,260">
-    <feColorMatrix type="luminanceToAlpha" in="arg1"/>
-  </image>
-
-  <image name="Mask" xy="170,260">
+  <image name="Mask" xy="150,300">
     <feColorMatrix type="luminanceToAlpha" in="arg1"/>
   </image>
 
