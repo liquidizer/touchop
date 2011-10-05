@@ -47,27 +47,6 @@ function updateStyle(obj) {
     }
 }
 
-function setSmiley(obj, passed) {
-    if (obj.getAttribute("class")=="smiley") {
-	if (obj.childNodes.length>0)
-	    obj.removeChild(obj.firstChild);
-	if (!passed) {
-	    obj.appendChild(document.createTextNode(" ☹"));
-	    obj.setAttribute("style", "color:lightgray"); 
-	} else {	   
-	    obj.appendChild(document.createTextNode(" ☻"));
-	    obj.setAttribute("style", "color:green"); 
-	}
-    } else {
-	for (var i=0; i<obj.childNodes.length; ++i) {
-	    var child= obj.childNodes[i];
-	    if (child.nodeType==1) {
-		setSmiley(child, passed);
-	    }
-	}
-    }
-}
-
 // update the score if db changes
 window.addEventListener("storage", update, false);
 
