@@ -16,7 +16,7 @@ window.onload = function() {
     smile(0.0);
     // Stop the browser from selecting objects
     document.onselectstart = function() {return false;} // ie
-    document.onmousedown = function() {return false;} // mozilla
+    document.onmousedown = function() { return false;} // mozilla
 }
 
 // DnD frame work
@@ -35,11 +35,27 @@ var tresh=0;
 // counter for long click action, after which the root is selected
 var longClick=0;
 
+// translate events that come from touch devices
+function translateTouch(evt) {
+    if (evt.touches!=undefined) {
+	evt.clientX= evt.touches[0].clientX;
+	evt.clientY= evt.touches[0].clientY;
+	evt.target= document.elementFromPoint(evt.clientX, evt.clientY);
+	evt.preventDefault();
+    }	
+
+    return evt;
+}
+    
+
 // msDown is called whenever the mouse button is pressed anywhere on the root document.
 function msDown (evt) {
     if (hand==null && evt.target!=null) {
         // find signaling object
+	evt= translateTouch(evt);
 	grab(evt.target);
+
+	status("mouse down on '"+hand.getAttributeNS(topns,"value")+"'");
         
         // store mouse position. Will be updated when mouse moves.
         startx= evt.clientX;
@@ -52,6 +68,7 @@ function msDown (evt) {
 	// mark root after time out
 	initLongClick();
     }
+    return false;
 }
 
 function grab(obj) {
@@ -60,7 +77,7 @@ function grab(obj) {
 	hand= hand.parentNode;
     
     // make underlying objects receive mouse events. Will be reverted after mouse up.
-    hand.setAttribute("style","pointer-events:none");
+    hand.setAttribute("pointer-events","none");
 
     // store initial position
     startCTM= hand.getAttribute("transform");
@@ -70,6 +87,7 @@ function grab(obj) {
 function msUp (evt) {
     if (hand!=null) {
 	var root= findRoot(hand);
+	status("release '"+hand.getAttributeNS(topns, "value")+"'");
 	releaseHand();
 
 	// verify winning test after mouse release
@@ -79,7 +97,7 @@ function msUp (evt) {
 
 function releaseHand() {
     // make object receive mouse events again, release grip
-    hand.removeAttribute("style");
+    hand.removeAttribute("pointer-events");
     
     // snap back if object was not dropped on a new place
     if (startCTM!=null) {
@@ -99,13 +117,12 @@ function setTransform(obj, m) {
 // Move the grabbed object "hand" with the mouse
 function msMove (evt) {
     if (hand!=null) {
-	// pevent scrolling on mobile devices
-	evt.preventDefault();
-
         // compute relative mouse movements since last call
+	evt= translateTouch(evt);
         var dx=evt.clientX-startx;
         var dy=evt.clientY-starty;
 	var dist=Math.abs(dx)+Math.abs(dy);
+	status("move '"+hand.getAttributeNS(topns,"value")+"' by "+dist);
 
         // if the mouse has moved more than a snap treshold "tresh"
 	initLongClick();
@@ -126,9 +143,11 @@ function msMove (evt) {
             setTransform(hand, m);
             
             // store current coordinates
+	    evt= translateTouch(evt);
             startx= evt.clientX;
             starty= evt.clientY;
         }
+	return false;
     }
 }
 
@@ -154,12 +173,18 @@ function dropOn(evt) {
     initLongClick();
 
     // check if an object is beeing dragged
+    evt= translateTouch(evt);
     var target= evt.target;
     if (target!=null && hand!=null) {
         // find signaling object
         while (target.getAttribute("onmousemove")==null)
             target= target.parentNode;
         
+	var c= target;
+	while (c.getAttribute("onmousedown")==null)
+	    c= c.parentNode;
+	status("droped on '"+c.getAttributeNS(topns, "value"));
+
 	// reset determines, if object can snap out
 	msMove(evt);
         if (hand.parentNode!=target &&
@@ -220,6 +245,9 @@ function deepLayout(obj, doFloat) {
     if (obj.nodeType==1) {
         // layout children
         var isObj= obj.getAttribute("onmousedown")!=null;
+	if (isObj) {
+	    obj.setAttribute("ontouchstart", obj.getAttribute("onmousedown"));
+	}
         for (var i=0; i<obj.childNodes.length; ++i) {
             deepLayout(obj.childNodes[i], !isObj && doFloat);
         }

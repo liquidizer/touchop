@@ -17,8 +17,10 @@
 <svg:svg onmousemove="msMove(evt)"
 	 ontouchmove="msMove(evt)"
 	 onmouseup="msUp(evt)"
+	 ontouchend="msUp(evt)"
 	 width="100%" height="100%"
 	 viewBox="0 0 600 400">
+  <svg:title>Touchop</svg:title>
 
   <!-- import the style sheet -->
   <svg:style type="text/css">@import url('../../common/style.css');</svg:style>
@@ -26,6 +28,10 @@
   <!-- Drag and drop interface -->
   <svg:script type="text/javascript" xlink:href="../../common/touchop.js"/>
   <svg:script type="text/javascript" xlink:href="../../common/def.js"/>
+  <svg:script type="text/javascript" xlink:href="../../common/status.js"/>
+
+  <!-- mobile device settings -->
+  <svg:meta name="viewport" content="width=device-width, initial-scale=1"/>
 
   <!-- blur effect for shadows -->
   <svg:defs>
@@ -68,7 +74,7 @@
 <!-- Generic drop area for operator arguments -->
 <xsl:template name="operand">
   <xsl:comment>Drop area for operands</xsl:comment>
-  <svg:g onmousemove="dropOn(evt)" top:layout="snap(obj)" class="operand">
+  <svg:g top:layout="snap(obj)" class="operand">
     <svg:rect height="50" width="50" rx="5" ry="5" class="background"/>
     <xsl:apply-templates/>
   </svg:g>
@@ -257,6 +263,7 @@
   <xsl:comment>Atomic element</xsl:comment>
   <xsl:element name="svg:g">
     <xsl:attribute name="onmousedown">msDown(evt)</xsl:attribute>
+    <xsl:attribute name="ontouchstart">msDown(evt)</xsl:attribute>
     <xsl:attribute name="top:value"><xsl:value-of select="@value"/></xsl:attribute>
     <xsl:attribute name="top:priority"><xsl:value-of select="@priority"/></xsl:attribute>
     <xsl:attribute name="top:play">500</xsl:attribute>
