@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type="text/xsl" href="../../common/touchop.xsl"?>
 <touchop>
-  <test domain="image"/>
+  <test domain="image"
+	win="img/quest10_result.gif"
+	exp="night ufo ToAlpha red feComp ufo ToAlpha Blur grad feComp feComp feComp"
+	/>
 
-  <def name="&#x2460;" xy="80,100"/>
-  <def name="&#x2461;" xy="80,200"/>
-  <use name="&#x2460;" xy="80,310"/>
-  <use name="&#x2460;" xy="170,310"/>
-  <use name="&#x2461;" xy="260,310"/>
-  <use name="&#x2461;" xy="350,310"/>
+  <def name="&#x2460;" xy="50,100"/>
+  <use name="&#x2460;" xy="50,200"/>
+  <use name="&#x2460;" xy="50,300"/>
 
-  <image xy="200,200">
-    <feFlood flood-color="black"/>
+  <image xy="220,80" src="img/dgrad.svg"/>
+  <image xy="320,80" src="img/night.jpg"/>
+  <image xy="150,190" src="img/ufo.gif"/>
+
+  <image xy="250,190">
+    <feFlood flood-color="red"/>
   </image>
-  <image xy="240,100" src="img/face.jpg"/>
 
-  <image name="Over" xy="470,285">
+  <image name="Over" xy="410,300">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
+  </image>
+  <image name="Over" xy="350,200">
     <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
-  <image name="Over" xy="470,110">
+  <image name="Over" xy="280,300">
     <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
@@ -27,32 +33,11 @@
     <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
-  <image name="Invert" xy="420,260">
-    <feColorMatrix type="matrix" in="arg1" 
-		   values="-1 0 0 0 1
-			   0 -1 0 0 1
-			   0 0 -1 0 1
-			   0 0 0 1 0"/>
-  </image>
-  <image name="Invert" xy="420,260">
-    <feColorMatrix type="matrix" in="arg1" 
-		   values="-1 0 0 0 1
-			   0 -1 0 0 1
-			   0 0 -1 0 1
-			   0 0 0 1 0"/>
+  <image name="Blur" xy="420,120">
+    <feGaussianBlur stdDeviation="5" in="arg1"/>
   </image>
 
-  <image name="Dilate" xy="400,180">
-    <feMorphology operator="dilate" in="arg1" radius="1"/>
-  </image>
-  <image name="Dilate" xy="400,180">
-    <feMorphology operator="dilate" in="arg1" radius="1"/>
-  </image>
-
-  <image name="Mask" xy="170,260">
-    <feColorMatrix type="luminanceToAlpha" in="arg1"/>
-  </image>
-  <image name="Mask" xy="170,260">
+  <image name="Mask" xy="150,300">
     <feColorMatrix type="luminanceToAlpha" in="arg1"/>
   </image>
 
