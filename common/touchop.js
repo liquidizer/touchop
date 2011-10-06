@@ -43,7 +43,7 @@ function translateTouch(evt) {
 	evt.target= document.elementFromPoint(evt.clientX, evt.clientY);
 	evt.preventDefault();
     }	
-
+    //status(evt.clientX+","+evt.clientY+" -> "+path(evt.target));
     return evt;
 }
     
@@ -55,8 +55,6 @@ function msDown (evt) {
 	evt= translateTouch(evt);
 	grab(evt.target);
 
-	status("mouse down on '"+hand.getAttributeNS(topns,"value")+"'");
-        
         // store mouse position. Will be updated when mouse moves.
         startx= evt.clientX;
         starty= evt.clientY;
@@ -87,7 +85,6 @@ function grab(obj) {
 function msUp (evt) {
     if (hand!=null) {
 	var root= findRoot(hand);
-	status("release '"+hand.getAttributeNS(topns, "value")+"'");
 	releaseHand();
 
 	// verify winning test after mouse release
@@ -122,32 +119,56 @@ function msMove (evt) {
         var dx=evt.clientX-startx;
         var dy=evt.clientY-starty;
 	var dist=Math.abs(dx)+Math.abs(dy);
-	status("move '"+hand.getAttributeNS(topns,"value")+"' by "+dist);
 
         // if the mouse has moved more than a snap treshold "tresh"
 	initLongClick();
-        if (dist > tresh) {
-            // bring object to front
-	    if (hand.parentNode!=null)
-		hand.parentNode.appendChild(hand);
-	    sendHome(hand);
-	    tresh=0;
+	if (dist > tresh) {
 
-            // switch to screen coordinate system
-            var m= hand.parentNode.getScreenCTM().inverse();
-            // translate by screen coordinates
-            m= m.translate(dx,dy);
-            // transform bock to local coordinate system
-            m= m.multiply(hand.getScreenCTM());
-            // apply transformation
-            setTransform(hand, m);
-            
-            // store current coordinates
-	    evt= translateTouch(evt);
-            startx= evt.clientX;
-            starty= evt.clientY;
-        }
-	return false;
+	    // check if object can be dropped
+	    var dropTo= evt.target;
+	    while (dropTo.nodeType==1 && dropTo.getAttribute("class")!="operand")
+		dropTo= dropTo.parentNode;
+	    if (dropTo== hand.parentNode) {
+		// refresh treshold
+		tresh=30;
+	    } 
+	    else if (dropTo.nodeType==1 && 
+		     dropTo.getAttribute("blocked")!="true" &&
+		     hand.getAttributeNS(topns,"drop")!="none") {
+		// insert grabbed object into mouse pointer target group
+		setFloating(hand, false);
+		moveToGroup(hand, dropTo);
+	
+		// verify the winning test during mouse hover
+		verify(findRoot(hand), false);
+		
+		// set snap treshold. Further mouse movements 
+		// are ignored until distance treshold is hit.
+		startCTM= hand.getAttribute("transform");
+		tresh= 30;
+	    }
+            else {
+		// object can not be dropped let it move
+		if (hand.parentNode!=null)
+		    hand.parentNode.appendChild(hand);
+		sendHome(hand);
+		tresh=0;
+		
+		// switch to screen coordinate system
+		var m= hand.parentNode.getScreenCTM().inverse();
+		// translate by screen coordinates
+		m= m.translate(dx,dy);
+		// transform bock to local coordinate system
+		m= m.multiply(hand.getScreenCTM());
+		// apply transformation
+		setTransform(hand, m);
+		
+		// store current coordinates
+		evt= translateTouch(evt);
+		startx= evt.clientX;
+		starty= evt.clientY;
+            }
+	}
     }
 }
 
@@ -165,48 +186,6 @@ function moveToGroup(obj, target) {
         // insert object to target group and layout new container
         layout(oldContainer);
         layout(target);
-    }
-}
-
-// this method is called when the mouse is moved over a region on which object can be dropped.
-function dropOn(evt) {
-    initLongClick();
-
-    // check if an object is beeing dragged
-    evt= translateTouch(evt);
-    var target= evt.target;
-    if (target!=null && hand!=null) {
-        // find signaling object
-        while (target.getAttribute("onmousemove")==null)
-            target= target.parentNode;
-        
-	var c= target;
-	while (c.getAttribute("onmousedown")==null)
-	    c= c.parentNode;
-	status("droped on '"+c.getAttributeNS(topns, "value"));
-
-	// reset determines, if object can snap out
-	msMove(evt);
-        if (hand.parentNode!=target &&
-	    hand.getAttributeNS(topns,"drop")!="none") {
-	    // if target is not blocked
-	    if (target.getAttribute("blocked")!="true") {
-		startCTM=null;
-
-		// insert grabbed object into mouse pointer target group
-		sendHome(hand);
-		setFloating(hand, false);
-		moveToGroup(hand, target);
-	
-		// verify the winning test during mouse hover
-		verify(findRoot(hand), false);
-	
-		// set snap treshold. Further mouse movements 
-		// are ignored until distance treshold is hit.
-		startCTM= hand.getAttribute("transform");
-		tresh= 30;
-	    }
-        }
     }
 }
 
