@@ -3,7 +3,7 @@
     <svg:feImage xlink:href="img/night.jpg" xmlns:xlink="http://www.w3.org/1999/xlink" result="arg2"/>
     <svg:feImage xlink:href="img/ufo.gif" xmlns:xlink="http://www.w3.org/1999/xlink" result="arg1_arg1_arg2_arg2_arg1"/>
     <svg:feColorMatrix type="luminanceToAlpha" in="arg1_arg1_arg2_arg2_arg1" result="arg1_arg1_arg2_arg2"/>
-    <svg:feImage xlink:href="img/vgrad2.svg" xmlns:xlink="http://www.w3.org/1999/xlink" result="arg1_arg1_arg2_arg1"/>
+    <svg:feImage xlink:href="img/dgrad.svg" xmlns:xlink="http://www.w3.org/1999/xlink" result="arg1_arg1_arg2_arg1"/>
     <svg:feComposite operator="atop" in="arg1_arg1_arg2_arg1" in2="arg1_arg1_arg2_arg2" result="arg1_arg1_arg2"/>
     <svg:feImage xlink:href="img/ufo.gif" xmlns:xlink="http://www.w3.org/1999/xlink" result="arg1_arg1_arg1_arg1_arg2_arg1_arg1"/>
     <svg:feColorMatrix type="matrix" in="arg1_arg1_arg1_arg1_arg2_arg1_arg1" values="-1 0 0 0 1       0 -1 0 0 1       0 0 -1 0 1       0 0 0 1 0" result="arg1_arg1_arg1_arg1_arg2_arg1"/>
