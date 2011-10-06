@@ -24,3 +24,16 @@ function status(msg) {
     statusNo= statusNo+1;
 
 }
+
+function path(obj) {
+    if (obj==null || obj.nodeType!=1) {
+	return "";
+    } else {
+	var str= obj.nodeName;
+	str= str.replace(/^svg:/,"");
+	if (obj.getAttribute("class")!=null)
+	    str=str+"."+obj.getAttribute("class");
+	return path(obj.parentNode)+"/"+str;
+    }
+}
+
