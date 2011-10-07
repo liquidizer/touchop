@@ -17,6 +17,11 @@ window.onload = function() {
     // Stop the browser from selecting objects
     document.onselectstart = function() {return false;} // ie
     document.onmousedown = function() { return false;} // mozilla
+    document.ontouchstart= function(e) { e.preventDefault(); }
+    setTimeout(function(){
+	// Hide the address bar!
+	window.scrollTo(0, 1);
+    }, 1);
 }
 
 // DnD frame work
@@ -42,6 +47,7 @@ function translateTouch(evt) {
 	evt2.clientX= evt.touches[0].clientX;
 	evt2.clientY= evt.touches[0].clientY;
 	evt2.target= document.elementFromPoint(evt2.clientX, evt2.clientY);
+	evt2.isTouch= true;
 	evt.preventDefault();
 	return evt2;
     }
@@ -114,9 +120,21 @@ function setTransform(obj, m) {
 
 // Move the grabbed object "hand" with the mouse
 function msMove (evt) {
+    evt= translateTouch(evt);
+    // late grab of objects with mouse over and empty hand
+    if (evt.isTouch && hand==null && evt.target!=null) {
+	var target= evt.target;
+	// find the parent can receive late grab event
+	while (target.nodeType==1) {
+	    if (target.getAttribute("onmousedown")!=null) {
+		msDown(evt);
+		break;
+	    }
+	    target= target.parentNode;
+	}
+    }
     if (hand!=null) {
         // compute relative mouse movements since last call
-	evt= translateTouch(evt);
         var dx=evt.clientX-startx;
         var dy=evt.clientY-starty;
 	var dist=Math.abs(dx)+Math.abs(dy);
