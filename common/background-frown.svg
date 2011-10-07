@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
+
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -13,7 +14,7 @@
    width="190"
    height="140"
    id="svg2510"
-   inkscape:version="0.46"
+   inkscape:version="0.48.1 r9760"
    sodipodi:docname="background-frown.svg"
    sodipodi:version="0.32"
    inkscape:output_extension="org.inkscape.output.svg.inkscape">
@@ -35,11 +36,11 @@
        inkscape:collect="always"
        id="linearGradient3754">
       <stop
-         style="stop-color:#aa4400;stop-opacity:1"
+         style="stop-color:#2ca089;stop-opacity:1"
          offset="0"
          id="stop3756" />
       <stop
-         style="stop-color:#ffccaa;stop-opacity:1"
+         style="stop-color:#d7f4ee;stop-opacity:1"
          offset="1"
          id="stop3758" />
     </linearGradient>
@@ -69,16 +70,16 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1113"
-     inkscape:window-height="956"
+     inkscape:window-width="1024"
+     inkscape:window-height="576"
      id="namedview2956"
      showgrid="false"
      inkscape:zoom="1.4567901"
      inkscape:cx="-57.931881"
      inkscape:cy="28.444065"
-     inkscape:window-x="1013"
-     inkscape:window-y="53"
-     inkscape:window-maximized="0"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
      inkscape:current-layer="svg2510" />
   <rect
      style="fill:url(#linearGradient3760);fill-opacity:1;stroke:none;stroke-width:6;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"

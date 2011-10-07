@@ -1,3 +1,7 @@
+body {
+    font-family: Lucita,Arial;
+}
+
 #levels {
     list-style-type: none;
     display: inline;
@@ -13,6 +17,7 @@
     padding: 20px;
     -moz-border-radius: 15px;
     border-radius: 15px;
+    font-size: 15pt;
 }
 
 #levels a {
@@ -42,5 +47,5 @@ img.result {
 
 .progress li {
     background: url(background-hot.svg);
-    color: black;
+    color: white;
 }
