@@ -20,7 +20,8 @@ function status(msg) {
     txt.setAttribute("y", "350");
     txt.setAttribute("id", "status-"+statusNo);
     txt.setAttribute("style", "font-size:10pt;");
-    root.appendChild(txt);
+    //root.appendChild(txt);
+    root.insertBefore(txt, root.firstChild);
     statusNo= statusNo+1;
 
 }
@@ -33,6 +34,9 @@ function path(obj) {
 	str= str.replace(/^svg:/,"");
 	if (obj.getAttribute("class")!=null)
 	    str=str+"."+obj.getAttribute("class");
+	var v= obj.getAttributeNS(topns,'value');
+	if (v!="")
+	    str= str+"="+v;
 	return path(obj.parentNode)+"/"+str;
     }
 }

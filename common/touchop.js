@@ -32,18 +32,19 @@ var startCTM;
 // tresh is a mouse movement treshold, that lets objects snap into drop areas
 var tresh=0;
 
-// counter for long click action, after which the root is selected
-var longClick=0;
+// position for long click action, after which group is selected
+var longClick=[0,0];
 
 // translate events that come from touch devices
 function translateTouch(evt) {
     if (evt.touches!=undefined) {
-	evt.clientX= evt.touches[0].clientX;
-	evt.clientY= evt.touches[0].clientY;
-	evt.target= document.elementFromPoint(evt.clientX, evt.clientY);
+	var evt2= {};
+	evt2.clientX= evt.touches[0].clientX;
+	evt2.clientY= evt.touches[0].clientY;
+	evt2.target= document.elementFromPoint(evt2.clientX, evt2.clientY);
 	evt.preventDefault();
-    }	
-    //status(evt.clientX+","+evt.clientY+" -> "+path(evt.target));
+	return evt2;
+    }
     return evt;
 }
     
@@ -121,9 +122,9 @@ function msMove (evt) {
 	var dist=Math.abs(dx)+Math.abs(dy);
 
         // if the mouse has moved more than a snap treshold "tresh"
-	initLongClick();
-	if (dist > tresh) {
+	initLongClick(evt.clientX, evt.clientY);
 
+	if (dist > tresh) {
 	    // check if object can be dropped
 	    var dropTo= evt.target;
 	    while (dropTo.nodeType==1 && dropTo.getAttribute("class")!="operand")
@@ -162,12 +163,10 @@ function msMove (evt) {
 		m= m.multiply(hand.getScreenCTM());
 		// apply transformation
 		setTransform(hand, m);
-		
-		// store current coordinates
-		evt= translateTouch(evt);
-		startx= evt.clientX;
-		starty= evt.clientY;
             }
+	    // store current coordinates
+	    startx= evt.clientX;
+	    starty= evt.clientY;
 	}
     }
 }
@@ -191,30 +190,30 @@ function moveToGroup(obj, target) {
 
 // This method is called when an object is draged on the background.
 // The draged object is inserted into its home group and the transformation is adjusted
-function sendHome() {
+function sendHome(obj) {
     startCTM=null;
     
     // move this object to the root element
-    var target= hand.ownerDocument.childNodes[0];
-    if (hand.parentNode != target) {
+    var target= obj.ownerDocument.childNodes[0];
+    if (obj.parentNode != target) {
 
 	// store the current location
 	var m1= target.getScreenCTM().inverse();
-	var m2= hand.getScreenCTM();
+	var m2= obj.getScreenCTM();
 
 	// the object is inserted into its home group
-	moveToGroup(hand, target);
+	moveToGroup(obj, target);
 
 	// compute relative transformation matrix
-	var m= hand.getScreenCTM();
+	var m= obj.getScreenCTM();
 	m.e= m2.e;
 	m.f= m2.f;
 	m= m1.multiply(m); 
 
 	// update transformation
-	setTransform(hand, m);
-	layout(hand);
-   	setFloating(hand, true);
+	setTransform(obj, m);
+	layout(obj);
+   	setFloating(obj, true);
     }
 }
 
@@ -521,14 +520,14 @@ function setFloating(obj, doFloat) {
 }
 
 // select root expression after 500ms stable click on sub expression
-function initLongClick() {
-    longClick+=1;
-    setTimeout("longClickAction("+longClick+")", 500);
+function initLongClick(x,y) {
+    longClick=[x,y];
+    setTimeout("longClickAction("+x+","+y+")", 500);
 }
 
 // select the root element in case of long clicks
-function longClickAction(counter) {
-    if (hand!=null && counter==longClick) {
+function longClickAction(x, y) {
+    if (hand!=null && Math.abs(x- longClick[0])+Math.abs(y-longClick[1]) < 5) {
 	root= findRoot(hand);
 	releaseHand();
 	grab(root);

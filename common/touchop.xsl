@@ -8,6 +8,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:svg="http://www.w3.org/2000/svg"
+		xmlns:html="http://www.w3.org/1999/xhtml"
 		xmlns:xlink="http://www.w3.org/1999/xlink"
 		xmlns:top="http://www.dadim.de/touchop"
                 version="1.0">
@@ -31,7 +32,8 @@
   <svg:script type="text/javascript" xlink:href="../../common/status.js"/>
 
   <!-- mobile device settings -->
-  <svg:meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <html:meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <html:meta name="apple-mobile-web-app-capable" content="yes" />
 
   <!-- blur effect for shadows -->
   <svg:defs>
@@ -263,7 +265,6 @@
   <xsl:comment>Atomic element</xsl:comment>
   <xsl:element name="svg:g">
     <xsl:attribute name="onmousedown">msDown(evt)</xsl:attribute>
-    <xsl:attribute name="ontouchstart">msDown(evt)</xsl:attribute>
     <xsl:attribute name="top:value"><xsl:value-of select="@value"/></xsl:attribute>
     <xsl:attribute name="top:priority"><xsl:value-of select="@priority"/></xsl:attribute>
     <xsl:attribute name="top:play">500</xsl:attribute>
