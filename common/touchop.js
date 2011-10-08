@@ -37,7 +37,7 @@ var startCTM;
 // tresh is a mouse movement treshold, that lets objects snap into drop areas
 var tresh=0;
 
-// position for long click action, after which group is selected
+// position for long click action, after which the top group is selected
 var longClick=[0,0];
 
 // translate events that come from touch devices
@@ -126,8 +126,9 @@ function msMove (evt) {
 	var target= evt.target;
 	// find the parent can receive late grab event
 	while (target.nodeType==1) {
-	    if (target.getAttribute("onmousedown")!=null) {
-		msDown(evt);
+	    var action= target.getAttribute("onmousedown");
+	    if (action!=null) {
+		eval(action);
 		break;
 	    }
 	    target= target.parentNode;

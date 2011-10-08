@@ -60,16 +60,19 @@
   <!-- The emoticon indicates the winning status and links -->
   <!-- back to the index page -->
   <xsl:comment>Emoticon</xsl:comment>
-  <svg:a xlink:href="javascript:window.history.back()">
-    <svg:g transform="translate(500,20)" id="top:notwin">
-      <svg:image xlink:href="../../common/frowny.svg" 
-		 width="81" height="81"/>
-    </svg:g>
-    <svg:g transform="translate(500,20)" id="top:win">
-      <svg:image xlink:href="../../common/smiley.svg" 
-		 width="81" height="81"/>
-    </svg:g>
-  </svg:a>
+  <svg:g onmousedown="window.history.back()"
+	 transform="translate(500,20)" >
+    <svg:a xlink:href="index.html">
+      <svg:g id="top:notwin">
+	<svg:image xlink:href="../../common/frowny.svg" 
+		   width="81" height="81"/>
+      </svg:g>
+      <svg:g id="top:win">
+	<svg:image xlink:href="../../common/smiley.svg" 
+		   width="81" height="81"/>
+      </svg:g>
+    </svg:a>
+  </svg:g>
 </svg:svg>
 </xsl:template>
 
