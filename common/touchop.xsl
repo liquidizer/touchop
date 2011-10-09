@@ -319,14 +319,18 @@
 	<xsl:attribute name="top:y"><xsl:value-of select="@y"/></xsl:attribute>
       </xsl:element>
     </xsl:for-each>
-    <xsl:for-each select="turtle">
+    <xsl:if test="turtle">
       <xsl:element name="svg:g">
 	<xsl:attribute name="transform">
-	  <xsl:value-of select="concat('translate(',../@size div 2,',',../@size div 2,')')"/>
+	  <xsl:text>translate(</xsl:text>
+	  <xsl:value-of select="(0 - @xmin) div (@xmax - @xmin) * @size"/>
+	  <xsl:text>,</xsl:text>
+	  <xsl:value-of select="(@ymax - 0) div (@ymax - @ymin) * @size"/>
+	  <xsl:text>)</xsl:text>
 	</xsl:attribute>
 	<svg:path id="turtle" d="M 0,-5 l 12,5, -12,5 Z"/>
       </xsl:element>
-    </xsl:for-each>
+    </xsl:if>
     <svg:path id="plotpath"/>
   </xsl:element>
 

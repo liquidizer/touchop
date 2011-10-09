@@ -127,8 +127,8 @@ function msMove (evt) {
 	// find the parent can receive late grab event
 	while (target.nodeType==1) {
 	    var action= target.getAttribute("onmousedown");
-	    if (action!=null) {
-		eval(action);
+	    if (action=="msDown(evt)") {
+		msDown(evt);
 		break;
 	    }
 	    target= target.parentNode;

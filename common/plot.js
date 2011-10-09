@@ -48,6 +48,7 @@ function drawGraph(samples, fx, fy) {
 
     var winList= [];
     var win= false;
+    var points= targetPoints(canvas);
     for (var i=0; i<=samples; ++i) {
 	if (fx==null) {
 	    var x= i*(xmax-xmin)/samples+xmin;
@@ -73,16 +74,12 @@ function drawGraph(samples, fx, fy) {
 
 	    // check if all objective nodes are traversed
 	    win= true;
-	    for (var j=0; j<canvas.childNodes.length; j++) {
-		var child= canvas.childNodes[j];
-		if (child.nodeName=="svg:circle") {
-		    var cx= child.getAttribute("cx");
-		    var cy= child.getAttribute("cy");
-		    if (isBetween(xOld, yOld, x, y, cx, cy)) {
-			winList[j]= true;
-		    }
-		    win= win && winList[j];
+	    for (var j=0; j<points.length; j++) {
+		var point= points[j];
+		if (isBetween(xOld, yOld, x, y, point[0], point[1])) {
+		    winList[j]= true;
 		}
+		win= win && winList[j];
 	    }
 
 	    // store old coordinates
@@ -92,6 +89,19 @@ function drawGraph(samples, fx, fy) {
     }
     path.setAttribute("d", d);
     if (win) smile(1.0); else smile(0.0);
+}
+
+function targetPoints(canvas) {
+    var points= [];
+    for (var j=0; j<canvas.childNodes.length; j++) {
+	var child= canvas.childNodes[j];
+	if (child.nodeName=="svg:circle") {
+	    var cx= eval(child.getAttribute("cx"));
+	    var cy= eval(child.getAttribute("cy"));
+	    points[points.length]= [cx,cy];
+	}
+    }
+    return points;
 }
 
 function isBetween(ax, ay, bx, by, cx, cy) {
