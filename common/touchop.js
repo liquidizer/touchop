@@ -136,7 +136,7 @@ function msMove (evt) {
 	if (dist > tresh) {
 	    // check if object can be dropped
 	    var dropTo= evt.target;
-	    while (dropTo.nodeType==1 && dropTo.getAttribute("class")!="operand")
+	    while (dropTo.nodeType==1 && !dropTo.classList.contains("operand"))
 		dropTo= dropTo.parentNode;
 	    if (dropTo== hand.parentNode) {
 		// refresh treshold
@@ -151,6 +151,10 @@ function msMove (evt) {
 	
 		// verify the winning test during mouse hover
 		verify(findRoot(hand), false);
+
+		// set snap treshold. Further mouse movements 
+		// are ignored until distance treshold is hit.
+		tresh= 30;
 	    }
             else {
 		// object can not be dropped let it move
