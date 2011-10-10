@@ -64,7 +64,8 @@ function msDown (evt) {
         starty= evt.clientY;
 
 	// create a drag treshold if object is a part
-        if (hand!=findRoot(hand))
+        if (!hand.parentNode.classList.contains("container") &&
+	    hand!=findRoot(hand))
 	    tresh=30;
 
 	// mark root after time out
@@ -138,23 +139,20 @@ function msMove (evt) {
 	    var dropTo= evt.target;
 	    while (dropTo.nodeType==1 && !dropTo.classList.contains("operand"))
 		dropTo= dropTo.parentNode;
-	    if (dropTo== hand.parentNode) {
-		// refresh treshold
-		tresh=30;
-	    } 
-	    else if (dropTo.nodeType==1 && 
-		     dropTo.getAttribute("blocked")!="true" &&
+	    if (dropTo.nodeType==1 && 
+		     (dropTo.getAttribute("blocked")!="true" || hand.parentNode==dropTo) &&
 		     hand.getAttributeNS(topns,"drop")!="none") {
 		// insert grabbed object into mouse pointer target group
 		setFloating(hand, false);
-		moveToGroup(hand, dropTo);
+		moveToGroup(hand, dropTo, evt.clientX, evt.clientY);
 	
 		// verify the winning test during mouse hover
 		verify(findRoot(hand), false);
 
 		// set snap treshold. Further mouse movements 
 		// are ignored until distance treshold is hit.
-		tresh= 30;
+		if (!dropTo.classList.contains("container"))
+		    tresh= 30;
 	    }
             else {
 		// object can not be dropped let it move
@@ -180,20 +178,27 @@ function msMove (evt) {
 }
 
 // The object obj is inserted into a new group element target. Layouts are updated
-function moveToGroup(obj, target) {
+function moveToGroup(obj, target, x, y) {
+    // move object from its current to the target container
     var oldContainer= obj.parentNode;
-    if (target!=oldContainer && obj !=target) {
-        // move object from its current to the target container
-	try {
-            target.appendChild(obj);
-	}  catch (e) {
-	    // ignore circular insertion due to event race
-	}
-
-        // insert object to target group and layout new container
-        layout(oldContainer);
-        layout(target);
+    try {
+        target.appendChild(obj);
+    }  catch (e) {
+	// ignore circular insertion due to event race
     }
+    
+    // default position at the cursor
+    if (y!=undefined) {
+	var m= obj.getScreenCTM();
+	var p= target.getScreenCTM().inverse();
+	m.e= x;
+	m.f= y;
+	setTransform(obj, p.multiply(m));
+    }
+    
+    // insert object to target group and layout new container
+    layout(oldContainer);
+    layout(target);
 }
 
 // This method is called when an object is draged on the background.
