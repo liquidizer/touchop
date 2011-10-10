@@ -28,11 +28,8 @@ window.onload = function() {
 // hand is a reference to the object currently beeing dragged.
 var hand= null;
 
-// The screen coordinates of the last drag update is stored in startx and starty.
-var startx, starty;
-
-// tresh is a mouse movement treshold, that lets objects snap into drop areas
-var tresh=0;
+// The screen coordinates of the last drag update.
+var startPos= [0,0];
 
 // position for long click action, after which the top group is selected
 var longClick=[0,0];
@@ -60,13 +57,7 @@ function msDown (evt) {
 	grab(evt.target);
 
         // store mouse position. Will be updated when mouse moves.
-        startx= evt.clientX;
-        starty= evt.clientY;
-
-	// create a drag treshold if object is a part
-        if (!hand.parentNode.classList.contains("container") &&
-	    hand!=findRoot(hand))
-	    tresh=30;
+	startPos= [evt.clientX, evt.clientY];
 
 	// mark root after time out
 	initLongClick();
@@ -100,7 +91,6 @@ function releaseHand() {
     
     // delete reference to hand object.
     hand= null;
-    tresh= 0;
 }
 
 // Applys the transformation matrix m to the SVG element obj
@@ -127,40 +117,40 @@ function msMove (evt) {
     }
     if (hand!=null) {
         // compute relative mouse movements since last call
-        var dx=evt.clientX-startx;
-        var dy=evt.clientY-starty;
+        var dx=evt.clientX-startPos[0];
+        var dy=evt.clientY-startPos[1];
 	var dist=Math.abs(dx)+Math.abs(dy);
 
-        // if the mouse has moved more than a snap treshold "tresh"
+	// long click action
 	initLongClick(evt.clientX, evt.clientY);
 
-	if (dist > tresh) {
-	    // check if object can be dropped
-	    var dropTo= evt.target;
-	    while (dropTo.nodeType==1 && !dropTo.classList.contains("operand"))
-		dropTo= dropTo.parentNode;
-	    if (dropTo.nodeType==1 && 
-		     (dropTo.getAttribute("blocked")!="true" || hand.parentNode==dropTo) &&
-		     hand.getAttributeNS(topns,"drop")!="none") {
-		// insert grabbed object into mouse pointer target group
-		setFloating(hand, false);
-		moveToGroup(hand, dropTo, evt.clientX, evt.clientY);
-	
-		// verify the winning test during mouse hover
-		verify(findRoot(hand), false);
+	// check if object can be dropped
+	var dropTo= evt.target;
+	while (dropTo.nodeType==1 && !dropTo.classList.contains("operand"))
+	    dropTo= dropTo.parentNode;
+	if (dropTo.nodeType==1 && 
+	    (dropTo.getAttribute("blocked")!="true" || hand.parentNode==dropTo) &&
+	    hand.getAttributeNS(topns,"drop")!="none") {
+	    // insert grabbed object into mouse pointer target group
+	    setFloating(hand, false);
+	    moveToGroup(hand, dropTo, evt.clientX, evt.clientY);
+	    
+	    // verify the winning test during mouse hover
+	    verify(findRoot(hand), false);
+	    
+	    // offset snap region
+	    startPos= [evt.clientX, evt.clientY];
+	}
+        else {
+	    // object can not be dropped let it move
+	    if (hand.parentNode!=null)
+		hand.parentNode.appendChild(hand);
 
-		// set snap treshold. Further mouse movements 
-		// are ignored until distance treshold is hit.
-		if (!dropTo.classList.contains("container"))
-		    tresh= 30;
-	    }
-            else {
-		// object can not be dropped let it move
-		if (hand.parentNode!=null)
-		    hand.parentNode.appendChild(hand);
+	    var isTop= hand == findRoot(hand);
+	    if (isTop || !isTop && dist>30) {
 		sendHome(hand);
-		tresh=0;
-		
+		dropTo= hand.parentNode;
+	    
 		// switch to screen coordinate system
 		var m= hand.parentNode.getScreenCTM().inverse();
 		// translate by screen coordinates
@@ -169,11 +159,11 @@ function msMove (evt) {
 		m= m.multiply(hand.getScreenCTM());
 		// apply transformation
 		setTransform(hand, m);
-            }
-	    // store current coordinates
-	    startx= evt.clientX;
-	    starty= evt.clientY;
-	}
+
+		// offset snap region
+		startPos= [evt.clientX, evt.clientY];
+	    }
+        }
     }
 }
 
