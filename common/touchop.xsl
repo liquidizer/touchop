@@ -28,6 +28,7 @@
 
   <!-- Drag and drop interface -->
   <svg:script type="text/javascript" xlink:href="../../common/touchop.js"/>
+  <svg:script type="text/javascript" xlink:href="../../common/sync.js"/>
   <svg:script type="text/javascript" xlink:href="../../common/def.js"/>
   <svg:script type="text/javascript" xlink:href="../../common/status.js"/>
 
@@ -59,6 +60,30 @@
 
   <!-- The emoticon indicates the winning status and links -->
   <!-- back to the index page -->
+
+  <!-- clip board window -->
+  <svg:g transform="matrix(0.5,0,0,0.5,50,150)"
+	 onmousedown="msDown(evt)"
+	 top:drop="none">
+    <svg:defs>
+      <svg:clipPath id="clipboard-frame">
+	<svg:use xlink:href="#clipboard-frame-background"/>
+      </svg:clipPath>
+    </svg:defs>
+    <svg:rect width="320" height="220" 
+	      x="-10" y="-10" 
+	      rx="10" ry="10"
+	      class="background"/>
+
+    <svg:g top:onrelease="syncToDB(obj)"
+	   id="clipboard"
+	   class="container operand"
+	   clip-path="url(#clipboard-frame)">
+	<svg:rect id="clipboard-frame-background"
+		  width="300" height="200" class="background"/>
+    </svg:g>
+  </svg:g>
+
   <xsl:comment>Emoticon</xsl:comment>
   <svg:g onmousedown="window.history.back()"
 	 transform="translate(500,20)" >

@@ -151,10 +151,6 @@ function msMove (evt) {
 	
 		// verify the winning test during mouse hover
 		verify(findRoot(hand), false);
-		
-		// set snap treshold. Further mouse movements 
-		// are ignored until distance treshold is hit.
-		tresh= 30;
 	    }
             else {
 		// object can not be dropped let it move

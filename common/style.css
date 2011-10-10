@@ -53,6 +53,10 @@ text {
     fill: #ffffe0;
 }
 
+.container > .background {
+    fill: white;
+}
+
 #plotpath {
     fill: none;
     stroke: blue;
