@@ -31,9 +31,6 @@ var hand= null;
 // The screen coordinates of the last drag update is stored in startx and starty.
 var startx, starty;
 
-// startCTM is the objects initial screen position, so it can snap back if needed.
-var startCTM;
-
 // tresh is a mouse movement treshold, that lets objects snap into drop areas
 var tresh=0;
 
@@ -83,9 +80,6 @@ function grab(obj) {
     
     // make underlying objects receive mouse events. Will be reverted after mouse up.
     hand.setAttribute("pointer-events","none");
-
-    // store initial position
-    startCTM= hand.getAttribute("transform");
 }
 
 // This function is called when the mouse button is released.
@@ -103,10 +97,6 @@ function releaseHand() {
     // make object receive mouse events again, release grip
     hand.removeAttribute("pointer-events");
     
-    // snap back if object was not dropped on a new place
-    if (startCTM!=null) {
-	hand.setAttribute("transform",startCTM);
-    }
     // delete reference to hand object.
     hand= null;
     tresh= 0;
@@ -164,7 +154,6 @@ function msMove (evt) {
 		
 		// set snap treshold. Further mouse movements 
 		// are ignored until distance treshold is hit.
-		startCTM= hand.getAttribute("transform");
 		tresh= 30;
 	    }
             else {
@@ -210,8 +199,6 @@ function moveToGroup(obj, target) {
 // This method is called when an object is draged on the background.
 // The draged object is inserted into its home group and the transformation is adjusted
 function sendHome(obj) {
-    startCTM=null;
-    
     // move this object to the root element
     var target= obj.ownerDocument.childNodes[0];
     if (obj.parentNode != target) {
