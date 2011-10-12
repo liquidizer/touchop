@@ -105,7 +105,7 @@ function targetPoints(canvas) {
 }
 
 function isBetween(ax, ay, bx, by, cx, cy) {
-    var eps=0.1;
+    var eps=1;
     var scale= Math.abs(ax-bx)+Math.abs(ay-by);
     if (scale > eps) {
 	var crossproduct = (cy - ay) * (bx - ax) - (cx - ax) * (by - ay);

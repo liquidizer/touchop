@@ -69,7 +69,7 @@ function grab(obj) {
     hand= obj;
     while (hand.getAttribute("onmousedown")==null)
 	hand= hand.parentNode;
-    
+
     // make underlying objects receive mouse events. Will be reverted after mouse up.
     hand.setAttribute("pointer-events","none");
 }
@@ -95,8 +95,9 @@ function releaseHand() {
 
 // Applys the transformation matrix m to the SVG element obj
 function setTransform(obj, m) {
-    var value="matrix("+m.a+","+m.b+","+m.c+","+m.d+","+m.e+","+m.f+")";
-    obj.setAttribute("transform", value);
+    var transforms= obj.transform.baseVal;
+    transforms.clear();
+    transforms.appendItem(transforms.createSVGTransformFromMatrix(m));
 }
 
 // Move the grabbed object "hand" with the mouse
@@ -141,11 +142,8 @@ function msMove (evt) {
 	    // offset snap region
 	    startPos= [evt.clientX, evt.clientY];
 	}
-        else {
+        else if (dropTo != hand.parentNode) {
 	    // object can not be dropped let it move
-	    if (hand.parentNode!=null)
-		hand.parentNode.appendChild(hand);
-
 	    var isTop= hand == findRoot(hand);
 	    if (isTop || !isTop && dist>30) {
 		sendHome(hand);
@@ -216,6 +214,8 @@ function sendHome(obj) {
 	layout(obj);
    	setFloating(obj, true);
     }
+    if (hand!= target.lastChild)
+	target.appendChild(hand);
 }
 
 
