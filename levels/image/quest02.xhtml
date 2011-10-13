@@ -10,18 +10,19 @@
     <feFlood flood-color="black"/>
   </image>
 
-  <image name="Over" xy="230,100">
-    <feComposite operator="atop" in="arg1" in2="arg2"/>
-  </image>
+  <image xy="100,200" src="img/circle.svg"/>
+  <image xy="100,100" src="img/sunset.jpg"/>
 
   <image name="Blur" xy="380,100">
     <feGaussianBlur stdDeviation="5" in="arg1"/>
   </image>
 
-  <image name="Over" xy="230,200">
+  <image name="Atop" xy="230,200">
     <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
-  <image xy="100,100" src="img/sunset.jpg"/>
-  <image xy="100,200" src="img/circle.svg"/>
+  <image name="Atop" xy="230,100">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
+  </image>
+
 </touchop>

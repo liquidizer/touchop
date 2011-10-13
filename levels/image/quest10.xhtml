@@ -17,23 +17,24 @@
     <feFlood flood-color="red"/>
   </image>
 
-  <image name="Over" xy="410,300">
-    <feComposite operator="atop" in="arg1" in2="arg2"/>
-  </image>
-  <image name="Over" xy="350,200">
+  <image name="Atop" xy="410,300">
     <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
-  <image name="Over" xy="280,300">
-    <feComposite operator="atop" in="arg1" in2="arg2"/>
-  </image>
-
-  <image name="Over" xy="470,200">
+  <image name="Atop" xy="470,200">
     <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
   <image name="Blur" xy="420,120">
     <feGaussianBlur stdDeviation="5" in="arg1"/>
+  </image>
+
+  <image name="Atop" xy="350,200">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
+  </image>
+
+  <image name="Atop" xy="280,300">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
   <image name="Mask" xy="150,300">

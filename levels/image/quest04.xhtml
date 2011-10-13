@@ -14,6 +14,8 @@
     <feFlood flood-color="blue"/>
   </image>
 
+  <image xy="380,80" src="img/tiger.jpg"/>
+
   <image name="Invert" xy="350,200">
     <feColorMatrix type="matrix" in="arg1" 
 		   values="-1 0 0 0 1
@@ -22,21 +24,15 @@
 			   0 0 0 1 0"/>
   </image>
 
-  <image xy="380,80" src="img/tiger.jpg"/>
-
-  <!-- single arg operators --> 
-
   <image name="Mask" xy="350,300">
     <feColorMatrix type="luminanceToAlpha" in="arg1"/>
   </image>
 
-  <!-- double arg operators -->
-
-  <image name="Over" xy="220,200">
+  <image name="Atop" xy="220,200">
     <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
-  <image name="Over" xy="220,300">
+  <image name="Atop" xy="220,300">
     <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
