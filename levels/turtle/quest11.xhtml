@@ -2,41 +2,45 @@
 <?xml-stylesheet type="text/xsl" href="../../common/touchop.xsl"?>
 <touchop>
   <test domain="turtle"/>
-  <canvas plot="y" xy="50,100" size="180" xmin="-4" xmax="4" ymin="-4" ymax="4">
-    <point x="2.5435893" y="1.1214830"/>
-    <point x="1.9042162" y="-2.9153741"/>
-    <point x="-1.9829217" y="-1.6523655"/>
-    <point x="-0.1273804" y="1.9893399"/>
-    <point x="3.1792216" y="-0.4130439"/>
-    <point x="0.2891479" y="-3.3031209"/>
-    <point x="-2.1132392" y="0.0034770"/>
-    <point x="1.5284688" y="1.8590244"/>
-    <point x="2.7914829" y="-2.0281196"/>
-    <point x="-1.2453803" y="-2.6675008"/>
-    <point x="-1.2453820" y="1.4196886"/>
+  <canvas plot="y" xy="50,50" size="180" xmin="-4" xmax="4" ymin="-4" ymax="4">
+    <point x="1.50222" y="-2.60000"/> 
+    <point x="2.00000" y="-3.46222"/>
+    <point x="-0.50222" y="-2.60000"/>
+    <point x="-3.00000" y="-1.73333"/>
+    <point x="-4.00000" y="-1.73333"/>
+    <point x="-2.00000" y="0.00000"/>
+    <point x="-3.00000" y="1.73333"/>
+    <point x="0.00000" y="1.73333"/>
+    <point x="0.49778" y="2.60000"/>
+    <point x="1.00000" y="0.00000"/>
+    <point x="3.00000" y="0.00000"/>
     <turtle/>
   </canvas>
-  <program def="true" name="I" xy="350,130">
+  <program def="true" name="I" xy="470,220">
     <step/>
     <step/>
   </program>
-  <program xy="420,130">
+  <program name="3&#215;" repeat="3" xy="250,50">
     <step/>
     <step/>
   </program>
-  <program name=" 2&#215;" repeat="2" xy="240,60">
-    <step/>
-  </program>
-  <program name="5&#215;" repeat="5" xy="240,130">
+  <program name="6&#215;" repeat="6" xy="360,50">
     <step/>
     <step/>
   </program>
-  <program name="11&#215;" repeat="11" xy="350,60">
+  <program xy="250,190">
+    <push/>
     <step/>
+    <pop/>
   </program>
-  <move value="rotate(-90)" img="#turn-right" xy="500,200"/>
-  <move value="rotate(27)" img="#half-right" xy="260,280"/>
-  <move value="translate(180.0/8,0)" img="#move-forward" xy="340,280"/>
-  <use name="I" xy="500,280"/>
-  <use name="I" xy="420,280"/>
+  <program xy="300,280">
+    <push/>
+    <step/>
+    <pop/>
+  </program>
+  <move value="rotate(60)" img="#half-right" xy="50,280"/>
+  <move value="translate(180.0/8,0)" img="#move-forward" xy="130,280"/>
+  <move value="translate(180.0/8,0)" img="#move-forward" xy="210,280"/>
+  <use name="I" xy="390,190"/>
+  <use name="I" xy="465,140"/>
 </touchop>

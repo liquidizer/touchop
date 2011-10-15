@@ -12,14 +12,19 @@
   <use name="&#x2461;" xy="260,310"/>
   <use name="&#x2461;" xy="350,310"/>
 
-  <!-- base images -->
   <image xy="240,100" src="img/circle.svg"/>
   <image xy="240,200" src="img/monkey.jpg"/>
 
-  <!-- single arg operators --> 
+  <image name="Atop" xy="470,285">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
+  </image>
 
-  <image name="Mask" xy="340,200">
-    <feColorMatrix type="luminanceToAlpha" in="arg1"/>
+  <image name="Atop" xy="470,110">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
+  </image>
+
+  <image name="Atop" xy="470,200">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
   <image name="Invert" xy="340,100">
@@ -30,16 +35,8 @@
 			   0 0 0 1 0"/>
   </image>
 
-  <image name="Over" xy="470,285">
-    <feComposite operator="atop" in="arg1" in2="arg2"/>
-  </image>
-
-  <image name="Over" xy="470,110">
-    <feComposite operator="atop" in="arg1" in2="arg2"/>
-  </image>
-
-  <image name="Over" xy="470,200">
-    <feComposite operator="atop" in="arg1" in2="arg2"/>
+  <image name="Mask" xy="340,200">
+    <feColorMatrix type="luminanceToAlpha" in="arg1"/>
   </image>
 
 </touchop>

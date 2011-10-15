@@ -3,7 +3,7 @@ var total= 0;
 
 function update(evt) {
     // show persistent success emoticons if the page is delivered as html5
-    if (document.domain!="") {
+    if (window.location.hostname!="") {
 	var levels= document.getElementById("levels");
 	
 	// refresh level state
@@ -52,3 +52,16 @@ window.addEventListener("storage", update, false);
 
 // update on load
 window.onload= update;
+
+// google analytics
+if (/(www\.)?dadim\.de/.test(window.location.hostname)) {
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-13269270-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+}

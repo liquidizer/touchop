@@ -8,7 +8,8 @@
  */
 
 var current=null;
-var turtle;
+var turtle= null;
+var path= null;
 var win= false;
 var winList= [];
 
@@ -38,7 +39,7 @@ function resetTurtle() {
     turtle.setAttribute("transform","");
     winList= [];
     // remove old path
-    var path= document.getElementById("plotpath");
+    path= document.getElementById("plotpath");
     path.setAttribute("d","");
     checkPosition();
 }
@@ -48,8 +49,9 @@ function resetPlaybackStyle(obj) {
     for (var i=0; i<obj.childNodes.length; ++i) {
 	var child= obj.childNodes[i];
 	if (child.nodeType==1) {
-	    if (child.getAttribute("class")=="playback")
-		child.setAttribute("class","");
+	    if (child.classList!=null &&
+		child.classList.contains("playback"))
+		child.classList.remove("playback");
 	    child.removeAttribute("next");
 	    child.removeAttribute("state");
 	    resetPlaybackStyle(child);
@@ -70,7 +72,7 @@ function executeNext() {
 	    if (id!=null) {
 		current= document.getElementById(id);
 		if (current!=null)
-		    current.removeAttribute("class");
+		    current.classList.remove("playback");
 	    } else {
  		if (current.nextSibling!=null) {
 		    current= current.nextSibling;
@@ -83,12 +85,12 @@ function executeNext() {
 	}
 	var value= current.getAttributeNS(topns, "value");
 	if (value!="") {
-	    if (current.getAttribute("class")=="playback") {
+	    if (current.classList.contains("playback")) {
 		move(value);
-		current.setAttribute("class","")
+		current.classList.remove("playback")
 	    } else {
 		// execute the next command and pause
-		current.setAttribute("class","playback");
+		current.classList.add("playback");
 		setTimeout("executeNext()", 500);
 		return;
 	    }
@@ -107,7 +109,7 @@ function executeNext() {
 	var use= current.getAttributeNS(topns, "use");
 	if (use!="") {
 	    var target= document.getElementById("def-"+use);
-	    current.setAttribute("class","playback");
+	    current.classList.add("playback");
 	    resetPlaybackStyle(target);
 	    target.removeAttribute("state");
 	    target.setAttribute("next",getId(current));
@@ -130,10 +132,30 @@ function executeNext() {
     executeNext();
 }
 
+// push the current position on a stack
+function push() {
+    var m= turtle.getAttribute("transform");
+    current.parentNode.setAttribute("stack", m);
+}
+
+// pop the turtle position from the stack
+function pop() {
+    var canvas= document.getElementById("canvas");
+    var m= current.parentNode.getAttribute("stack");
+    turtle.setAttribute("transform", m);
+    var m= turtle.getTransformToElement(canvas);
+    var d= path.getAttribute("d");
+    d=d +" M "+m.e.toFixed(1)+","+m.f.toFixed(1);
+    path.setAttribute("d",d);
+}
+
+// move the turtle according to the current command
 function move(value) {
     var m= turtle.getTransformToElement(turtle.parentNode);
-    m= eval("m."+value);
-    setTransform(turtle,m);
+    eval(value);
+    if (/^m=/.test(value)) {
+	setTransform(turtle,m);
+    }
     checkPosition();
 }
 
@@ -156,12 +178,11 @@ function checkPosition() {
     if (win)
 	smile(1.0);
     // draw trail
-    var path= document.getElementById("plotpath");
     var d= path.getAttribute("d");
-    if (d=="") {
-	d= "M "+m1.e+","+m1.f;
-    } else {
-	d= d+" L "+m1.e+","+m1.f;
-    }
+    if (d=="")
+	d="M ";
+    else
+	d= d+ " L ";
+    d= d + m1.e.toFixed(1) + "," + m1.f.toFixed(1);
     path.setAttribute("d", d);
 }

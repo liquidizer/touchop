@@ -29,17 +29,17 @@
     <feMorphology operator="dilate" in="tmp" radius="1"/>
   </image>
 
+  <image name="Atop" xy="290,260">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
+  </image>
+
   <image name="Mask" xy="170,260">
     <feColorMatrix type="luminanceToAlpha" in="arg1"/>
   </image>
 
   <!-- double arg operators -->
 
-  <image name="Over" xy="170,180">
-    <feComposite operator="atop" in="arg1" in2="arg2"/>
-  </image>
-
-  <image name="Over" xy="290,260">
+  <image name="Atop" xy="170,180">
     <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 

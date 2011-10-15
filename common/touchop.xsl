@@ -463,6 +463,9 @@
     </svg:g>
     <svg:path id="move-forward" class="move"
 	      d="m 30,11 -15,15 8,0 c 0,0 0,0 0,2 0,0 -5,9 -6,14 0,1 0,3 0,3 0,4 3,6 6,6 l 15,0 c 3,0 6,-2 6,-6 0,0 0,-2 0,-3 -1,-5 -6,-15 -6,-15 0,-1 0,-1 0,-1 l 7,0 z"/>
+    <svg:path id="flag"
+	      d="M 1,30 L 7,0 L 8,0 L 8,2 C 8,2 11,0 16,4 C 21,6 20,9 22,15 C 25,21 28,20 28,20 C 28,20 25,25 19,23 C 14,21 12,14 5,18 L 3,31 L 1,30 z"/>
+    <svg:path id="arrow" d="M 0,0 L 18,0 M 18,0 L 14,-4 M 14,4 L 18,0"/>
   </defs>  
 </xsl:template>
 
@@ -490,19 +493,32 @@
 	<xsl:if test="@def">=</xsl:if>
       </svg:text>
     </xsl:if>
+    <xsl:if test="push">
+      <svg:g top:value="push()">
+	<svg:use xlink:href="#flag" class="background"/>
+	<svg:use xlink:href="#arrow" class="background" transform="translate(8,30)"/>
+      </svg:g>
+    </xsl:if>
     <svg:g top:layout="verticalLayout(obj)">
       <svg:rect class="background" display="none"/>
       <xsl:for-each select="step">
 	<xsl:call-template name="operand"/>
       </xsl:for-each>
     </svg:g>
+    <xsl:if test="pop">
+      <svg:g top:value="pop()">
+	<svg:use xlink:href="#flag" class="background"/>
+	<svg:use xlink:href="#arrow" class="background" 
+		 transform="scale(-1,1) translate(-26,30)"/>
+      </svg:g>
+    </xsl:if>
   </xsl:element>
 </xsl:template>
 
 <xsl:template match="move">
   <xsl:element name="svg:g">
     <xsl:attribute name="onmousedown">msDown(evt)</xsl:attribute>
-    <xsl:attribute name="top:value"><xsl:value-of select="@value"/></xsl:attribute>
+    <xsl:attribute name="top:value">m=m.<xsl:value-of select="@value"/></xsl:attribute>
     <svg:rect class="background" rx="5" ry="5" height="60" width="60"/>
     <xsl:element name="svg:use">
       <xsl:attribute name="xlink:href"><xsl:value-of select="@img"/></xsl:attribute>
