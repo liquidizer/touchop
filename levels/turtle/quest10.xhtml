@@ -2,40 +2,36 @@
 <?xml-stylesheet type="text/xsl" href="../../common/touchop.xsl"?>
 <touchop>
   <test domain="turtle"/>
-  <canvas plot="y" xy="50,100" size="180" xmin="-3" xmax="3" ymin="-3" ymax="3">
-   <point x="0.248690" y="-0.968583"/>
-  <point x="-0.627617" y="-1.450337"/>
-   <point x="0.530707" y="1.011224"/>
-   <point x="0.718089" y="0.028937"/>
-  <point x="-1.265056" y="1.891232"/>
-  <point x="-0.272941" y="1.765899"/>
-  <point x="-2.656915" y="0.455295"/>
-  <point x="-2.231136" y="1.360124"/>
-  <point x="-1.721365" y="-1.312170"/>
-  <point x="-2.450335" y="-0.627623"/>
+  <canvas plot="y" xy="50,100" size="180" xmin="-3" xmax="2" ymin="-3" ymax="2">
+   <point x="0.61667" y="-1.90333"/>
+  <point x="-0.19000" y="-2.49000"/>
+  <point x="-1.31000" y="-2.12667"/>
+  <point x="-2.11667" y="-1.54000"/>
+  <point x="-2.11667" y="-0.36333"/>
+  <point x="-1.81000" y="0.58667"/>
+  <point x="-0.69000" y="0.95000"/>
+   <point x="0.31000" y="0.95000"/>
+   <point x="1.00000" y="0.00000"/>
+   <point x="1.31000" y="-0.95000"/>
     <turtle/>
   </canvas>
-  <program def="true" name="H" xy="350,130">
+  <program def="true" name="H" xy="370,90">
     <step/>
     <step/>
   </program>
-  <program xy="420,130">
+  <program xy="440,130">
+    <push/>
+    <step/>
+    <step/>
+    <pop/>
+  </program>
+  <program name="5&#215;" repeat="5" xy="260,50">
     <step/>
     <step/>
   </program>
-  <program name=" 2&#215;" repeat="2" xy="240,60">
-    <step/>
-  </program>
-  <program name="5&#215;" repeat="5" xy="240,130">
-    <step/>
-    <step/>
-  </program>
-  <program name="4&#215;" repeat="4" xy="350,60">
-    <step/>
-  </program>
-  <move value="rotate(-90)" img="#turn-right" xy="500,200"/>
-  <move value="rotate(37.8)" img="#half-right" xy="260,280"/>
-  <move value="translate(180.0/6,0)" img="#move-forward" xy="340,280"/>
+  <move value="rotate(72)" img="#half-right" xy="260,280"/>
+  <move value="translate(180.0/5,0)" img="#move-forward" xy="260,200"/>
+  <move value="translate(180.0/5,0)" img="#move-forward" xy="340,280"/>
   <use name="H" xy="500,280"/>
   <use name="H" xy="420,280"/>
 </touchop>
