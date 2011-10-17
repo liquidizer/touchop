@@ -54,7 +54,9 @@ function msDown (evt) {
     if (hand==null && evt.target!=null) {
         // find signaling object
 	evt= translateTouch(evt);
-	grab(evt.target);
+	hand= evt.target;
+	while (hand.getAttribute("onmousedown")!="msDown(evt)")
+	    hand= hand.parentNode;
 
         // store mouse position. Will be updated when mouse moves.
 	startPos= [evt.clientX, evt.clientY];
@@ -63,15 +65,6 @@ function msDown (evt) {
 	initLongClick();
     }
     return false;
-}
-
-function grab(obj) {
-    hand= obj;
-    while (hand.getAttribute("onmousedown")==null)
-	hand= hand.parentNode;
-
-    // make underlying objects receive mouse events. Will be reverted after mouse up.
-    hand.setAttribute("pointer-events","none");
 }
 
 // This function is called when the mouse button is released.
@@ -147,7 +140,6 @@ function msMove (evt) {
 	    var isTop= hand == findRoot(hand);
 	    if (isTop || !isTop && dist>30) {
 		sendHome(hand);
-		dropTo= hand.parentNode;
 	    
 		// switch to screen coordinate system
 		var m= hand.parentNode.getScreenCTM().inverse();
@@ -176,7 +168,7 @@ function moveToGroup(obj, target, x, y) {
     }
     
     // default position at the cursor
-    if (y!=undefined) {
+    if (obj.parentNode==target && y!=undefined) {
 	var m= obj.getScreenCTM();
 	var p= target.getScreenCTM().inverse();
 	m.e= x;
@@ -186,6 +178,7 @@ function moveToGroup(obj, target, x, y) {
     
     // insert object to target group and layout new container
     layout(oldContainer);
+    eval(obj.getAttributeNS(topns,"layout"));
     layout(target);
 }
 
@@ -214,8 +207,12 @@ function sendHome(obj) {
 	layout(obj);
    	setFloating(obj, true);
     }
-    if (hand!= target.lastChild)
-	target.appendChild(hand);
+    // make the object float on top
+    if (obj!= target.lastChild)
+	target.appendChild(obj);
+
+    // make underlying objects receive mouse events. Will be reverted after mouse up.
+    obj.setAttribute("pointer-events","none");
 }
 
 
@@ -531,7 +528,7 @@ function longClickAction(x, y) {
     if (hand!=null && Math.abs(x- longClick[0])+Math.abs(y-longClick[1]) < 5) {
 	root= findRoot(hand);
 	releaseHand();
-	grab(root);
+	hand= root;
     }
 }
 

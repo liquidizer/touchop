@@ -60,30 +60,6 @@
 
   <!-- The emoticon indicates the winning status and links -->
   <!-- back to the index page -->
-
-  <!-- clip board window -->
-  <svg:g transform="matrix(0.5,0,0,0.5,50,150)"
-	 onmousedown="msDown(evt)"
-	 top:drop="none">
-    <svg:defs>
-      <svg:clipPath id="clipboard-frame">
-	<svg:use xlink:href="#clipboard-frame-background"/>
-      </svg:clipPath>
-    </svg:defs>
-    <svg:rect width="320" height="220" 
-	      x="-10" y="-10" 
-	      rx="10" ry="10"
-	      class="background"/>
-
-    <svg:g top:onrelease="syncToDB(obj)"
-	   id="clipboard"
-	   class="container operand"
-	   clip-path="url(#clipboard-frame)">
-	<svg:rect id="clipboard-frame-background"
-		  width="300" height="200" class="background"/>
-    </svg:g>
-  </svg:g>
-
   <xsl:comment>Emoticon</xsl:comment>
   <svg:g onmousedown="window.history.back()"
 	 transform="translate(500,20)" >
@@ -622,6 +598,118 @@
       <xsl:call-template name="toSVG"/>
     </xsl:element>
   </xsl:for-each>
+</xsl:template>
+
+
+<!-- TOUCHOP - PROGRAMMING DOMAIN -->
+<!-- Special operators for programming -->
+<xsl:template match="test[@domain='prog']">
+  <xsl:comment>Programming domain</xsl:comment>
+  <svg:script type="text/javascript" xlink:href="../../common/prog.js"/>
+</xsl:template>
+
+<!-- XSL language operands -->
+<xsl:template name="editOperand">
+  <xsl:param name="editable" select="@editable"/>
+  <svg:g top:layout="snap(obj)" class="operand">
+    <xsl:if test="$editable">
+      <svg:g onmousedown="evt.target.focus()" class="background">
+	<svg:foreignObject width="100" height="35">
+	  <xsl:element name="html:input">
+	    <xsl:attribute name="type">text</xsl:attribute>
+	    <xsl:attribute name="style">width:90px;height:28px</xsl:attribute>
+	    <xsl:attribute name="placeholder">
+	      <xsl:value-of select="$editable"/>
+	    </xsl:attribute>
+	  </xsl:element>
+	</svg:foreignObject>
+      </svg:g>
+    </xsl:if>
+    <xsl:if test="not($editable)">
+      <svg:rect height="50" width="50" rx="5" ry="5" class="background"/>
+    </xsl:if>
+    <xsl:apply-templates/>
+  </svg:g>
+</xsl:template>
+
+<xsl:template match="if-then">
+  <svg:g onmousedown="msDown(evt)"
+	 top:padding="3"
+	 top:layout="verticalLayout(obj)">
+
+    <!-- background image -->
+    <svg:rect class="background" rx="5" ry="5"/>
+
+    <svg:g top:layout="horizontalLayout(obj)" class="program">
+      <svg:rect class="background" display="none"/>
+      <svg:text>if</svg:text>
+      <xsl:call-template name="editOperand">
+	<xsl:with-param name="editable" select="'condition'"/>
+      </xsl:call-template>
+    </svg:g>
+
+    <svg:g top:layout="horizontalLayout(obj)" class="program">
+      <svg:rect class="background" display="none"/>
+      <xsl:call-template name="editOperand">
+	<xsl:with-param name="editable" select="'true'"/>
+      </xsl:call-template>
+      <svg:text>else</svg:text>
+      <xsl:call-template name="editOperand">
+	<xsl:with-param name="editable" select="'false'"/>
+      </xsl:call-template>
+    </svg:g>
+  </svg:g>    
+</xsl:template>
+
+<xsl:template match="assign-var">
+  <svg:g onmousedown="msDown(evt)"
+	 top:padding="3"
+	 top:layout="hideChildren(obj); verticalLayout(obj)">
+
+    <!-- background image -->
+    <svg:rect class="background" rx="5" ry="5"/>
+
+    <svg:g top:layout="horizontalLayout(obj)" class="program">
+      <svg:rect class="background" display="none"/>
+      <xsl:call-template name="editOperand">
+	<xsl:with-param name="editable" select="'name'"/>
+      </xsl:call-template>
+      <svg:text>=</svg:text>
+      <xsl:call-template name="editOperand">
+	<xsl:with-param name="editable" select="'value'"/>
+      </xsl:call-template>
+    </svg:g>    
+
+    <svg:g top:hide="ontop">
+      <xsl:call-template name="editOperand">
+	<xsl:with-param name="editable" select="'result'"/>
+      </xsl:call-template>
+    </svg:g>
+  </svg:g>
+</xsl:template>
+
+<xsl:template match="clipboard">
+  <svg:g transform="matrix(0.5,0,0,0.5,10,250)"
+	 onmousedown="msDown(evt)"
+	 top:drop="none">
+    <svg:defs>
+      <svg:clipPath id="clipboard-frame">
+	<svg:use xlink:href="#clipboard-frame-background"/>
+      </svg:clipPath>
+    </svg:defs>
+    <svg:rect width="320" height="220" 
+	      x="-10" y="-10" 
+	      rx="10" ry="10"
+	      class="background"/>
+
+    <svg:g top:onrelease="syncToDB(obj)"
+	   id="clipboard"
+	   class="container operand"
+	   clip-path="url(#clipboard-frame)">
+	<svg:rect id="clipboard-frame-background"
+		  width="300" height="200" class="background"/>
+    </svg:g>
+  </svg:g>
 </xsl:template>
 
 </xsl:stylesheet>

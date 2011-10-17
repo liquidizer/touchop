@@ -2,7 +2,7 @@
 /* Touchop - Touchable operators
  *           turtle graphics domain
  *
- * Copyright(C) 2008, 2011, Stefan Dirnstorfer
+ * Copyright(C) 2011, Stefan Dirnstorfer
  * This software may be copied, distributed and modified under the terms 
  * of the GPL (http://www.gnu.org/licenses/gpl.html)
  */
