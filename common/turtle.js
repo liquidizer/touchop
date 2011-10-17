@@ -49,9 +49,8 @@ function resetPlaybackStyle(obj) {
     for (var i=0; i<obj.childNodes.length; ++i) {
 	var child= obj.childNodes[i];
 	if (child.nodeType==1) {
-	    if (child.classList!=null &&
-		child.classList.contains("playback"))
-		child.classList.remove("playback");
+	    if (child.getAttribute("class")=="playback")
+		child.setAttribute("class","");
 	    child.removeAttribute("next");
 	    child.removeAttribute("state");
 	    resetPlaybackStyle(child);
@@ -72,7 +71,7 @@ function executeNext() {
 	    if (id!=null) {
 		current= document.getElementById(id);
 		if (current!=null)
-		    current.classList.remove("playback");
+		    current.setAttribute("class","");
 	    } else {
  		if (current.nextSibling!=null) {
 		    current= current.nextSibling;
@@ -85,12 +84,12 @@ function executeNext() {
 	}
 	var value= current.getAttributeNS(topns, "value");
 	if (value!="") {
-	    if (current.classList.contains("playback")) {
+	    if (current.getAttribute("class")=="playback") {
 		move(value);
-		current.classList.remove("playback")
+		current.setAttribute("class","");
 	    } else {
 		// execute the next command and pause
-		current.classList.add("playback");
+		current.setAttribute("class","playback");
 		setTimeout("executeNext()", 500);
 		return;
 	    }
@@ -109,7 +108,7 @@ function executeNext() {
 	var use= current.getAttributeNS(topns, "use");
 	if (use!="") {
 	    var target= document.getElementById("def-"+use);
-	    current.classList.add("playback");
+	    current.setAttribute("class","playback");
 	    resetPlaybackStyle(target);
 	    target.removeAttribute("state");
 	    target.setAttribute("next",getId(current));

@@ -15,9 +15,14 @@ function hideChildren(obj) {
 	var child=obj.childNodes[i];
 	if (child.nodeType==1) {
 	    var hide= child.getAttributeNS(topns, "hide");
+	    var isBlocked= child.lastChild;
+	    if (isBlocked) {
+		isBlocked= isBlocked.getAttribute("blocked");
+		isBlocked= isBlocked!=null && eval(isBlocked);
+	    }
 	    if (hide!="") {
 		var state= child.getAttribute("display");
-		if (hide=="ontop" && isTop) {
+		if (hide=="ontop" && isTop && !isBlocked) {
 		    child.setAttribute("display","none");
 		} else { 
 		    child.removeAttribute("display");

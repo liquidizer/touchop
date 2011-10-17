@@ -63,8 +63,9 @@ function msDown (evt) {
 
 	// mark root after time out
 	initLongClick();
+	//if (document.activeElement.blur)
+	//    document.activeElement.blur();
     }
-    return false;
 }
 
 // This function is called when the mouse button is released.
@@ -120,7 +121,7 @@ function msMove (evt) {
 
 	// check if object can be dropped
 	var dropTo= evt.target;
-	while (dropTo.nodeType==1 && !dropTo.classList.contains("operand"))
+	while (dropTo.nodeType==1 && dropTo.getAttribute("class")!="operand")
 	    dropTo= dropTo.parentNode;
 	if (dropTo.nodeType==1 && 
 	    (dropTo.getAttribute("blocked")!="true" || hand.parentNode==dropTo) &&
@@ -168,7 +169,7 @@ function moveToGroup(obj, target, x, y) {
     }
     
     // default position at the cursor
-    if (obj.parentNode==target && y!=undefined) {
+    if (target.getAttributeNS(topns,"container")=="true") {
 	var m= obj.getScreenCTM();
 	var p= target.getScreenCTM().inverse();
 	m.e= x;
@@ -176,7 +177,7 @@ function moveToGroup(obj, target, x, y) {
 	setTransform(obj, p.multiply(m));
     }
     
-    // insert object to target group and layout new container
+    // layout old and new container
     layout(oldContainer);
     eval(obj.getAttributeNS(topns,"layout"));
     layout(target);
@@ -186,7 +187,7 @@ function moveToGroup(obj, target, x, y) {
 // The draged object is inserted into its home group and the transformation is adjusted
 function sendHome(obj) {
     // move this object to the root element
-    var target= obj.ownerDocument.childNodes[0];
+    var target= document.lastChild;
     if (obj.parentNode != target) {
 
 	// store the current location
@@ -263,7 +264,6 @@ function layout(element) {
     if (top!=null) {
         // make sure original element does not move on the screen
         var ctm2= element.getCTM();
-	var box2= element.getBBox();
 	var w= top.getCTM();
 	var m= top.getTransformToElement(top.parentNode);
 	m= m.multiply(w.inverse());

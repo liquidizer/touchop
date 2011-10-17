@@ -608,21 +608,29 @@
   <svg:script type="text/javascript" xlink:href="../../common/prog.js"/>
 </xsl:template>
 
+<!-- text input field -->
+<xsl:template name="textInput">
+  <xsl:param name="editable" select="@editable"/>
+  <svg:foreignObject width="100" height="35" onmousedown="evt.target.focus()">
+    <xsl:element name="html:input">
+      <xsl:attribute name="type">text</xsl:attribute>
+      <xsl:attribute name="style">width:98px;height:28px</xsl:attribute>
+      <xsl:attribute name="placeholder">
+	<xsl:value-of select="$editable"/>
+      </xsl:attribute>
+    </xsl:element>
+  </svg:foreignObject>
+</xsl:template>
+
 <!-- XSL language operands -->
 <xsl:template name="editOperand">
   <xsl:param name="editable" select="@editable"/>
   <svg:g top:layout="snap(obj)" class="operand">
     <xsl:if test="$editable">
-      <svg:g onmousedown="evt.target.focus()" class="background">
-	<svg:foreignObject width="100" height="35">
-	  <xsl:element name="html:input">
-	    <xsl:attribute name="type">text</xsl:attribute>
-	    <xsl:attribute name="style">width:90px;height:28px</xsl:attribute>
-	    <xsl:attribute name="placeholder">
-	      <xsl:value-of select="$editable"/>
-	    </xsl:attribute>
-	  </xsl:element>
-	</svg:foreignObject>
+      <svg:g class="background">
+	<xsl:call-template name="textInput">
+	  <xsl:with-param name="editable" select="$editable"/>
+	</xsl:call-template>
       </svg:g>
     </xsl:if>
     <xsl:if test="not($editable)">
@@ -671,7 +679,7 @@
 
     <svg:g top:layout="horizontalLayout(obj)" class="program">
       <svg:rect class="background" display="none"/>
-      <xsl:call-template name="editOperand">
+      <xsl:call-template name="textInput">
 	<xsl:with-param name="editable" select="'name'"/>
       </xsl:call-template>
       <svg:text>=</svg:text>
