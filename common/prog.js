@@ -31,3 +31,51 @@ function hideChildren(obj) {
 	}
     }
 }
+
+// a key is pressed
+function checkTab(evt) {
+    if (evt.which==9 || evt.which==0 || evt.which==13) {
+	focusNext(evt);
+	evt.preventDefault();
+    }
+}
+
+function focusNext(evt) {
+    var focus= null;
+    var obj= document.activeElement;
+    var root= findRoot(obj);
+    while (obj!=root) {
+	var child= obj.firstChild;
+	// skip invisible operand elements
+	var opacity= obj.getAttribute("opacity");
+	var display= obj.getAttribute("display");
+	var visible= opacity!="0.0" && display!="none";
+	// find traverse axis
+	if (child!=null && child.nodeType==1 && visible) {
+	    // traverse down
+	    obj= child;
+	} else {
+	    // traverse to sibling, or up if not existent
+	    if (evt.shiftKey!=1) {
+		while (obj!=root && obj.nextSibling==null)
+		    obj= obj.parentNode;
+		if (obj!=root)
+		    obj= obj.nextSibling;
+	    } else {
+		while (obj!=root && obj.previousSibling==null)
+		    obj= obj.parentNode;
+		if (obj!=root)
+		    obj= obj.previousSibling;
+	    }
+
+	}
+	var canFocus= obj!=root && obj.getAttributeNS(topns, "focus");
+	if (canFocus=="true") {
+	    obj.focus();
+	    return;
+	}
+    }
+    msBlur(evt);
+}
+
+
