@@ -19,6 +19,8 @@
 	 ontouchmove="msMove(evt)"
 	 onmouseup="msUp(evt)"
 	 ontouchend="msUp(evt)"
+	 onmousedown="msBlur(evt)"
+	 ontouchstart="msBlur(evt)"
 	 width="100%" height="100%"
 	 viewBox="0 0 600 400">
   <svg:title>Touchop</svg:title>
@@ -614,10 +616,12 @@
 <!-- text input field -->
 <xsl:template name="textInput">
   <xsl:param name="editable" select="@editable"/>
-  <svg:foreignObject width="100" height="35" onmousedown="evt.target.focus()">
+  <svg:foreignObject width="100" height="35">
     <xsl:element name="html:input">
       <xsl:attribute name="type">text</xsl:attribute>
       <xsl:attribute name="style">width:98px;height:28px</xsl:attribute>
+      <xsl:attribute name="top:focus">true</xsl:attribute>
+      <xsl:attribute name="onkeypress">checkTab(event)</xsl:attribute>
       <xsl:attribute name="placeholder">
 	<xsl:value-of select="$editable"/>
       </xsl:attribute>
@@ -627,12 +631,11 @@
 
 <!-- repeat the next sibling on click -->
 <xsl:template name="expand">
-  <svg:g>
+  <svg:g top:layout="expandLayout(obj)">
     <svg:g display="none" top:filled="false"/>
     <svg:path d="M 0,0 L 60,0 30,10 Z" 
-	      class="program"
 	      onclick="expand(evt)"
-	      top:layout="expandLayout(obj)"/>
+	      class="program"/>
   </svg:g>
 </xsl:template>
 

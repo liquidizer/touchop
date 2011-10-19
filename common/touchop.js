@@ -63,9 +63,15 @@ function msDown (evt) {
 
 	// mark root after time out
 	initLongClick();
-	//if (document.activeElement.blur)
-	//    document.activeElement.blur();
+	if (document.activeElement.blur)
+	    document.activeElement.blur();
     }
+}
+
+// Mouse clicked on the background
+function msBlur(evt) {
+    if (document.activeElement.blur)
+	document.activeElement.blur();
 }
 
 // This function is called when the mouse button is released.
@@ -73,6 +79,16 @@ function msUp (evt) {
     if (hand!=null) {
 	var root= findRoot(hand);
 	releaseHand();
+
+	// focus element if applicable
+	var target= evt.target;
+	while (target!=null && target.nodeType==1) {
+	    if (target.getAttributeNS(topns,"focus")=="true") {
+		target.focus();
+		break;
+	    }
+	    target= target.parentNode;
+	}
 
 	// verify winning test after mouse release
 	verify(root, true);
@@ -221,7 +237,7 @@ function sendHome(obj) {
 function deepLayout(obj, doFloat) {
     if (obj.nodeType==1) {
         // layout children
-        var isObj= obj.getAttribute("onmousedown")!=null;
+        var isObj= obj.getAttribute("onmousedown")=="msDown(evt)";
 	if (isObj) {
 	    obj.setAttribute("ontouchstart", obj.getAttribute("onmousedown"));
 	}
@@ -536,7 +552,7 @@ function longClickAction(x, y) {
 function findRoot(obj) {
     var root= obj;
     while (obj!=null && obj.nodeType==1) {
-	if (obj.getAttribute("onmousedown")!=null)
+	if (obj.getAttribute("onmousedown")=="msDown(evt)")
 	    root= obj;
 	obj= obj.parentNode;
     }
