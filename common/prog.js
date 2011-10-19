@@ -9,6 +9,9 @@
 function verify() {
 }
 
+// A layout function that hides certain elements dynamically
+// ontop: element is hidden if container is not embedded in another object
+// notontop: todo
 function hideChildren(obj) {
     var isTop= obj == findRoot(obj);
     for (var i=0; i<obj.childNodes.length; ++i) {
@@ -30,4 +33,7 @@ function hideChildren(obj) {
 	    }
 	}
     }
+}
+
+function expandLayout(obj) {
 }

@@ -9,4 +9,6 @@
   <assign-var xy="350,100"/>
   <assign-var xy="350,200"/>
 
+  <xml-node xy="100,300"/>
+
 </touchop>

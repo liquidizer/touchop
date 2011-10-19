@@ -360,6 +360,7 @@
   </xsl:call-template>
 </xsl:template>
 
+<!-- find resolution for the canvas grid -->
 <xsl:template name="resolution">
   <xsl:param name="span"/>
   <xsl:choose>
@@ -370,6 +371,7 @@
   </xsl:choose>
 </xsl:template>
 
+<!-- render horizontal grid lines -->
 <xsl:template name="ygrid">
   <xsl:param name="pos"/>
   <xsl:param name="res"/>
@@ -394,6 +396,7 @@
   </xsl:if>
 </xsl:template>
 
+<!-- render vertical grid lines -->
 <xsl:template name="xgrid">
   <xsl:param name="pos"/>
   <xsl:param name="res"/>
@@ -622,6 +625,17 @@
   </svg:foreignObject>
 </xsl:template>
 
+<!-- repeat the next sibling on click -->
+<xsl:template name="expand">
+  <svg:g>
+    <svg:g display="none" top:filled="false"/>
+    <svg:path d="M 0,0 L 60,0 30,10 Z" 
+	      class="program"
+	      onclick="expand(evt)"
+	      top:layout="expandLayout(obj)"/>
+  </svg:g>
+</xsl:template>
+
 <!-- XSL language operands -->
 <xsl:template name="editOperand">
   <xsl:param name="editable" select="@editable"/>
@@ -637,6 +651,30 @@
       <svg:rect height="50" width="50" rx="5" ry="5" class="background"/>
     </xsl:if>
     <xsl:apply-templates/>
+  </svg:g>
+</xsl:template>
+
+<!-- xml node -->
+<xsl:template match="xml-node">
+  <svg:g onmousedown="msDown(evt)"
+	 top:padding="3"
+	 top:layout="verticalLayout(obj)">
+
+    <svg:rect rx="5" ry="5" class="background"/>
+
+    <svg:g top:layout="horizontalLayout(obj)" class="program">
+      <svg:rect class="background" display="none"/>
+      <svg:text>&lt;</svg:text>
+      <xsl:call-template name="editOperand">
+	<xsl:with-param name="editable" select="'name'"/>
+      </xsl:call-template>
+      <svg:text>&gt;</svg:text>
+    </svg:g>
+
+    <xsl:call-template name="expand"/>
+    <xsl:call-template name="editOperand">
+      <xsl:with-param name="editable" select="'child'"/>
+    </xsl:call-template>
   </svg:g>
 </xsl:template>
 
@@ -696,6 +734,7 @@
   </svg:g>
 </xsl:template>
 
+<!-- Clipboard window -->
 <xsl:template match="clipboard">
   <svg:g transform="matrix(0.5,0,0,0.5,10,250)"
 	 onmousedown="msDown(evt)"
