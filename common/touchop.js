@@ -83,10 +83,15 @@ function msUp (evt) {
 	// focus element if applicable
 	var target= evt.target;
 	while (target!=null && target.nodeType==1) {
+	    // check if clicked object can be focused
 	    if (target.getAttributeNS(topns,"focus")=="true") {
 		target.focus();
 		break;
 	    }
+	    // check if clicked object has click handler
+	    eval(target.getAttributeNS(topns,"click"));
+
+	    // proceed to parent element
 	    target= target.parentNode;
 	}
 

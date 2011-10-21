@@ -20,6 +20,14 @@ function isValid(obj) {
     return false;
 }
 
+// check if element is visible
+function isVisible(obj) {
+    if (obj.nodeType!=1) return false;
+    var opacity= obj.getAttribute("opacity");
+    var display= obj.getAttribute("display");
+    return opacity!="0.0" && display!="none";
+}
+
 // check a variable definition and set its validity
 function validateDef(obj) {
     var name= obj.getAttributeNS(topns, "def");
@@ -84,7 +92,7 @@ function checkIsValid(obj, list) {
     // recurse over child elements
     for (var i=0; i<obj.childNodes.length; ++i) {
         var child= obj.childNodes[i];
-        if (child.nodeType==1) {
+        if (isVisible(child)) {
 	    value= value + checkIsValid(child, list);
 	}
     }

@@ -63,19 +63,21 @@
   <!-- The emoticon indicates the winning status and links -->
   <!-- back to the index page -->
   <xsl:comment>Emoticon</xsl:comment>
-  <svg:g onmousedown="window.history.back()"
-	 transform="translate(500,20)" >
-    <svg:a xlink:href="index.html">
-      <svg:g id="top:notwin">
-	<svg:image xlink:href="../../common/frowny.svg" 
-		   width="81" height="81"/>
-      </svg:g>
-      <svg:g id="top:win">
-	<svg:image xlink:href="../../common/smiley.svg" 
-		   width="81" height="81"/>
-      </svg:g>
-    </svg:a>
-  </svg:g>
+  <xsl:if test="not(test[@smiley='false'])">
+    <svg:g onmousedown="window.history.back()"
+	   transform="translate(500,20)" >
+      <svg:a xlink:href="index.html">
+	<svg:g id="top:notwin">
+	  <svg:image xlink:href="../../common/frowny.svg" 
+		     width="81" height="81"/>
+	</svg:g>
+	<svg:g id="top:win">
+	  <svg:image xlink:href="../../common/smiley.svg" 
+		     width="81" height="81"/>
+	</svg:g>
+      </svg:a>
+    </svg:g>
+  </xsl:if>
 </svg:svg>
 </xsl:template>
 
@@ -611,6 +613,11 @@
 <xsl:template match="test[@domain='prog']">
   <xsl:comment>Programming domain</xsl:comment>
   <svg:script type="text/javascript" xlink:href="../../common/prog.js"/>
+  <defs>
+    <svg:path id="expand-arrow"
+	      d="M 0,0 L 60,0 30,30 Z" 
+	      class="program"/>
+  </defs>
 </xsl:template>
 
 <!-- text input field -->
@@ -627,16 +634,6 @@
       </xsl:attribute>
     </xsl:element>
   </svg:foreignObject>
-</xsl:template>
-
-<!-- repeat the next sibling on click -->
-<xsl:template name="expand">
-  <svg:g top:layout="expandLayout(obj)">
-    <svg:g display="none" top:filled="false"/>
-    <svg:path d="M 0,0 L 60,0 30,10 Z" 
-	      onclick="expand(evt)"
-	      class="program"/>
-  </svg:g>
 </xsl:template>
 
 <!-- XSL language operands -->
@@ -668,16 +665,22 @@
     <svg:g top:layout="horizontalLayout(obj)" class="program">
       <svg:rect class="background" display="none"/>
       <svg:text>&lt;</svg:text>
-      <xsl:call-template name="editOperand">
+      <xsl:call-template name="textInput">
 	<xsl:with-param name="editable" select="'name'"/>
       </xsl:call-template>
       <svg:text>&gt;</svg:text>
     </svg:g>
 
-    <xsl:call-template name="expand"/>
-    <xsl:call-template name="editOperand">
-      <xsl:with-param name="editable" select="'child'"/>
-    </xsl:call-template>
+    <svg:g top:layout="expandLayout(obj);verticalLayout(obj)"
+	   transform="scale(0.9)">
+      <svg:g display="none" top:content="true">
+	<xsl:call-template name="editOperand">
+	  <xsl:with-param name="editable" select="'child'"/>
+	</xsl:call-template>
+      </svg:g>
+      <svg:rect rx="5" ry="5" class="background" display="none"/>
+      <svg:use xlink:href="#expand-arrow" top:click="expand(evt)"/>
+    </svg:g>
   </svg:g>
 </xsl:template>
 

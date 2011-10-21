@@ -37,34 +37,49 @@ function hideChildren(obj) {
 
 // layout an expandable list of arguments
 function expandLayout(obj) {
-    var container= obj.firstChild;
-    while (container.getAttributeNS(topns, "filled")=="")
-	container= container.nextSibling;
-    if (container.getAttributeNS(topns, "filled")=="false") {
-	obj.parentNode.insertBefore(document.createComment("dynamic content"), obj);
-	container.appendChild(obj.nextSibling);
-	container.setAttributeNS(topns, "filled", "true");
+    var operand= null;
+    var arrow= null;
+    for (var i=0; i<obj.childNodes.length; ++i) {
+	var child= obj.childNodes[i];
+	if (child.nodeType==1 && child.getAttribute("class")=="operand")
+	    operand= child;
     }
-    var lastInsert= obj.previousSibling;
-    //if (lastInsert.nodeType==1) {
-    container= container.nextSibling;
-    container.setAttribute("transform","");
-    //}
- }
+    if (operand==null || hasContent(operand)) {
+	obj.lastChild.removeAttribute("transform");
+    } else {
+	obj.lastChild.setAttribute("transform", "rotate(180)");
+    }
+}
+
+function hasContent(obj) {
+    for (var i=0; i<obj.childNodes.length; ++i) {
+	var child= obj.childNodes[i];
+	if (child.nodeType==1 && 
+	    child.getAttribute("onmousedown"))
+	    return true;
+    }
+    return false;
+}
 
 // expand a dynamic list of arguments
 function expand(evt) {
-    var container= evt.target.previousSibling;
-    if (container.getAttributeNS(topns, "filled")!="true")
-	throw "expand without prototype";
+    var obj= evt.target.parentNode;
     // rotate arrow
-    //container.nextSibling.setAttribute("transform","rotate(180)");
-    // insert cloned node
-    var copy= container.firstChild.cloneNode(true);
-    container= container.parentNode;
-    container.parentNode.insertBefore(copy, container);
+    var button= obj.lastChild;
+    if (button.getCTM().d<0) {
+	// remove object
+	obj.removeChild(button.previousSibling);
+    } else {
+	// insert cloned node
+	var container= evt.target;
+	while (container.getAttributeNS(topns, "content")!="true")
+	    container= container.previousSibling;
+	var copy= container.firstChild.cloneNode(true);
+	container= evt.target.parentNode;
+	container.insertBefore(copy, evt.target);
+    }
     // relayout
-    layout(container.parentNode);
+    layout(obj);
 }
 
 // a key is pressed
@@ -75,13 +90,6 @@ function checkTab(evt) {
     }
 }
 
-// check if element is visible
-function isVisible(obj) {
-    var opacity= obj.getAttribute("opacity");
-    var display= obj.getAttribute("display");
-    return opacity!="0.0" && display!="none";
-}
-
 function focusNext(evt) {
     var focus= null;
     var obj= document.activeElement;
@@ -90,7 +98,7 @@ function focusNext(evt) {
 	var child= obj.firstChild;
 	// skip invisible operand elements
 	// find traverse axis
-	if (child!=null && child.nodeType==1 && isVisible(obj)) {
+	if (child!=null && isVisible(obj)) {
 	    // traverse down
 	    obj= child;
 	} else {
