@@ -110,10 +110,7 @@ function releaseHand() {
 
 // Applys the transformation matrix m to the SVG element obj
 function setTransform(obj, m) {
-    var transforms= obj.transform.baseVal;
-
-    transforms.clear();
-    transforms.appendItem(transforms.createSVGTransformFromMatrix(m));
+    obj.setAttribute("transform","matrix("+m.a+","+m.b+","+m.c+","+m.d+","+m.e+","+m.f+")");
 }
 
 // Move the grabbed object "hand" with the mouse
@@ -200,9 +197,11 @@ function moveToGroup(obj, target, x, y) {
     }
     
     // layout old and new container
-    layout(oldContainer);
-    eval(obj.getAttributeNS(topns,"layout"));
-    layout(target);
+    if (oldContainer!=target) {
+	setTimeout(function() {layout(oldContainer);}, 1);
+	eval(obj.getAttributeNS(topns,"layout"));
+	layout(target);
+    }
 }
 
 // This method is called when an object is draged on the background.
