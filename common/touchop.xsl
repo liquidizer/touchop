@@ -615,8 +615,8 @@
   <svg:script type="text/javascript" xlink:href="../../common/prog.js"/>
   <defs>
     <svg:path id="expand-arrow"
-	      d="M 0,0 L 60,0 30,30 Z" 
-	      class="program"/>
+	      d="M 0,0 L 60,0 30,40 Z" 
+	      class="move"/>
   </defs>
 </xsl:template>
 
@@ -626,9 +626,8 @@
   <svg:foreignObject width="100" height="35">
     <xsl:element name="html:input">
       <xsl:attribute name="type">text</xsl:attribute>
-      <xsl:attribute name="style">width:98px;height:28px</xsl:attribute>
-      <xsl:attribute name="top:focus">true</xsl:attribute>
-      <xsl:attribute name="onkeypress">checkTab(event)</xsl:attribute>
+      <xsl:attribute name="style">width:95px;height:28px</xsl:attribute>
+      <xsl:attribute name="onkeypress">navigation(event)</xsl:attribute>
       <xsl:attribute name="placeholder">
 	<xsl:value-of select="$editable"/>
       </xsl:attribute>
@@ -648,7 +647,7 @@
       </svg:g>
     </xsl:if>
     <xsl:if test="not($editable)">
-      <svg:rect height="50" width="50" rx="5" ry="5" class="background"/>
+      <svg:rect height="30" width="60" rx="5" ry="5" class="background"/>
     </xsl:if>
     <xsl:apply-templates/>
   </svg:g>
@@ -657,25 +656,26 @@
 <!-- xml node -->
 <xsl:template match="xml-node">
   <svg:g onmousedown="msDown(evt)"
+	 class="prog_xml"
 	 top:padding="3"
 	 top:layout="verticalLayout(obj)">
 
     <svg:rect rx="5" ry="5" class="background"/>
 
-    <svg:g top:layout="horizontalLayout(obj)" class="program">
+    <svg:g top:layout="horizontalLayout(obj)" class="prog_xml">
       <svg:rect class="background" display="none"/>
-      <svg:text>&lt;</svg:text>
+      <svg:text>&lt;XML:</svg:text>
       <xsl:call-template name="textInput">
-	<xsl:with-param name="editable" select="'name'"/>
+	<xsl:with-param name="editable" select="'nodeName'"/>
       </xsl:call-template>
       <svg:text>&gt;</svg:text>
     </svg:g>
 
     <svg:g top:layout="expandLayout(obj);verticalLayout(obj)"
+	   class="program"
 	   transform="scale(0.9)">
       <svg:g display="none" top:content="true">
 	<xsl:call-template name="editOperand">
-	  <xsl:with-param name="editable" select="'child'"/>
 	</xsl:call-template>
       </svg:g>
       <svg:rect rx="5" ry="5" class="background" display="none"/>
@@ -683,6 +683,27 @@
     </svg:g>
   </svg:g>
 </xsl:template>
+
+<!-- xml attribute -->
+<xsl:template match="xml-attribute">
+  <svg:g onmousedown="msDown(evt)"
+	 top:padding="3"
+	 class="prog_xml"
+	 top:layout="horizontalLayout(obj)">
+
+    <svg:rect class="background" rx="5" ry="5"/>
+
+    <svg:text>@</svg:text>
+    <xsl:call-template name="textInput">
+      <xsl:with-param name="editable" select="'attribute'"/>
+    </xsl:call-template>
+    <svg:text>:</svg:text>
+    <xsl:call-template name="editOperand">
+      <xsl:with-param name="editable" select="'value'"/>
+    </xsl:call-template>
+  </svg:g>
+</xsl:template>
+
 
 <xsl:template match="if-then">
   <svg:g onmousedown="msDown(evt)"
@@ -724,7 +745,7 @@
     <svg:g top:layout="horizontalLayout(obj)" class="program">
       <svg:rect class="background" display="none"/>
       <xsl:call-template name="textInput">
-	<xsl:with-param name="editable" select="'name'"/>
+	<xsl:with-param name="editable" select="'variable'"/>
       </xsl:call-template>
       <svg:text>=</svg:text>
       <xsl:call-template name="editOperand">
@@ -736,6 +757,36 @@
       <xsl:call-template name="editOperand">
 	<xsl:with-param name="editable" select="'result'"/>
       </xsl:call-template>
+    </svg:g>
+  </svg:g>
+</xsl:template>
+
+<xsl:template match="for-each">
+  <svg:g onmousedown="msDown(evt)"
+	 top:padding="3"
+	 class="prog_loop"
+	 top:layout="verticalLayout(obj)">
+
+    <!-- background image -->
+    <svg:rect class="background" rx="5" ry="5"/>
+
+    <svg:g top:layout="horizontalLayout(obj)" class="program">
+      <svg:rect class="background" display="none"/>
+      <svg:text>for</svg:text>
+      <xsl:call-template name="textInput">
+	<xsl:with-param name="editable" select="'variable'"/>
+      </xsl:call-template>
+      <svg:text>in</svg:text>
+      <xsl:call-template name="editOperand">
+	<xsl:with-param name="editable" select="'list'"/>
+      </xsl:call-template>
+      <svg:text>get</svg:text>
+    </svg:g>    
+
+    <svg:g class="program">
+    <xsl:call-template name="editOperand">
+      <xsl:with-param name="editable" select="'result'"/>
+    </xsl:call-template>
     </svg:g>
   </svg:g>
 </xsl:template>

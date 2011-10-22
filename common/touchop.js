@@ -16,8 +16,6 @@ window.onload = function() {
     smile(0.0);
     // Stop the browser from selecting objects
     document.onselectstart = function() {return false;} // ie
-    document.onmousedown = function() { return false;} // mozilla
-    document.ontouchstart= function(e) { e.preventDefault(); }
     setTimeout(function(){
 	// Hide the address bar!
 	window.scrollTo(0, 1);
@@ -72,6 +70,8 @@ function msDown (evt) {
 function msBlur(evt) {
     if (document.activeElement.blur)
 	document.activeElement.blur();
+    evt.preventDefault();
+    return false;
 }
 
 // This function is called when the mouse button is released.
@@ -84,7 +84,7 @@ function msUp (evt) {
 	var target= evt.target;
 	while (target!=null && target.nodeType==1) {
 	    // check if clicked object can be focused
-	    if (target.getAttributeNS(topns,"focus")=="true") {
+	    if (target.nodeName=="html:input") {
 		target.focus();
 		break;
 	    }
@@ -111,6 +111,7 @@ function releaseHand() {
 // Applys the transformation matrix m to the SVG element obj
 function setTransform(obj, m) {
     var transforms= obj.transform.baseVal;
+
     transforms.clear();
     transforms.appendItem(transforms.createSVGTransformFromMatrix(m));
 }
@@ -270,8 +271,7 @@ function deepLayout(obj, doFloat) {
 function layout(element) {
     var obj= element;
     var top= null;
-    var ctm1= element.getCTM();
-    var box1= element.getBBox();
+    var ctm1= obj.getCTM();
     do {
         command= obj.getAttributeNS(topns,"layout");
         if (command!="") {
@@ -280,7 +280,7 @@ function layout(element) {
         }
         obj= obj.parentNode;
     } while(obj.nodeType==1);
-    
+
     // The the topmost element is assumed to be freely placeable on the screen
     if (top!=null) {
         // make sure original element does not move on the screen
@@ -430,11 +430,12 @@ function boxLayout(obj, horizontal) {
     for (var i=0; i<obj.childNodes.length; ++i) {
         var child= obj.childNodes[i];
         if (child.nodeType==1) {
+	    var debug= child.nodeName=="svg:use";
 	    var opt= child.getAttributeNS(topns, "layoutOpt");
             if (child.getAttribute("class")=="background") {
                 back= child;
             } else if (back!=null && child.getAttribute("display")!="none" 
-		       && child.transform!=undefined) {
+		       && child.transform) {
                 // find local coordinate system
 		var m= child.getTransformToElement(obj);
 		var box= child.getBBox();
@@ -464,7 +465,7 @@ function boxLayout(obj, horizontal) {
 		    } else {
 			m.e= y - m.a * (box.x + 0.5*box.width) 
 			    - m.c * (box.y + 0.5*box.height);
-			m.f= x - m.d * box.y;
+			m.f= x - m.d * box.y - Math.min(m.d,0)*box.height;
 		    }
                     setTransform(child,m);
                 }
@@ -473,14 +474,14 @@ function boxLayout(obj, horizontal) {
                     x += + m.a * box.width + padding;
                     h = Math.max(h, Math.abs(m.d)*box.height);
 		} else {
-                    x += + m.d * box.height + padding;
+                    x += m.d * box.height + padding;
                     h = Math.max(h, Math.abs(m.a)*box.width + Math.abs(m.c)*box.height);
 		}
                 n++;
             }
        }
     }
-    
+
     // strech object
     if (stretch!=null) {
 	h= h+10;

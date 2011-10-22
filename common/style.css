@@ -40,6 +40,20 @@ text {
     fill: lightgray;
 }    
 
+.prog_xml > .background {
+    fill: coral;
+}
+
+.prog_xml > text {
+    font-size: 14pt;
+    font-family: courier;
+    font-weight: bold;
+}
+
+.prog_loop > .background {
+    fill: gold;
+}
+
 .image text {
     font-size: 12pt;
 }

@@ -83,19 +83,26 @@ function expand(evt) {
 }
 
 // a key is pressed
-function checkTab(evt) {
-    if (evt.which==9 || evt.which==0 || evt.which==13) {
-	focusNext(evt);
+function navigation(evt) {
+    var obj= document.activeElement;
+    var key= evt.keyCode;
+    if (key==13 || key==40 || !evt.shiftKey && key==9) {
+	focusNext(obj, true);
+	evt.preventDefault();
+    } 
+    else if (key==38 || key==9) {
+	focusNext(obj, false);
 	evt.preventDefault();
     }
 }
 
-function focusNext(evt) {
+function focusNext(obj, dir) {
     var focus= null;
-    var obj= document.activeElement;
     var root= findRoot(obj);
     while (obj!=root) {
 	var child= obj.firstChild;
+	if (!dir)
+	    child= obj.lastChild;
 	// skip invisible operand elements
 	// find traverse axis
 	if (child!=null && isVisible(obj)) {
@@ -103,7 +110,7 @@ function focusNext(evt) {
 	    obj= child;
 	} else {
 	    // traverse to sibling, or up if not existent
-	    if (evt.shiftKey!=1) {
+	    if (dir) {
 		while (obj!=root && obj.nextSibling==null)
 		    obj= obj.parentNode;
 		if (obj!=root)
@@ -117,12 +124,13 @@ function focusNext(evt) {
 
 	}
 	if (obj.nodeType==1) {
-	    var canFocus= obj!=root && obj.getAttributeNS(topns, "focus");
-	    if (canFocus=="true") {
+	    var canFocus= obj!=root && obj.nodeName=="html:input"
+	    if (canFocus) {
 		obj.focus();
 		return;
 	    }
 	}
     }
-    msBlur(evt);
+    if (document.activeElement.blur)
+	document.activeElement.blur();
 }

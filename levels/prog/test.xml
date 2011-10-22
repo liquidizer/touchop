@@ -6,8 +6,10 @@
   <if-then xy="50,100"/>
   <if-then xy="50,200"/>
 
-  <assign-var xy="350,100"/>
+  <xml-attribute xy="350,100"/>
+  <assign-var xy="350,150"/>
   <assign-var xy="350,200"/>
+  <for-each xy="350,300"/>
 
   <xml-node xy="100,300"/>
 
