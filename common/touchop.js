@@ -14,12 +14,6 @@ window.onload = function() {
     deepLayout(document.childNodes[0], true);
     // Set the smiley to frowning
     smile(0.0);
-    // Stop the browser from selecting objects
-    document.onselectstart = function() {return false;} // ie
-    setTimeout(function(){
-	// Hide the address bar!
-	window.scrollTo(0, 1);
-    }, 1);
 }
 
 // DnD frame work
@@ -425,7 +419,6 @@ function boxLayout(obj, horizontal) {
     var x0 = 0;
     var y = 0;
     var h = 0;
-    var n = 0;
     for (var i=0; i<obj.childNodes.length; ++i) {
         var child= obj.childNodes[i];
         if (child.nodeType==1) {
@@ -439,35 +432,23 @@ function boxLayout(obj, horizontal) {
 		var m= child.getTransformToElement(obj);
 		var box= child.getBBox();
 
-                if (n==0) {
-                    // use first element as reference for alignment
-		    if (horizontal) {
-			x0= m.e + m.a * box.x;
-			x= x0;
-			y= m.f + m.d * (box.y + box.height/2);
-		    } else {
-			x0= m.f + m.d * box.y;
-			x= x0;
-			y= m.e + m.a * (box.x + box.width/2) + m.c * (box.height/2);
-		    }
-                }
-                else {
-		    if (opt=="stretch") {
-			m.a=1.0;
-			m.d=1.0;
-			stretch= child;
-		    }
-		    if (horizontal) {
-			m.e= x - m.a * box.x;
-			m.f= y - m.d * (box.y + 0.5*box.height)
-			    - m.b * (box.x + 0.5*box.width);
-		    } else {
-			m.e= y - m.a * (box.x + 0.5*box.width) 
-			    - m.c * (box.y + 0.5*box.height);
-			m.f= x - m.d * box.y - Math.min(m.d,0)*box.height;
-		    }
-                    setTransform(child,m);
-                }
+		// align object
+		if (opt=="stretch") {
+		    m.a=1.0;
+		    m.d=1.0;
+		    stretch= child;
+		}
+		if (horizontal) {
+		    m.e= x - m.a * box.x;
+		    m.f= y - m.d * (box.y + 0.5*box.height)
+			- m.b * (box.x + 0.5*box.width);
+		} else {
+		    m.e= y - m.a * (box.x + 0.5*box.width) 
+			- m.c * (box.y + 0.5*box.height);
+		    m.f= x - m.d * box.y - Math.min(m.d,0)*box.height;
+		}
+                setTransform(child,m);
+
                 // compute position for next element
 		if (horizontal) {
                     x += + m.a * box.width + padding;
@@ -476,7 +457,6 @@ function boxLayout(obj, horizontal) {
                     x += m.d * box.height + padding;
                     h = Math.max(h, Math.abs(m.a)*box.width + Math.abs(m.c)*box.height);
 		}
-                n++;
             }
        }
     }
