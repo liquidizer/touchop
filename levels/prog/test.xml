@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../../common/touchop.xsl"?>
+<?xml-stylesheet type="text/xsl" href="../../common/touchop-prog.xsl"?>
 <touchop>
   <test domain="prog" smiley="false"/>
 
   <if-then xy="50,100"/>
-  <if-then xy="50,200"/>
+  <assign-var xy="50,200"/>
+  <for-each xy="50,300"/>
 
-  <xml-attribute xy="350,100"/>
-  <assign-var xy="350,170"/>
-  <for-each xy="350,300"/>
+  <xml-node xy="350,100"/>
+  <xml-attribute xy="350,200"/>
+  <xml-attribute xy="350,270"/>
 
-  <xml-node xy="100,300"/>
-
+  <to-svg xy="200,10"/>
 </touchop>

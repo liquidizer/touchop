@@ -506,7 +506,7 @@ function setFloating(obj, doFloat) {
 // select root expression after 500ms stable click on sub expression
 function initLongClick(x,y) {
     longClick=[x,y];
-    setTimeout("longClickAction("+x+","+y+")", 500);
+    setTimeout(function() { longClickAction(x,y) }, 500);
 }
 
 // select the root element in case of long clicks
