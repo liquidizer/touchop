@@ -38,13 +38,6 @@
   <html:meta name="viewport" content="width=device-width, initial-scale=1"/>
   <html:meta name="apple-mobile-web-app-capable" content="yes" />
 
-  <!-- blur effect for shadows -->
-  <svg:defs>
-    <svg:filter id="shadow-blur">
-      <svg:feGaussianBlur stdDeviation="2"/>
-    </svg:filter>
-  </svg:defs>
-
   <!-- iterate over all xml elements in the source file -->
   <xsl:comment>List of operators</xsl:comment>
   <xsl:for-each select="*">
@@ -660,8 +653,10 @@
 	 top:padding="3"
 	 top:layout="verticalLayout(obj)">
 
+    <!-- background image -->
     <svg:rect rx="5" ry="5" class="background"/>
 
+    <!-- xml node name -->
     <svg:g top:layout="horizontalLayout(obj)" class="prog_xml">
       <svg:rect class="background" display="none"/>
       <svg:text>&lt;XML:</svg:text>
@@ -671,6 +666,7 @@
       <svg:text>&gt;</svg:text>
     </svg:g>
 
+    <!-- expandable list of child elements -->
     <svg:g top:layout="expandLayout(obj);verticalLayout(obj)"
 	   class="program"
 	   transform="scale(0.9)">
@@ -691,13 +687,16 @@
 	 class="prog_xml"
 	 top:layout="horizontalLayout(obj)">
 
+    <!-- background image -->
     <svg:rect class="background" rx="5" ry="5"/>
 
-    <svg:text>@</svg:text>
+    <!-- attribute name -->
     <xsl:call-template name="textInput">
       <xsl:with-param name="editable" select="'attribute'"/>
     </xsl:call-template>
     <svg:text>:</svg:text>
+
+    <!-- attribute value -->
     <xsl:call-template name="editOperand">
       <xsl:with-param name="editable" select="'value'"/>
     </xsl:call-template>
@@ -713,6 +712,7 @@
     <!-- background image -->
     <svg:rect class="background" rx="5" ry="5"/>
 
+    <!-- condition -->
     <svg:g top:layout="horizontalLayout(obj)" class="program">
       <svg:rect class="background" display="none"/>
       <svg:text>if</svg:text>
@@ -721,6 +721,7 @@
       </xsl:call-template>
     </svg:g>
 
+    <!-- true and false paths -->
     <svg:g top:layout="horizontalLayout(obj)" class="program">
       <svg:rect class="background" display="none"/>
       <xsl:call-template name="editOperand">
@@ -737,11 +738,12 @@
 <xsl:template match="assign-var">
   <svg:g onmousedown="msDown(evt)"
 	 top:padding="3"
-	 top:layout="hideChildren(obj); verticalLayout(obj)">
+	 top:layout="verticalLayout(obj)">
 
     <!-- background image -->
     <svg:rect class="background" rx="5" ry="5"/>
 
+    <!-- variable definition -->
     <svg:g top:layout="horizontalLayout(obj)" class="program">
       <svg:rect class="background" display="none"/>
       <xsl:call-template name="textInput">
@@ -753,11 +755,10 @@
       </xsl:call-template>
     </svg:g>    
 
-    <svg:g top:hide="ontop">
-      <xsl:call-template name="editOperand">
-	<xsl:with-param name="editable" select="'result'"/>
-      </xsl:call-template>
-    </svg:g>
+    <!-- expression with the variable scope -->
+    <xsl:call-template name="editOperand">
+      <xsl:with-param name="editable" select="'result'"/>
+    </xsl:call-template>
   </svg:g>
 </xsl:template>
 
@@ -770,6 +771,7 @@
     <!-- background image -->
     <svg:rect class="background" rx="5" ry="5"/>
 
+    <!-- loop variable and list -->
     <svg:g top:layout="horizontalLayout(obj)" class="program">
       <svg:rect class="background" display="none"/>
       <svg:text>for</svg:text>
@@ -783,10 +785,11 @@
       <svg:text>get</svg:text>
     </svg:g>    
 
+    <!-- repeated execution -->
     <svg:g class="program">
-    <xsl:call-template name="editOperand">
-      <xsl:with-param name="editable" select="'result'"/>
-    </xsl:call-template>
+      <xsl:call-template name="editOperand">
+	<xsl:with-param name="editable" select="'result'"/>
+      </xsl:call-template>
     </svg:g>
   </svg:g>
 </xsl:template>

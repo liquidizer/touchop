@@ -8,14 +8,6 @@
 // The namespace of additional attributes interpreted by this module
 var topns="http://www.dadim.de/touchop";
 
-// initialize the touchop framework. 
-window.onload = function() {
-    // Relayout all objects on the screen
-    deepLayout(document.childNodes[0], true);
-    // Set the smiley to frowning
-    smile(0.0);
-}
-
 // DnD frame work
 // hand is a reference to the object currently beeing dragged.
 var hand= null;
@@ -26,7 +18,43 @@ var startPos= [0,0];
 // position for long click action, after which the top group is selected
 var longClick=[0,0];
 
-// translate events that come from touch devices
+// Initialize the touchop framework. 
+window.onload = function() {
+    // Relayout all objects on the screen
+    deepLayout(document.childNodes[0], true);
+    // Set the smiley to frowning
+    smile(0.0);
+}
+
+// Perform an initial layout of all objects on the screen.
+function deepLayout(obj, doFloat) {
+    if (obj.nodeType==1) {
+        // layout children
+        var isObj= obj.getAttribute("onmousedown")=="msDown(evt)";
+	if (isObj) {
+	    obj.setAttribute("ontouchstart", obj.getAttribute("onmousedown"));
+	}
+        for each (child in obj.childNodes) {
+            deepLayout(child, !isObj && doFloat);
+        }
+        // call layout function if available
+        var command= obj.getAttributeNS(topns,"layout");
+        if (command!="") {
+            eval(command);
+        }
+
+	// set Floating
+	setFloating(obj, doFloat);
+	if (doFloat && isObj) {
+	    var box= obj.getBBox();
+	    var m= obj.getTransformToElement(obj.parentNode);
+	    m= m.translate(-box.x, -box.y);
+	    setTransform(obj, m);
+	}
+    }
+}
+
+// Translate events that come from touch devices
 function translateTouch(evt) {
     if (evt.touches!=undefined) {
 	var evt2= {};
@@ -37,6 +65,7 @@ function translateTouch(evt) {
 	evt.preventDefault();
 	return evt2;
     }
+    // not a touch device
     return evt;
 }
     
@@ -100,11 +129,6 @@ function releaseHand() {
     
     // delete reference to hand object.
     hand= null;
-}
-
-// Applys the transformation matrix m to the SVG element obj
-function setTransform(obj, m) {
-    obj.setAttribute("transform","matrix("+m.a+","+m.b+","+m.c+","+m.d+","+m.e+","+m.f+")");
 }
 
 // Move the grabbed object "hand" with the mouse
@@ -231,35 +255,6 @@ function sendHome(obj) {
     obj.setAttribute("pointer-events","none");
 }
 
-
-// This method layouts all objects on the screen according to the default layout.
-function deepLayout(obj, doFloat) {
-    if (obj.nodeType==1) {
-        // layout children
-        var isObj= obj.getAttribute("onmousedown")=="msDown(evt)";
-	if (isObj) {
-	    obj.setAttribute("ontouchstart", obj.getAttribute("onmousedown"));
-	}
-        for (var i=0; i<obj.childNodes.length; ++i) {
-            deepLayout(obj.childNodes[i], !isObj && doFloat);
-        }
-        // call layout function if available
-        var command= obj.getAttributeNS(topns,"layout");
-        if (command!="") {
-            eval(command);
-        }
-
-	// set Floating
-	setFloating(obj, doFloat);
-	if (doFloat && isObj) {
-	    var box= obj.getBBox();
-	    var m= obj.getTransformToElement(obj.parentNode);
-	    m= m.translate(-box.x, -box.y);
-	    setTransform(obj, m);
-	}
-    }
-}
-
 // Transform element and all containing groups to hold new content
 function layout(element) {
     var obj= element;
@@ -297,50 +292,39 @@ function insertParenthesis(obj) {
         myPrio= parseInt(myPrio);
 	if ((myPrio&1)==1)
 	    myPrio= myPrio - 1;
-        var lastpar= null;
-        var i=0;
+        var child= obj.firstChild;
         // check each child if parenthesis are needed
-        while (i<obj.childNodes.length) {
-            var child= obj.childNodes[i];
+        while (child!=null) {
+            var next= child.nextSibling;
             if (child.nodeType==1) {
                 // prevailing parenthesis are removed
                 if (child.getAttribute("name")=="parenthesis") {
-                    lastpar= child;
                     obj.removeChild(child);
-                    --i;
                 } else {
                     // check if child's priority requires placing parethesis
 		    var subPrio= getPriority(child)
                     if (myPrio < subPrio) {
-                        // reuse previous node for speed up, if possible
-                        if (lastpar!=null) {
-                            obj.insertBefore(lastpar, child);
-			    var lpar= lastpar;
-			    var rpar= child.nextSibling;
-                        } else {
-                            // create new parenthesis objects
-                            var lpar= document.createElementNS(obj.namespaceURI, "text");
-                            lpar.appendChild(document.createTextNode("("));
-                            lpar.setAttribute("name","parenthesis");
-                            obj.insertBefore(lpar, child);
-                            var rpar= document.createElementNS(obj.namespaceURI, "text");
-                            rpar.appendChild(document.createTextNode(")"));
-                            rpar.setAttribute("name","parenthesis");
-                            obj.insertBefore(rpar, child.nextSibling);
-                        }
+                        // create new parenthesis objects
+                        var lpar= document.createElementNS(obj.namespaceURI, "text");
+                        lpar.appendChild(document.createTextNode("("));
+                        lpar.setAttribute("name","parenthesis");
+                        obj.insertBefore(lpar, child);
+                        var rpar= document.createElementNS(obj.namespaceURI, "text");
+                        rpar.appendChild(document.createTextNode(")"));
+                        rpar.setAttribute("name","parenthesis");
+                        obj.insertBefore(rpar, child.nextSibling);
+
 			// scale the parenthesis to full height
 			var cbox= child.getBBox();
 			var parbox= lpar.getBBox();
 			var scale= cbox.height / parbox.height;
 			lpar.setAttribute("transform","scale(1,"+scale+")");
 			rpar.setAttribute("transform","scale(1,"+scale+")");
-                        i+=2;
                     }
-                    lastpar=null;
                 }
             }
             // proceed to the next child
-            i++;
+            child= next;
         }
     }
 }
@@ -432,12 +416,14 @@ function boxLayout(obj, horizontal) {
 		var m= child.getTransformToElement(obj);
 		var box= child.getBBox();
 
-		// align object
 		if (opt=="stretch") {
+		    // determine the objects size later
 		    m.a=1.0;
 		    m.d=1.0;
 		    stretch= child;
 		}
+
+		// align object
 		if (horizontal) {
 		    m.e= x - m.a * box.x;
 		    m.f= y - m.d * (box.y + 0.5*box.height)
@@ -461,7 +447,7 @@ function boxLayout(obj, horizontal) {
        }
     }
 
-    // strech object
+    // strech object to span from left to right
     if (stretch!=null) {
 	h= h+10;
 	var box= stretch.getBBox();
@@ -481,7 +467,7 @@ function boxLayout(obj, horizontal) {
     }
 }
 
-// Set the boundaries of a rect element
+// Set the boundaries for the background rectangular element
 function scaleRect(obj, x0, x1, y0, y1) {
     obj.setAttribute("width", x1-x0);
     obj.setAttribute("height", y1-y0);
@@ -489,11 +475,10 @@ function scaleRect(obj, x0, x1, y0, y1) {
     obj.setAttribute("y", y0);
 }
 
-// Makes or removes a little shadow below movable objects
+// Makes or removes a shadow below movable objects
 function setFloating(obj, doFloat) {
     var canMove= obj.getAttribute("onmousedown")!=null;
-    var canDrop= obj.getAttributeNS(topns, "drop")!="none";
-    if (canMove && canDrop) {
+    if (canMove) {
 	// the shadow is always the first child
 	var shadow= obj.childNodes[0];
 	if (shadow.nodeType==1 && shadow.getAttribute("class")=="shadow") {
@@ -544,14 +529,10 @@ function findRoot(obj) {
     return root;
 }
 
-// get and create an id for an element
-function getId(obj) {
-    var id= obj.getAttribute("id");
-    if (id==null) {
-	id= "autoid"+Math.random();
-	obj.setAttribute("id", id);
-    }
-    return id;
+// Applys the transformation matrix m to the SVG element obj
+function setTransform(obj, m) {
+    // For some very strange reasons conversion to string is 2x faster.
+    obj.setAttribute("transform","matrix("+m.a+","+m.b+","+m.c+","+m.d+","+m.e+","+m.f+")");
 }
 
 // sets the oppacitiy to show either of the two similies

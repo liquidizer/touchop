@@ -12,11 +12,12 @@ var turtle= null;
 var path= null;
 var win= false;
 var winList= [];
+var turtleStack=[];
 
 function verify(obj, isFinal) {
     if (isFinal && isValid(obj)) {
 	resetTurtle();
-	obj.setAttribute("next", "STOP");
+	turtleStack=[obj];
 	// check, if something is already executed
 	if (current==null) {
 	    current= obj;
@@ -51,7 +52,6 @@ function resetPlaybackStyle(obj) {
 	if (child.nodeType==1) {
 	    if (child.getAttribute("class")=="playback")
 		child.setAttribute("class","");
-	    child.removeAttribute("next");
 	    child.removeAttribute("state");
 	    resetPlaybackStyle(child);
 	}
@@ -67,9 +67,9 @@ function executeNext() {
     if (current.nodeType==1) {
 	var state= current.getAttribute("state");
 	if (state=="0") {
-	    var id= current.getAttribute("next");
-	    if (id!=null) {
-		current= document.getElementById(id);
+	    if (current==turtleStack[turtleStack.length-1]) {
+		turtleStack.pop();
+		current= turtleStack.pop();
 		if (current!=null)
 		    current.setAttribute("class","");
 	    } else {
@@ -111,7 +111,8 @@ function executeNext() {
 	    current.setAttribute("class","playback");
 	    resetPlaybackStyle(target);
 	    target.removeAttribute("state");
-	    target.setAttribute("next",getId(current));
+	    turtleStack.push(current);
+	    turtleStack.push(target);
 	    current= target;
 	    executeNext();
 	    return;
