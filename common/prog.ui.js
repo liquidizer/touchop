@@ -105,6 +105,6 @@ function focusNext(obj, dir) {
 	    }
 	}
     }
-    if (document.activeElement.blur)
+    if (document.activeElement && document.activeElement.blur)
 	document.activeElement.blur();
 }

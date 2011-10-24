@@ -64,7 +64,7 @@
 	  <svg:image xlink:href="../../common/frowny.svg" 
 		     width="81" height="81"/>
 	</svg:g>
-	<svg:g id="top:win">
+	<svg:g id="top:win" opacity="0.0">
 	  <svg:image xlink:href="../../common/smiley.svg" 
 		     width="81" height="81"/>
 	</svg:g>

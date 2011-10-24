@@ -22,8 +22,6 @@ var longClick=[0,0];
 window.onload = function() {
     // Relayout all objects on the screen
     deepLayout(document.childNodes[0], true);
-    // Set the smiley to frowning
-    smile(0.0);
 }
 
 // Perform an initial layout of all objects on the screen.
@@ -34,8 +32,8 @@ function deepLayout(obj, doFloat) {
 	if (isObj) {
 	    obj.setAttribute("ontouchstart", obj.getAttribute("onmousedown"));
 	}
-        for each (child in obj.childNodes) {
-            deepLayout(child, !isObj && doFloat);
+        for (var i=0; i<obj.childNodes.length; ++i) {
+            deepLayout(obj.childNodes[i], !isObj && doFloat);
         }
         // call layout function if available
         var command= obj.getAttributeNS(topns,"layout");
@@ -68,7 +66,6 @@ function translateTouch(evt) {
     // not a touch device
     return evt;
 }
-    
 
 // msDown is called whenever the mouse button is pressed anywhere on the root document.
 function msDown (evt) {
@@ -76,24 +73,25 @@ function msDown (evt) {
         // find signaling object
 	evt= translateTouch(evt);
 	hand= evt.target;
-	while (hand.getAttribute("onmousedown")!="msDown(evt)")
+	while (hand.getAttribute("onmousedown")!="msDown(evt)") {
 	    hand= hand.parentNode;
+	}
 
-        // store mouse position. Will be updated when mouse moves.
+	// store mouse position. Will be updated when mouse moves.
 	startPos= [evt.clientX, evt.clientY];
 
 	// mark root after time out
 	initLongClick();
-	if (document.activeElement.blur)
+	if (document.activeElement && document.activeElement.blur)
 	    document.activeElement.blur();
     }
 }
 
 // Mouse clicked on the background
 function msBlur(evt) {
-    if (document.activeElement.blur)
-	document.activeElement.blur();
     evt.preventDefault();
+    if (document.activeElement && document.activeElement.blur)
+	document.activeElement.blur();
     return false;
 }
 
