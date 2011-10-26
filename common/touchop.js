@@ -14,6 +14,7 @@ var hand= null;
 
 // The screen coordinates of the last drag update.
 var startPos= [0,0];
+var hasMoved= false;
 
 // position for long click action, after which the top group is selected
 var longClick=[0,0];
@@ -53,6 +54,7 @@ function deepLayout(obj, doFloat) {
 }
 
 // Translate events that come from touch devices
+var touchOnly= false; // FF mobile bug
 function translateTouch(evt) {
     if (evt.touches!=undefined) {
 	var evt2= {};
@@ -63,6 +65,7 @@ function translateTouch(evt) {
 	evt.preventDefault();
 	return evt2;
     }
+    if (touchOnly) throw "nope";
     // not a touch device
     return evt;
 }
@@ -72,6 +75,8 @@ function msDown (evt) {
     if (hand==null && evt.target!=null) {
         // find signaling object
 	evt= translateTouch(evt);
+	touchOnly= evt.isTouch;
+
 	hand= evt.target;
 	while (hand.getAttribute("onmousedown")!="msDown(evt)") {
 	    hand= hand.parentNode;
@@ -79,6 +84,7 @@ function msDown (evt) {
 
 	// store mouse position. Will be updated when mouse moves.
 	startPos= [evt.clientX, evt.clientY];
+	hasMoved= false;
 
 	// mark root after time out
 	initLongClick(evt.clientX, evt.clientY);
@@ -110,7 +116,8 @@ function msUp (evt) {
 		break;
 	    }
 	    // check if clicked object has click handler
-	    eval(target.getAttributeNS(topns,"click"));
+	    if (!hasMoved)
+		eval(target.getAttributeNS(topns,"click"));
 
 	    // proceed to parent element
 	    target= target.parentNode;
@@ -170,6 +177,7 @@ function msMove (evt) {
 	    
 	    // offset snap region
 	    startPos= [evt.clientX, evt.clientY];
+	    hasMoved= true;
 	}
         else if (dropTo != hand.parentNode) {
 	    // object can not be dropped let it move
@@ -188,6 +196,7 @@ function msMove (evt) {
 
 		// offset snap region
 		startPos= [evt.clientX, evt.clientY];
+		hasMoved= true;
 	    }
         }
     }
@@ -360,11 +369,12 @@ function snap(obj) {
 		back.removeAttribute("opacity");
 	    }
 	    else if (back!=null) {
-		var m= child.getTransformToElement(child.parentNode);
+		var m= child.getTransformToElement(obj);
 		var box1= back.getBBox();
 		var box2= child.getBBox();
+
 		m.e = box1.x - box2.x - 0.5*box2.width + 0.5*box1.width;
-		m.f = box1.y - box2.y - 0.5*box2.height + 0.5*box1.width;
+		m.f = box1.y - box2.y - 0.5*box2.height + 0.5*box1.height;
 		setTransform(child, m);
 
 		// make drop area opaque

@@ -40,23 +40,18 @@ text {
     fill: lightgray;
 }    
 
-.prog_xml > .background {
-    fill: coral;
-}
-
-.prog_xml > text {
+.prog > text {
     font-size: 14pt;
     font-family: courier;
     font-weight: bold;
 }
 
-.prog_loop > .background {
-    fill: gold;
-}
-
-.prog_if > .background {
-    fill: olive;
-}
+.xml > .background { fill: orangered }
+.loop > .background { fill: gold }
+.if > .background { fill: mediumseagreen }
+.list > .background { fill: chocolate }
+.attrs > .background { fill: darkorange }
+.assign > .background { fill: cornflowerblue }
 
 .image text {
     font-size: 12pt;

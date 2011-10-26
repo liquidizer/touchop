@@ -71,7 +71,7 @@
 <!-- xml node -->
 <xsl:template match="xml-node">
   <svg:g onmousedown="msDown(evt)"
-	 class="prog_xml"
+	 class="prog xml"
 	 top:padding="3"
 	 top:run="createXmlNode(prog)"
 	 top:layout="verticalLayout(obj)">
@@ -80,7 +80,7 @@
     <svg:rect rx="5" ry="5" class="background"/>
 
     <!-- xml node name -->
-    <svg:g top:layout="horizontalLayout(obj)" class="prog_xml">
+    <svg:g top:layout="horizontalLayout(obj)" class="prog xml">
       <svg:rect class="background" display="none"/>
       <svg:text>&lt;XML:</svg:text>
       <xsl:call-template name="textInput">
@@ -103,7 +103,7 @@
   <svg:g>
     <svg:use xlink:href="#expand-plus" 
 	     top:click="expand_add(evt)"/>
-    <svg:use transform="translate(50,0)"
+    <svg:use transform="translate(60,0)"
 	     xlink:href="#expand-minus" 
 	     top:click="expand_remove(evt)"/>
   </svg:g>
@@ -112,7 +112,7 @@
 <!-- xml node sequence -->
 <xsl:template match="list">
   <svg:g onmousedown="msDown(evt)"
-	 class="prog_xml"
+	 class="prog list"
 	 top:padding="3"
 	 top:run="createXmlNode(prog)"
 	 top:layout="verticalLayout(obj)">
@@ -134,7 +134,7 @@
 <!-- xml attribute -->
 <xsl:template match="xml-attribute">
   <svg:g onmousedown="msDown(evt)"
-	 class="prog_xml"
+	 class="prog attrs"
 	 top:padding="3"
 	 top:layout="verticalLayout(obj)">
 
@@ -164,7 +164,7 @@
 
 <xsl:template match="if-then">
   <svg:g onmousedown="msDown(evt)"
-	 class="prog_if"
+	 class="prog if"
 	 top:padding="3"
 	 top:layout="verticalLayout(obj)">
 
@@ -196,6 +196,7 @@
 
 <xsl:template match="assign-var">
   <svg:g onmousedown="msDown(evt)"
+	 class="prog assign"
 	 top:padding="3"
 	 top:layout="verticalLayout(obj)">
 
@@ -224,7 +225,7 @@
 <xsl:template match="for-each">
   <svg:g onmousedown="msDown(evt)"
 	 top:padding="3"
-	 class="prog_loop"
+	 class="prog loop"
 	 top:layout="verticalLayout(obj)">
 
     <!-- background image -->
