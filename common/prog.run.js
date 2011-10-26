@@ -27,7 +27,8 @@ function compileToSVG(obj) {
 	var g= document.createElementNS(obj.namespaceURI, "g");
 	g.setAttributeNS(topns, "drop", "none");
 	g.setAttribute("onmousedown", "msDown(evt)");
-	g.appendChild(result);
+	if (result)
+	    g.appendChild(result);
 	canvas.appendChild(g);
     } catch (e) {
 	console.log(e);

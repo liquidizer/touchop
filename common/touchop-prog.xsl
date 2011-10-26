@@ -22,9 +22,16 @@
   <svg:script type="text/javascript" xlink:href="../../common/prog.ui.js"/>
   <svg:script type="text/javascript" xlink:href="../../common/prog.run.js"/>
   <defs>
-    <svg:path id="expand-arrow"
-	      d="M 0,0 L 60,0 30,40 Z" 
-	      class="move"/>
+    <svg:g id="expand-minus">
+      <svg:rect width="40" height="40" opacity="0.01" fill="white"/>
+      <svg:path class="move"
+		d="M 20,0 C 8.96,0 0,8.96 0,20 C 0,31.04 8.96,40 20,40 C 31,40 40,31 40,20 C 40,9 31,0 20,0 z M 7,17 L 33,17 L 33,23 L 7,23 L 7,17 z"/>
+    </svg:g>
+    <svg:g id="expand-plus">
+      <svg:rect width="40" height="40" opacity="0.01" fill="white"/>
+      <svg:path	class="move"
+		d="M 20 0 C 9 0 0 9 0 20 C 0 31 9 40 20 40 C 31.04 40 40 31.04 40 20 C 40 9 31 0 20 0 z M 17 7 L 23 7 L 23 17 L 33 17 L 33 23 L 23 23 L 23 33 L 17 33 L 17 23 L 7 23 L 7 17 L 17 17 L 17 7 z"/>
+    </svg:g>
   </defs>
 </xsl:template>
 
@@ -82,46 +89,82 @@
       <svg:text>&gt;</svg:text>
     </svg:g>
 
-    <!-- expandable list of child elements -->
-    <svg:g top:layout="expandLayout(obj);verticalLayout(obj)"
-	   class="program"
-	   transform="scale(0.9)">
-      <svg:g display="none" top:content="true">
-	<xsl:call-template name="editOperand">
-	</xsl:call-template>
-      </svg:g>
-      <svg:rect rx="5" ry="5" class="background" display="none"/>
-      <svg:use xlink:href="#expand-arrow" top:click="expand(evt)"/>
+    <!-- child node hook -->
+    <svg:g transform="scale(0.81)">
+      <xsl:call-template name="editOperand">
+	<xsl:with-param name="editable" select="'value'"/>
+      </xsl:call-template>
     </svg:g>
+  </svg:g>
+</xsl:template>
+
+<!-- buttons for expandable content -->
+<xsl:template name="expand-button">
+  <svg:g>
+    <svg:use xlink:href="#expand-plus" 
+	     top:click="expand_add(evt)"/>
+    <svg:use transform="translate(50,0)"
+	     xlink:href="#expand-minus" 
+	     top:click="expand_remove(evt)"/>
+  </svg:g>
+</xsl:template>
+
+<!-- xml node sequence -->
+<xsl:template match="list">
+  <svg:g onmousedown="msDown(evt)"
+	 class="prog_xml"
+	 top:padding="3"
+	 top:run="createXmlNode(prog)"
+	 top:layout="verticalLayout(obj)">
+
+    <!-- child element prototype -->
+    <svg:g display="none" top:content="true">
+      <xsl:call-template name="editOperand">
+	<xsl:with-param name="editable" select="'value'"/>
+      </xsl:call-template>
+    </svg:g>
+
+    <!-- content -->
+    <svg:rect rx="5" ry="5" class="background"/>
+    <svg:text>List</svg:text>
+    <xsl:call-template name="expand-button"/>
   </svg:g>
 </xsl:template>
 
 <!-- xml attribute -->
 <xsl:template match="xml-attribute">
   <svg:g onmousedown="msDown(evt)"
-	 top:padding="3"
 	 class="prog_xml"
-	 top:layout="horizontalLayout(obj)">
+	 top:padding="3"
+	 top:layout="verticalLayout(obj)">
 
     <!-- background image -->
     <svg:rect class="background" rx="5" ry="5"/>
+    <svg:text>Attributes</svg:text>
 
-    <!-- attribute name -->
-    <xsl:call-template name="textInput">
-      <xsl:with-param name="editable" select="'attribute'"/>
-    </xsl:call-template>
-    <svg:text>:</svg:text>
+    <!-- attribute prototype -->
+    <svg:g display="none" top:content="true">
+      <svg:g top:layout="horizontalLayout(obj)" class="program">
+	<svg:rect class="background" display="none"/>
+	<xsl:call-template name="textInput">
+	  <xsl:with-param name="editable" select="'attribute'"/>
+	</xsl:call-template>
+	<svg:text>:</svg:text>
+	<xsl:call-template name="editOperand">
+	  <xsl:with-param name="editable" select="'value'"/>
+	</xsl:call-template>
+      </svg:g>
+    </svg:g>
 
-    <!-- attribute value -->
-    <xsl:call-template name="editOperand">
-      <xsl:with-param name="editable" select="'value'"/>
-    </xsl:call-template>
+    <!-- expand arrow -->
+    <xsl:call-template name="expand-button"/>
   </svg:g>
 </xsl:template>
 
 
 <xsl:template match="if-then">
   <svg:g onmousedown="msDown(evt)"
+	 class="prog_if"
 	 top:padding="3"
 	 top:layout="verticalLayout(obj)">
 

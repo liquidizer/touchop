@@ -26,7 +26,7 @@ window.onload = function() {
 
 // Perform an initial layout of all objects on the screen.
 function deepLayout(obj, doFloat) {
-    if (obj.nodeType==1) {
+    if (obj.nodeType==1 && obj.getAttribute("display")!="none") {
         // layout children
         var isObj= obj.getAttribute("onmousedown")=="msDown(evt)";
 	if (isObj) {
@@ -81,7 +81,7 @@ function msDown (evt) {
 	startPos= [evt.clientX, evt.clientY];
 
 	// mark root after time out
-	initLongClick();
+	initLongClick(evt.clientX, evt.clientY);
 	if (document.activeElement && document.activeElement.blur)
 	    document.activeElement.blur();
     }

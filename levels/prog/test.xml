@@ -9,7 +9,8 @@
 
   <xml-node xy="350,100"/>
   <xml-attribute xy="350,200"/>
-  <xml-attribute xy="350,270"/>
+
+  <list xy="400,300"/>
 
   <to-svg xy="200,10"/>
 </touchop>

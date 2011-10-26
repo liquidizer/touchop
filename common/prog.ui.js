@@ -9,51 +9,53 @@
 function verify() {
 }
 
-// layout an expandable list of arguments
-function expandLayout(obj) {
-    var operand= null;
-    var arrow= null;
-    for (var i=0; i<obj.childNodes.length; ++i) {
-	var child= obj.childNodes[i];
-	if (child.nodeType==1 && child.getAttribute("class")=="operand")
-	    operand= child;
-    }
-    if (operand==null || hasContent(operand)) {
-	obj.lastChild.removeAttribute("transform");
-    } else {
-	obj.lastChild.setAttribute("transform", "rotate(180)");
-    }
-}
-
 function hasContent(obj) {
+    var ithas= obj.getAttribute("onmousedown")!=null;
     for (var i=0; i<obj.childNodes.length; ++i) {
 	var child= obj.childNodes[i];
-	if (child.nodeType==1 && 
-	    child.getAttribute("onmousedown"))
-	    return true;
+	if (child.nodeType==1) {
+	    ithas= ithas || hasContent(child);
+	}
     }
-    return false;
+    return ithas;
 }
 
 // expand a dynamic list of arguments
-function expand(evt) {
-    var obj= evt.target.parentNode;
-    // rotate arrow
-    var button= obj.lastChild;
-    if (button.getCTM().d<0) {
-	// remove object
-	obj.removeChild(button.previousSibling);
-    } else {
-	// insert cloned node
-	var container= evt.target;
-	while (container.getAttributeNS(topns, "content")!="true")
-	    container= container.previousSibling;
-	var copy= container.firstChild.cloneNode(true);
-	container= evt.target.parentNode;
-	container.insertBefore(copy, evt.target);
+function expand_add(evt) {
+    var parent= evt.target;
+    while (!parent.getAttribute("onmousedown"))
+	parent= parent.parentNode;
+
+    // clone prototype
+    var container= parent.firstChild;
+    while (container.getAttributeNS(topns, "content")!="true") {
+	container= container.nextSibling;
+    }
+    var obj= container.firstChild.cloneNode(true);
+    obj.setAttributeNS(topns, "copy", "true");
+
+    // insert
+    parent.insertBefore(obj, parent.lastChild);
+
+    // relayout
+    eval(obj.getAttributeNS(topns,"layout"));
+    layout(parent);
+}
+
+function expand_remove(evt) {
+    var parent= evt.target.parentNode.parentNode;
+    var child= parent.lastChild;
+    while (child) {
+	if (child.nodeType==1 &&
+	    child.getAttributeNS(topns,"copy")=="true" &&
+	    !hasContent(child)) {
+	    parent.removeChild(child);
+	    break;
+	}
+	child= child.previousSibling;
     }
     // relayout
-    layout(obj);
+    layout(parent);
 }
 
 // a key is pressed

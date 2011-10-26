@@ -34,7 +34,7 @@ text {
     font-size: 12pt;
 }
 
-.image .background {
+.image > .background {
     stroke: black;
     stroke-width: 1px;
     fill: lightgray;
@@ -52,6 +52,10 @@ text {
 
 .prog_loop > .background {
     fill: gold;
+}
+
+.prog_if > .background {
+    fill: olive;
 }
 
 .image text {
