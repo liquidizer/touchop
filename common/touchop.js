@@ -139,19 +139,6 @@ function releaseHand() {
 // Move the grabbed object "hand" with the mouse
 function msMove (evt) {
     evt= translateTouch(evt);
-    // late grab of objects with mouse over and empty hand
-    if (evt.isTouch && hand==null && evt.target!=null) {
-	var target= evt.target;
-	// find the parent can receive late grab event
-	while (target.nodeType==1) {
-	    var action= target.getAttribute("onmousedown");
-	    if (action=="msDown(evt)") {
-		msDown(evt);
-		break;
-	    }
-	    target= target.parentNode;
-	}
-    }
     if (hand!=null) {
         // compute relative mouse movements since last call
         var dx=evt.clientX-startPos[0];
