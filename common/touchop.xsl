@@ -30,9 +30,7 @@
 
   <!-- Drag and drop interface -->
   <svg:script type="text/javascript" xlink:href="../../common/touchop.js"/>
-  <svg:script type="text/javascript" xlink:href="../../common/sync.js"/>
   <svg:script type="text/javascript" xlink:href="../../common/def.js"/>
-  <svg:script type="text/javascript" xlink:href="../../common/status.js"/>
 
   <!-- mobile device settings -->
   <html:meta name="viewport" content="width=device-width, initial-scale=1"/>

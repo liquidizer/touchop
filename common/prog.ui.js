@@ -110,3 +110,7 @@ function focusNext(obj, dir) {
     if (document.activeElement && document.activeElement.blur)
 	document.activeElement.blur();
 }
+
+function runProg(obj) {
+    layout(findRoot(obj));
+}
