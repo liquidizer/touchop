@@ -6,35 +6,50 @@
  * of the GPL (http://www.gnu.org/licenses/gpl.html)
  */
 
+function verify(obj) {
+    for (var i=0; i<obj.childNodes.length; ++i) {
+	var child= obj.childNodes[i];
+	if (child.nodeType==1 && 
+	    child.getAttributeNS(topns, "runnable")=="true") {
+	    compileToSVG(child);
+	    layout(child);
+	}
+    }
+}
+
 function compileToSVG(obj) {
     var child= obj.firstChild;
+    var prog= null;
+    var canvas= null;
     // find program and canvas
     while (child!=null) {
 	var type= child.getAttribute("class");
 	if (type=="program")
-	    var prog= child;
+	    prog= child;
 	if (type=="canvas")
-	    var canvas= child;
+	    canvas= child;
 	child= child.nextSibling;
     }
     // clear canvas
-    while (canvas.firstChild) 
-	canvas.removeChild(canvas.firstChild);
+    if (prog && canvas) {
+	while (canvas.firstChild) 
+	    canvas.removeChild(canvas.firstChild);
 
-    // process result
-    //    var xsl= document.getElementById('template').firstChild;
-    var xsl= extractXSL(obj);
-    serializeXML(xsl[0]);
-    var xml= document.createElement("none");
-    xsltProcessor=new XSLTProcessor();
-    xsltProcessor.importStylesheet(xsl[0]);
-    var result= xsltProcessor.transformToFragment(xml,document);
+	// process result
+	//    var xsl= document.getElementById('template').firstChild;
+	var xsl= extractXSL(obj);
+	serializeXML(xsl[0]);
+	var xml= document.createElement("none");
+	xsltProcessor=new XSLTProcessor();
+	xsltProcessor.importStylesheet(xsl[0]);
+	var result= xsltProcessor.transformToFragment(xml,document);
 
-    // draw result
-    var g= document.createElementNS(obj.namespaceURI, "g");
-    if (result)
-	g.appendChild(result);
-    canvas.appendChild(g);
+	// draw result
+	var g= document.createElementNS(obj.namespaceURI, "g");
+	if (result)
+	    g.appendChild(result);
+	canvas.appendChild(g);
+    }
 }
 
 function extractXSL(obj) {

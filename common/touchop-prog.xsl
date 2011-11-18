@@ -44,10 +44,11 @@
 <!-- text input field -->
 <xsl:template name="textInput">
   <xsl:param name="editable" select="@editable"/>
-  <svg:foreignObject width="100" height="35">
+  <svg:foreignObject width="100" height="35" top:run="progOp(obj)">
     <xsl:element name="html:input">
       <xsl:attribute name="type">text</xsl:attribute>
       <xsl:attribute name="style">width:95px;height:28px</xsl:attribute>
+      <xsl:attribute name="onchange">runCode(event)</xsl:attribute>
       <xsl:attribute name="onkeypress">navigation(event)</xsl:attribute>
       <xsl:attribute name="placeholder">
 	<xsl:value-of select="$editable"/>
@@ -153,9 +154,16 @@
     <svg:rect class="background" rx="5" ry="5"/>
     <svg:text>Attributes</svg:text>
 
+	<!-- template -->
+	<svg:foreignObject class="top:run">
+	  <xsl:copy-of select="$template//attribute-node/*"/>
+	</svg:foreignObject>
+
     <!-- attribute prototype -->
     <svg:g display="none" top:content="true">
       <svg:g top:layout="horizontalLayout(obj)" class="program">
+
+	<!-- name and value input fields -->
 	<svg:rect class="background" display="none"/>
 	<xsl:call-template name="textInput">
 	  <xsl:with-param name="editable" select="'attribute'"/>
@@ -277,7 +285,8 @@
     <svg:rect class="background" rx="5" ry="5"/>
     <svg:text>Render</svg:text>
 
-    <svg:g top:layout="compileToSVG(obj); horizontalLayout(obj)">
+    <svg:g top:runnable="true"
+	   top:layout="horizontalLayout(obj)">
       <svg:rect class="background" display="none"/>
 
       <!-- template -->
