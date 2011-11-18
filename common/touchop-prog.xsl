@@ -2,10 +2,11 @@
 <!-- Touchop - Touchable operators -->
 <!-- -->
 <!-- Copyright(C) 2011, Stefan Dirnstorfer -->
-<!-- This software may be copied, distributed and modified under the terms -->
-<!-- of the GPL (http://www.gnu.org/licenses/gpl.html) -->
+<!-- This software may be copied, distributed and modified under the --> 
+<!-- terms of the GPL (http://www.gnu.org/licenses/gpl.html) -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:exsl="http://exslt.org/common"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:svg="http://www.w3.org/2000/svg"
 		xmlns:html="http://www.w3.org/1999/xhtml"
@@ -15,12 +16,17 @@
 
 <xsl:import href="touchop.xsl"/>
 
+<!-- template file for code -->
+<xsl:variable name="template" select="document('prog.template.xsl')"/>
+
 <!-- TOUCHOP - PROGRAMMING DOMAIN -->
 <!-- Special operators for programming -->
 <xsl:template match="test[@domain='prog']">
   <xsl:comment>Programming domain</xsl:comment>
   <svg:script type="text/javascript" xlink:href="../../common/prog.ui.js"/>
   <svg:script type="text/javascript" xlink:href="../../common/prog.run.js"/>
+  <svg:script type="text/javascript" xlink:href="../../common/sync.js"/>
+  <svg:script type="text/javascript" xlink:href="../../common/status.js"/>
   <defs>
     <svg:g id="expand-minus">
       <svg:rect width="40" height="40" opacity="0.01" fill="white"/>
@@ -38,10 +44,11 @@
 <!-- text input field -->
 <xsl:template name="textInput">
   <xsl:param name="editable" select="@editable"/>
-  <svg:foreignObject width="100" height="35">
+  <svg:foreignObject width="100" height="35" top:run="progOp(obj)">
     <xsl:element name="html:input">
       <xsl:attribute name="type">text</xsl:attribute>
       <xsl:attribute name="style">width:95px;height:28px</xsl:attribute>
+      <xsl:attribute name="onchange">runCode(event)</xsl:attribute>
       <xsl:attribute name="onkeypress">navigation(event)</xsl:attribute>
       <xsl:attribute name="placeholder">
 	<xsl:value-of select="$editable"/>
@@ -53,7 +60,9 @@
 <!-- XSL language operands -->
 <xsl:template name="editOperand">
   <xsl:param name="editable" select="@editable"/>
-  <svg:g top:layout="snap(obj)" class="operand">
+  <svg:g top:layout="snap(obj)" 
+	 top:run="progOp(obj)"
+	 class="operand">
     <xsl:if test="$editable">
       <svg:g class="background">
 	<xsl:call-template name="textInput">
@@ -73,11 +82,15 @@
   <svg:g onmousedown="msDown(evt)"
 	 class="prog xml"
 	 top:padding="3"
-	 top:run="createXmlNode(prog)"
 	 top:layout="verticalLayout(obj)">
 
     <!-- background image -->
     <svg:rect rx="5" ry="5" class="background"/>
+
+    <!-- template -->
+    <svg:foreignObject class="top:run">
+      <xsl:copy-of select="$template//xml-node/*"/>
+    </svg:foreignObject>
 
     <!-- xml node name -->
     <svg:g top:layout="horizontalLayout(obj)" class="prog xml">
@@ -114,7 +127,6 @@
   <svg:g onmousedown="msDown(evt)"
 	 class="prog list"
 	 top:padding="3"
-	 top:run="createXmlNode(prog)"
 	 top:layout="verticalLayout(obj)">
 
     <!-- child element prototype -->
@@ -142,9 +154,16 @@
     <svg:rect class="background" rx="5" ry="5"/>
     <svg:text>Attributes</svg:text>
 
+	<!-- template -->
+	<svg:foreignObject class="top:run">
+	  <xsl:copy-of select="$template//attribute-node/*"/>
+	</svg:foreignObject>
+
     <!-- attribute prototype -->
     <svg:g display="none" top:content="true">
       <svg:g top:layout="horizontalLayout(obj)" class="program">
+
+	<!-- name and value input fields -->
 	<svg:rect class="background" display="none"/>
 	<xsl:call-template name="textInput">
 	  <xsl:with-param name="editable" select="'attribute'"/>
@@ -258,6 +277,7 @@
 <xsl:template match="to-svg">
   <svg:g onmousedown="msDown(evt)"
 	 class="image"
+	 top:drop="none"
 	 top:padding="10"
 	 top:layout="verticalLayout(obj)">
 
@@ -265,8 +285,15 @@
     <svg:rect class="background" rx="5" ry="5"/>
     <svg:text>Render</svg:text>
 
-    <svg:g top:layout="compileToSVG(obj); horizontalLayout(obj)">
+    <svg:g top:runnable="true"
+	   top:layout="horizontalLayout(obj)">
       <svg:rect class="background" display="none"/>
+
+      <!-- template -->
+      <svg:foreignObject class="top:run">
+	<xsl:copy-of select="$template//root/*"/>
+      </svg:foreignObject>
+
       <!-- program -->
       <svg:g class="program">
 	<xsl:call-template name="editOperand"/>

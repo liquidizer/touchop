@@ -6,7 +6,8 @@
  * of the GPL (http://www.gnu.org/licenses/gpl.html)
  */
 
-function verify() {
+function runCode(evt) {
+    verify(findRoot(evt.target));
 }
 
 function hasContent(obj) {
@@ -110,3 +111,4 @@ function focusNext(obj, dir) {
     if (document.activeElement && document.activeElement.blur)
 	document.activeElement.blur();
 }
+
