@@ -353,7 +353,7 @@ function snap(obj) {
 	    if (child.getAttribute("class")=="background") {
 		// The first element is the reference position
 		back= child;
-		back.removeAttribute("opacity");
+		back.removeAttribute("visibility");
 	    }
 	    else if (back!=null) {
 		var m= child.getTransformToElement(obj);
@@ -365,7 +365,7 @@ function snap(obj) {
 		setTransform(child, m);
 
 		// make drop area opaque
-		back.setAttribute("opacity","0.0");
+		back.setAttribute("visibility","hidden");
 		
 		if (child.getAttribute("onmousedown")!=null)
 		    obj.setAttribute("blocked","true");

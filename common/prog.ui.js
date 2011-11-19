@@ -7,7 +7,7 @@
  */
 
 function runCode(evt) {
-    verify(findRoot(evt.target));
+    verify(findRoot(evt.target),true);
 }
 
 function hasContent(obj) {

@@ -154,19 +154,18 @@
     <svg:rect class="background" rx="5" ry="5"/>
     <svg:text>Attributes</svg:text>
 
+    <!-- attribute prototype -->
+    <svg:g display="none" top:content="true">
+      <svg:g top:layout="horizontalLayout(obj)" class="program">
 	<!-- template -->
 	<svg:foreignObject class="top:run">
 	  <xsl:copy-of select="$template//attribute-node/*"/>
 	</svg:foreignObject>
 
-    <!-- attribute prototype -->
-    <svg:g display="none" top:content="true">
-      <svg:g top:layout="horizontalLayout(obj)" class="program">
-
 	<!-- name and value input fields -->
 	<svg:rect class="background" display="none"/>
 	<xsl:call-template name="textInput">
-	  <xsl:with-param name="editable" select="'attribute'"/>
+	  <xsl:with-param name="editable" select="'name'"/>
 	</xsl:call-template>
 	<svg:text>:</svg:text>
 	<xsl:call-template name="editOperand">

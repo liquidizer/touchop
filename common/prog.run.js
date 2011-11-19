@@ -5,14 +5,17 @@
  * This software may be copied, distributed and modified under the terms 
  * of the GPL (http://www.gnu.org/licenses/gpl.html)
  */
+var xslns= "http://www.w3.org/1999/XSL/Transform";
 
-function verify(obj) {
-    for (var i=0; i<obj.childNodes.length; ++i) {
-	var child= obj.childNodes[i];
-	if (child.nodeType==1 && 
-	    child.getAttributeNS(topns, "runnable")=="true") {
-	    compileToSVG(child);
-	    layout(child);
+function verify(obj, isFinal) {
+    if (isFinal) {
+	for (var i=0; i<obj.childNodes.length; ++i) {
+	    var child= obj.childNodes[i];
+	    if (child.nodeType==1 && 
+		child.getAttributeNS(topns, "runnable")=="true") {
+		compileToSVG(child);
+		layout(child);
+	    }
 	}
     }
 }
@@ -54,48 +57,54 @@ function compileToSVG(obj) {
 
 function extractXSL(obj) {
     var xsl= [];
-    var args= [];
     for (var i=0; i<obj.childNodes.length; ++i) {
 	var child= obj.childNodes[i];
-	if (child.nodeType==1) {
+	if (child.nodeType==1 && 
+	    child.getAttribute("visibility")!="hidden" &&
+	    child.getAttribute("display")!="none") {
 	    var code= getCode(child);
 	    if (code==null) {
 		var sub=extractXSL(child);
-		args= args.concat(sub);
+		xsl= xsl.concat(sub);
 	    } else {
 		xsl.push(code);
 	    }
 	}
     }
-    if (args.length>0) {
-	if (xsl.length==0)
-	    return args[0];
-	for (var i=0; i<xsl.length; ++i) {
-	    fillArgs(xsl[i], args);
+    var target= [];
+    while (xsl.length>0) {
+	var head= xsl.shift();
+	if (xsl.length>0) {
+	    fillArgs(head, xsl);
 	}
+	target.push(head);
     }
-    return xsl;
+    return target;
 }
 
 // Extract the XSL template associated with this element
 function getCode(obj) {
+    var code= null;
     var cmd= obj.getAttributeNS(topns,"run");
     if (cmd!="") {
 	// dynamically generate XSL
-	return eval(cmd);
+	code= eval(cmd);
     } else {
 	var type= obj.getAttribute("class");
-	if (type=="top:run")
-	    return obj.firstChild.cloneNode(true);
+	if (type=="top:run") {
+	    code= obj.firstChild.cloneNode(true);
+	}
     }
-    return null;
+    return code;
 }
 
 // dynamic XSL generation callback
 function progOp(obj) {
     var xsl= extractXSL(obj);
     if (xsl.length==0) {
-	return getInput(obj);
+	xsl= getInput(obj);
+    } else {
+	xsl=xsl[0];
     }
     return xsl;
 }
@@ -106,10 +115,7 @@ function getInput(obj) {
 	var child= obj.childNodes[i];
 	if (child.nodeType==1) {
 	    if (child.nodeName=="html:input")
-		{
-		    X=child;
 		return child.value
-	    }
 	    var text= getInput(child);
 	    if (text!=null)
 		return text;
@@ -122,9 +128,15 @@ function fillArgs(obj, args) {
     if (obj.getAttribute("name")=="top:arg") {
 	var value= args.shift();
 	obj.setAttribute("name", value);
-    } else if (obj.nodeName=="top:arg") {
+    }
+    if (obj.nodeName=="top:arg") {
 	var arg= args.shift();
-	if (arg!=undefined) {
+	if (arg) {
+	    if (!arg.nodeType) {
+		var vo= document.createElementNS(xslns, "value-of");
+		vo.setAttribute("select",arg);
+		arg= vo;
+	    }
 	    obj.parentNode.replaceChild(arg, obj);
 	}
     } else {
