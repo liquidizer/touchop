@@ -221,6 +221,11 @@
     <!-- background image -->
     <svg:rect class="background" rx="5" ry="5"/>
 
+    <!-- template -->
+    <svg:foreignObject class="top:run">
+      <xsl:copy-of select="$template//assign/*"/>
+    </svg:foreignObject>
+
     <!-- variable definition -->
     <svg:g top:layout="horizontalLayout(obj)" class="program">
       <svg:rect class="background" display="none"/>
@@ -249,18 +254,19 @@
     <!-- background image -->
     <svg:rect class="background" rx="5" ry="5"/>
 
+    <!-- template -->
+    <svg:foreignObject class="top:run">
+      <xsl:copy-of select="$template//for-each/*"/>
+    </svg:foreignObject>
+
     <!-- loop variable and list -->
     <svg:g top:layout="horizontalLayout(obj)" class="program">
       <svg:rect class="background" display="none"/>
-      <svg:text>for</svg:text>
-      <xsl:call-template name="textInput">
-	<xsl:with-param name="editable" select="'variable'"/>
-      </xsl:call-template>
-      <svg:text>in</svg:text>
+      <svg:text>for each in </svg:text>
       <xsl:call-template name="editOperand">
 	<xsl:with-param name="editable" select="'list'"/>
       </xsl:call-template>
-      <svg:text>get</svg:text>
+      <svg:text>do</svg:text>
     </svg:g>    
 
     <!-- repeated execution -->

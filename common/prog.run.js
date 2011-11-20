@@ -104,7 +104,15 @@ function progOp(obj) {
     if (xsl.length==0) {
 	xsl= getInput(obj);
     } else {
-	xsl=xsl[0];
+	if (xsl.length==1)
+	    xsl=xsl[0];
+	else {
+	    var block= document.createElementNS(xslns, "if");
+	    block.setAttribute("test","1=1");
+	    for (var i=0; i<xsl.length; ++i)
+		block.appendChild(toNode(xsl[i]));
+	    xsl= block;
+	}
     }
     return xsl;
 }
@@ -124,19 +132,25 @@ function getInput(obj) {
     return null;
 }
 
+function toNode(obj) {
+    if (!obj.nodeType) {
+	if (obj=="") obj="''";
+	var vo= document.createElementNS(xslns, "value-of");
+	vo.setAttribute("select",obj);
+	return vo;
+    }
+    return obj;
+}
+
 function fillArgs(obj, args) {
+    if (!obj.nodeType) return;
     if (obj.getAttribute("name")=="top:arg") {
 	var value= args.shift();
 	obj.setAttribute("name", value);
     }
     if (obj.nodeName=="top:arg") {
-	var arg= args.shift();
-	if (arg) {
-	    if (!arg.nodeType) {
-		var vo= document.createElementNS(xslns, "value-of");
-		vo.setAttribute("select",arg);
-		arg= vo;
-	    }
+	if (args.length>0) {
+	    var arg= toNode(args.shift());
 	    obj.parentNode.replaceChild(arg, obj);
 	}
     } else {

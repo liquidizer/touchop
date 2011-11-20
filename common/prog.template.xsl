@@ -21,9 +21,6 @@
 
   <xml-node>
     <xsl:element name="top:arg" namespace="http://www.w3.org/2000/svg">
-      <xsl:attribute name="width">80</xsl:attribute>
-      <xsl:attribute name="height">50</xsl:attribute>
-      <xsl:attribute name="r">50</xsl:attribute>
       <top:arg/>
     </xsl:element>
   </xml-node>
@@ -34,4 +31,21 @@
     </xsl:attribute>
   </attribute-node>
 
+  <assign>
+    <xsl:variable name="top:arg">
+      <top:arg/>
+    </xsl:variable>
+  </assign>
+
+  <for-each>
+    <xsl:if test="1=1">
+      <xsl:variable name="tmp">
+	<top:arg/>
+      </xsl:variable>
+      <xsl:for-each select="exsl:node-set($tmp)/node()" 
+		    xmlns:exsl="http://exslt.org/common">
+	<top:arg/>
+      </xsl:for-each>
+    </xsl:if>
+  </for-each>
 </touchop-templates>

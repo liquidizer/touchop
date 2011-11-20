@@ -476,7 +476,8 @@ function setFloating(obj, doFloat) {
     if (canMove) {
 	// the shadow is always the first child
 	var shadow= obj.childNodes[0];
-	if (shadow.nodeType==1 && shadow.getAttribute("class")=="shadow") {
+	if (shadow && shadow.nodeType==1 && 
+	    shadow.getAttribute("class")=="shadow") {
 	    obj.removeChild(shadow);
 	}
 	// find the objects background element
