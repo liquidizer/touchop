@@ -1,45 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <?xml-stylesheet type="text/xsl" href="../../common/touchop.xsl"?>
 <touchop>
   <test domain="image"
 	win="img/quest06_result.png"
-	exp="face dilate face feColor type = matrix ToAlpha face feComp feComp"/>
+	exp="blue tiger feColor ToAlpha blue (feColor matrix feComp | fe Comp feColor matrix) feComp"/>
 
-  <def name="&#x2460;" xy="80,100"/>
-  <use name="&#x2460;" xy="80,180"/>
-  <use name="&#x2460;" xy="80,260"/>
-  <use name="&#x2460;" xy="310,180"/>
+  <def name="&#x2460;" xy="100,100"/>
+  <use name="&#x2460;" xy="100,200"/>
+  <use name="&#x2460;" xy="100,300"/>
 
   <!-- base images -->
+  <image xy="270,80">
+    <feFlood flood-color="blue"/>
+  </image>
 
-  <image xy="240,70" src="img/face.jpg"/>
+  <image xy="380,80" src="img/tiger.jpg"/>
 
-  <!-- single arg operators --> 
-  <image name="Invert" xy="420,260">
+  <image name="Invert" xy="350,200">
     <feColorMatrix type="matrix" in="arg1" 
-		   values="-2 0 0 0 1
-			   0 -2 0 0 1
-			   0 0 -2 0 1
+		   values="-1 0 0 0 1
+			   0 -1 0 0 1
+			   0 0 -1 0 1
 			   0 0 0 1 0"/>
   </image>
 
-  <image name="Dilate" xy="400,180">
-    <feGaussianBlur stdDeviation="1" in="arg1" result="tmp"/>
-    <feMorphology operator="dilate" in="tmp" radius="1"/>
-  </image>
-
-  <image name="Atop" xy="290,260">
-    <feComposite operator="atop" in="arg1" in2="arg2"/>
-  </image>
-
-  <image name="Mask" xy="170,260">
+  <image name="Mask" xy="350,300">
     <feColorMatrix type="luminanceToAlpha" in="arg1"/>
   </image>
 
-  <!-- double arg operators -->
+  <image name="Atop" xy="220,200">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
+  </image>
 
-  <image name="Atop" xy="170,180">
+  <image name="Atop" xy="220,300">
     <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 

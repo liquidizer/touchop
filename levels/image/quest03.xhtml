@@ -1,27 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type="text/xsl" href="../../common/touchop.xsl"?>
 <touchop>
-  <test domain="image"
-	win="img/quest03_result.png"
-	exp="rgrad A.svg (Blur vgrad feComp | vgrad feComp Blur) A.svg feComp feComp"/>
+  <test domain="image" 
+	win="img/quest03_result.png" 
+	exp="smiley ToAlpha rgrad feComp"/>
 
-  <image xy="200,200" src="img/rgrad.svg"/>
-
-  <image xy="100,100" src="img/A.svg"/>
-  <image xy="100,200" src="img/A.svg"/>
-  <image xy="200,100" src="img/vgrad.svg"/>
-
-  <image name="Atop" xy="300,180">
-    <feComposite operator="atop" in="arg2" in2="arg3" result="tmp"/>
-    <feComposite operator="atop" in="arg1" in2="tmp"/>
+  <image name="Mask" xy="280,200">
+    <feColorMatrix type="luminanceToAlpha" in="arg1" result="tmp"/>
+    <feComponentTransfer in="tmp">
+        <feFuncA type="gamma" exponent="0.5"/>
+    </feComponentTransfer>
   </image>
 
-  <image name="Blur" xy="300,100">
-    <feGaussianBlur stdDeviation="4" in="arg1"/>
-  </image>
-
-  <image name="Atop" xy="190,300">
+  <image name="Atop" xy="150,200">
     <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
+
+  <!-- base images -->
+  <image xy="150,100" src="img/rgrad.svg"/>
+  <image xy="280,100" src="../../common/smiley.svg"/>
 
 </touchop>

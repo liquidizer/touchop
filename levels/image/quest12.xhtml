@@ -1,80 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type="text/xsl" href="../../common/touchop.xsl"?>
 <touchop>
-  <test domain="image"/>
+  <test domain="image"
+	win="img/quest12_result.gif"
+	exp="night ufo ToAlpha red feComp ufo ToAlpha (Blur grad feComp | grad feComp Blur) feComp feComp"/>
 
-  <def name="&#x2460;" xy="10,10"/>
-  <use name="&#x2460;" xy="10,140"/>
-  <use name="&#x2460;" xy="10,140"/>
-  <use name="&#x2460;" xy="10,140"/>
-  <use name="&#x2460;" xy="10,140"/>
-  <use name="&#x2460;" xy="10,140"/>
+  <def name="&#x2460;" xy="50,100"/>
+  <use name="&#x2460;" xy="50,200"/>
+  <use name="&#x2460;" xy="50,300"/>
 
-  <!-- base images -->
-  <image xy="50,10">
-    <feFlood flood-color="black"/>
+  <image xy="220,80" src="img/dgrad.svg"/>
+  <image xy="320,80" src="img/night.jpg"/>
+  <image xy="150,190" src="img/ufo.gif"/>
+
+  <image xy="250,190">
+    <feFlood flood-color="red"/>
   </image>
 
-  <image xy="50,190" src="img/monkey.jpg"/>
-
-  <image xy="280,10" src="img/sunset.jpg"/>
-  <image xy="280,100" src="img/circle.svg"/>
-  <image xy="280,190" src="img/circle.svg"/>
-
-  <image xy="50,280">
-    <feTurbulence baseFrequency="0.05,0.05" numOctaves="2"/>
-  </image>
-
-  <!-- single arg operators --> 
-
-  <image name="offset" xy="380,10">
-    <feOffset dx="5" dy="8" in="arg1"/>
-  </image>
-
-  <image name="Blur" xy="380,80">
-    <feGaussianBlur stdDeviation="3" in="arg1"/>
-  </image>
-
-  <image name="Light" xy="380,150">
-    <feSpecularLighting in="arg1" surfaceScale="10" specularExponent="10">
-      <fePointLight/>
-    </feSpecularLighting>
-  </image>
-
-  <image name="Hue+90" xy="380,220">
-    <feColorMatrix type="hueRotate" in="arg1" values="90"/>
-  </image>
-
-  <image name="Mask" xy="270,290">
-    <feColorMatrix type="luminanceToAlpha" in="arg1"/>
-  </image>
-
-  <image name="Erode" xy="380,320">
-    <feMorphology operator="erode" in="arg1" radius="1"/>
-  </image>
-
-  <image name="Dilate" xy="150,100">
-    <feMorphology operator="dilate" in="arg1" radius="2"/>
-  </image>
-
-  <image name="Lighter" xy="150,180">
-    <feComponentTransfer in="arg1">
-      <feFuncR type="gamma" exponent="0.5"/>
-      <feFuncG type="gamma" exponent="0.5"/>
-      <feFuncB type="gamma" exponent="0.5"/>
-      <feFuncA type="gamma" exponent="1"/>
-    </feComponentTransfer>
-  </image>
-
-
-
-  <!-- double arg operators -->
-
-  <image name="Atop" xy="470,285">
-    <feComposite operator="atop" in="arg1" in2="arg2"/>
-  </image>
-
-  <image name="Atop" xy="470,110">
+  <image name="Atop" xy="410,300">
     <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
@@ -82,8 +25,20 @@
     <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
-  <image name="Displace" xy="150,280">
-    <feDisplacementMap in="arg1" in2="arg2" scale="10"/>
+  <image name="Blur" xy="420,120">
+    <feGaussianBlur stdDeviation="5" in="arg1"/>
+  </image>
+
+  <image name="Atop" xy="350,200">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
+  </image>
+
+  <image name="Atop" xy="280,300">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
+  </image>
+
+  <image name="Mask" xy="150,300">
+    <feColorMatrix type="luminanceToAlpha" in="arg1"/>
   </image>
 
 </touchop>

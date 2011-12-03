@@ -3,36 +3,25 @@
 <touchop>
   <test domain="image"
 	win="img/quest04_result.png"
-	exp="blue tiger feColor ToAlpha blue (feColor matrix feComp | fe Comp feColor matrix) feComp"/>
+	exp="black circle Blur sunset feComp feComp"/>
 
-  <def name="&#x2460;" xy="100,100"/>
-  <use name="&#x2460;" xy="100,200"/>
-  <use name="&#x2460;" xy="100,300"/>
 
-  <!-- base images -->
-  <image xy="270,80">
-    <feFlood flood-color="blue"/>
+  <image xy="380,200">
+    <feFlood flood-color="black"/>
   </image>
 
-  <image xy="380,80" src="img/tiger.jpg"/>
+  <image xy="100,200" src="img/circle.svg"/>
+  <image xy="100,100" src="img/sunset.jpg"/>
 
-  <image name="Invert" xy="350,200">
-    <feColorMatrix type="matrix" in="arg1" 
-		   values="-1 0 0 0 1
-			   0 -1 0 0 1
-			   0 0 -1 0 1
-			   0 0 0 1 0"/>
+  <image name="Blur" xy="380,100">
+    <feGaussianBlur stdDeviation="5" in="arg1"/>
   </image>
 
-  <image name="Mask" xy="350,300">
-    <feColorMatrix type="luminanceToAlpha" in="arg1"/>
-  </image>
-
-  <image name="Atop" xy="220,200">
+  <image name="Atop" xy="230,200">
     <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
-  <image name="Atop" xy="220,300">
+  <image name="Atop" xy="230,100">
     <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 

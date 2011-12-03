@@ -3,21 +3,14 @@
 <touchop>
   <test domain="image" 
 	win="img/quest01_result.png" 
-	exp="smiley ToAlpha rgrad feComp"/>
+	exp="circL circR atop"/>
 
-  <image name="Mask" xy="280,200">
-    <feColorMatrix type="luminanceToAlpha" in="arg1" result="tmp"/>
-    <feComponentTransfer in="tmp">
-        <feFuncA type="gamma" exponent="0.5"/>
-    </feComponentTransfer>
-  </image>
-
-  <image name="Atop" xy="150,200">
+  <image name="Atop" xy="100,200">
     <feComposite operator="atop" in="arg1" in2="arg2"/>
   </image>
 
   <!-- base images -->
-  <image xy="150,100" src="img/rgrad.svg"/>
-  <image xy="280,100" src="../../common/smiley.svg"/>
+  <image xy="250,200" src="img/circL.svg"/>
+  <image xy="380,200" src="img/circR.svg"/>
 
 </touchop>
