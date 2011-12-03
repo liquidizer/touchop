@@ -34,12 +34,13 @@ text {
     font-size: 12pt;
 }
 
-.image > .background {
+.image .background {
     stroke: black;
     stroke-width: 1px;
     fill: lightgray;
 }    
 
+.prog .background { stroke: black; }
 .prog > text {
     font-size: 14pt;
     font-family: courier;

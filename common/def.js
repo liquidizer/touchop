@@ -23,9 +23,9 @@ function isValid(obj) {
 // check if element is visible
 function isVisible(obj) {
     if (obj.nodeType!=1) return false;
-    var opacity= obj.getAttribute("opacity");
+    var visibility= obj.getAttribute("visibility");
     var display= obj.getAttribute("display");
-    return opacity!="0.0" && display!="none";
+    return visibility!="hidden" && display!="none";
 }
 
 // check a variable definition and set its validity

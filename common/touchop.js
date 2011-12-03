@@ -353,7 +353,7 @@ function snap(obj) {
 	    if (child.getAttribute("class")=="background") {
 		// The first element is the reference position
 		back= child;
-		back.removeAttribute("opacity");
+		back.removeAttribute("visibility");
 	    }
 	    else if (back!=null) {
 		var m= child.getTransformToElement(obj);
@@ -365,7 +365,7 @@ function snap(obj) {
 		setTransform(child, m);
 
 		// make drop area opaque
-		back.setAttribute("opacity","0.0");
+		back.setAttribute("visibility","hidden");
 		
 		if (child.getAttribute("onmousedown")!=null)
 		    obj.setAttribute("blocked","true");
@@ -476,7 +476,8 @@ function setFloating(obj, doFloat) {
     if (canMove) {
 	// the shadow is always the first child
 	var shadow= obj.childNodes[0];
-	if (shadow.nodeType==1 && shadow.getAttribute("class")=="shadow") {
+	if (shadow && shadow.nodeType==1 && 
+	    shadow.getAttribute("class")=="shadow") {
 	    obj.removeChild(shadow);
 	}
 	// find the objects background element

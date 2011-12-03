@@ -44,11 +44,11 @@
 <!-- text input field -->
 <xsl:template name="textInput">
   <xsl:param name="editable" select="@editable"/>
-  <svg:foreignObject width="100" height="35">
+  <svg:foreignObject width="100" height="35" top:run="progOp(obj)">
     <xsl:element name="html:input">
       <xsl:attribute name="type">text</xsl:attribute>
       <xsl:attribute name="style">width:95px;height:28px</xsl:attribute>
-      <xsl:attribute name="onchange">rerunProg(event)</xsl:attribute>
+      <xsl:attribute name="onchange">runCode(event)</xsl:attribute>
       <xsl:attribute name="onkeypress">navigation(event)</xsl:attribute>
       <xsl:attribute name="placeholder">
 	<xsl:value-of select="$editable"/>
@@ -157,9 +157,15 @@
     <!-- attribute prototype -->
     <svg:g display="none" top:content="true">
       <svg:g top:layout="horizontalLayout(obj)" class="program">
+	<!-- template -->
+	<svg:foreignObject class="top:run">
+	  <xsl:copy-of select="$template//attribute-node/*"/>
+	</svg:foreignObject>
+
+	<!-- name and value input fields -->
 	<svg:rect class="background" display="none"/>
 	<xsl:call-template name="textInput">
-	  <xsl:with-param name="editable" select="'attribute'"/>
+	  <xsl:with-param name="editable" select="'name'"/>
 	</xsl:call-template>
 	<svg:text>:</svg:text>
 	<xsl:call-template name="editOperand">
@@ -215,6 +221,11 @@
     <!-- background image -->
     <svg:rect class="background" rx="5" ry="5"/>
 
+    <!-- template -->
+    <svg:foreignObject class="top:run">
+      <xsl:copy-of select="$template//assign/*"/>
+    </svg:foreignObject>
+
     <!-- variable definition -->
     <svg:g top:layout="horizontalLayout(obj)" class="program">
       <svg:rect class="background" display="none"/>
@@ -243,18 +254,19 @@
     <!-- background image -->
     <svg:rect class="background" rx="5" ry="5"/>
 
+    <!-- template -->
+    <svg:foreignObject class="top:run">
+      <xsl:copy-of select="$template//for-each/*"/>
+    </svg:foreignObject>
+
     <!-- loop variable and list -->
     <svg:g top:layout="horizontalLayout(obj)" class="program">
       <svg:rect class="background" display="none"/>
-      <svg:text>for</svg:text>
-      <xsl:call-template name="textInput">
-	<xsl:with-param name="editable" select="'variable'"/>
-      </xsl:call-template>
-      <svg:text>in</svg:text>
+      <svg:text>for each in </svg:text>
       <xsl:call-template name="editOperand">
 	<xsl:with-param name="editable" select="'list'"/>
       </xsl:call-template>
-      <svg:text>get</svg:text>
+      <svg:text>do</svg:text>
     </svg:g>    
 
     <!-- repeated execution -->
@@ -278,7 +290,8 @@
     <svg:rect class="background" rx="5" ry="5"/>
     <svg:text>Render</svg:text>
 
-    <svg:g top:layout="compileToSVG(obj); horizontalLayout(obj)">
+    <svg:g top:runnable="true"
+	   top:layout="horizontalLayout(obj)">
       <svg:rect class="background" display="none"/>
 
       <!-- template -->
