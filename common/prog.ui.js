@@ -112,10 +112,3 @@ function focusNext(obj, dir) {
 	document.activeElement.blur();
 }
 
-<<<<<<< HEAD
-function rerunProg(evt) {
-    console.log("rerun "+path(findRoot(evt.target)));
-    layout(findRoot(evt.target));
-}
-=======
->>>>>>> 2db5e61ad5505bcf52ef79bf047e99b9af019423
