@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../../common/touchop.xsl"?>
+<touchop>
+  <test domain="image" 
+	win="img/quest02_result.png" 
+	exp="circle vgrad atop iris atop"/>
+
+  <image name="Atop" xy="100,150">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
+  </image>
+
+  <image name="Atop" xy="100,250">
+    <feComposite operator="atop" in="arg1" in2="arg2"/>
+  </image>
+
+  <!-- base images -->
+  <image xy="250,140" src="img/iris.svg"/>
+  <image xy="380,140" src="img/circle.svg"/>
+  <image xy="315,240" src="img/vgrad.svg"/>
+
+</touchop>
