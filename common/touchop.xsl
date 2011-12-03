@@ -19,6 +19,8 @@
 	 ontouchmove="msMove(evt)"
 	 onmouseup="msUp(evt)"
 	 ontouchend="msUp(evt)"
+	 onmousedown="msBlur(evt)"
+	 ontouchstart="msBlur(evt)"
 	 width="100%" height="100%"
 	 viewBox="0 0 600 400">
   <svg:title>Touchop</svg:title>
@@ -29,18 +31,10 @@
   <!-- Drag and drop interface -->
   <svg:script type="text/javascript" xlink:href="../../common/touchop.js"/>
   <svg:script type="text/javascript" xlink:href="../../common/def.js"/>
-  <svg:script type="text/javascript" xlink:href="../../common/status.js"/>
 
   <!-- mobile device settings -->
   <html:meta name="viewport" content="width=device-width, initial-scale=1"/>
   <html:meta name="apple-mobile-web-app-capable" content="yes" />
-
-  <!-- blur effect for shadows -->
-  <svg:defs>
-    <svg:filter id="shadow-blur">
-      <svg:feGaussianBlur stdDeviation="2"/>
-    </svg:filter>
-  </svg:defs>
 
   <!-- iterate over all xml elements in the source file -->
   <xsl:comment>List of operators</xsl:comment>
@@ -60,19 +54,21 @@
   <!-- The emoticon indicates the winning status and links -->
   <!-- back to the index page -->
   <xsl:comment>Emoticon</xsl:comment>
-  <svg:g onmousedown="window.history.back()"
-	 transform="translate(500,20)" >
-    <svg:a xlink:href="index.html">
-      <svg:g id="top:notwin">
-	<svg:image xlink:href="../../common/frowny.svg" 
-		   width="81" height="81"/>
-      </svg:g>
-      <svg:g id="top:win">
-	<svg:image xlink:href="../../common/smiley.svg" 
-		   width="81" height="81"/>
-      </svg:g>
-    </svg:a>
-  </svg:g>
+  <xsl:if test="not(test[@smiley='false'])">
+    <svg:g onmousedown="window.history.back()"
+	   transform="translate(500,20)" >
+      <svg:a xlink:href="index.html">
+	<svg:g id="top:notwin">
+	  <svg:image xlink:href="../../common/frowny.svg" 
+		     width="81" height="81"/>
+	</svg:g>
+	<svg:g id="top:win" opacity="0.0">
+	  <svg:image xlink:href="../../common/smiley.svg" 
+		     width="81" height="81"/>
+	</svg:g>
+      </svg:a>
+    </svg:g>
+  </xsl:if>
 </svg:svg>
 </xsl:template>
 
@@ -359,6 +355,7 @@
   </xsl:call-template>
 </xsl:template>
 
+<!-- find resolution for the canvas grid -->
 <xsl:template name="resolution">
   <xsl:param name="span"/>
   <xsl:choose>
@@ -369,6 +366,7 @@
   </xsl:choose>
 </xsl:template>
 
+<!-- render horizontal grid lines -->
 <xsl:template name="ygrid">
   <xsl:param name="pos"/>
   <xsl:param name="res"/>
@@ -393,6 +391,7 @@
   </xsl:if>
 </xsl:template>
 
+<!-- render vertical grid lines -->
 <xsl:template name="xgrid">
   <xsl:param name="pos"/>
   <xsl:param name="res"/>

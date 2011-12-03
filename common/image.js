@@ -1,7 +1,7 @@
 /* Touchop - Touchable operators
  *           image processing domain
  *
- * Copyright(C) 2008, 2011, Stefan Dirnstorfer
+ * Copyright(C) 2011, Stefan Dirnstorfer
  * This software may be copied, distributed and modified under the terms 
  * of the GPL (http://www.gnu.org/licenses/gpl.html)
  */
@@ -37,6 +37,7 @@ function verify(obj, isFinal) {
 
 function updateFilter(obj) {
     var filter= null;
+    var hasArgs= false;
     var isvalid= isValid(obj);
     for (var i=0; i<obj.childNodes.length; ++i) {
 	var child= obj.childNodes[i];
@@ -60,15 +61,18 @@ function updateFilter(obj) {
 			    child.removeChild(layer);
 			    j= j-1;
 			}
+			var inAttr= layer.getAttribute("in");
+			if (/^arg.*/.test(inAttr))
+			    hasArgs= true;
 		    }
 		}
 	    } else {
 		// search for filter components recursively
-		fillFilter(child, filter, true);
+		fillFilter(child, filter);
 	    }
 	    // control visibility of the result
 	    if (child.getAttribute("filter")!=null) {
-		if (isvalid && obj==findRoot(obj))
+		if (isvalid && (obj==findRoot(obj) || !hasArgs))
 		    child.removeAttribute("display");
 		else
 		    child.setAttribute("display","none");
@@ -79,29 +83,19 @@ function updateFilter(obj) {
 	filter.removeAttribute("display");
  }
 
-function fillFilter(obj, filter, hide) {
+function fillFilter(obj, filter) {
     if (filter!=null) {
 	var use= obj.getAttributeNS(topns,"use");
 	if (use!="") {
 	    obj= document.getElementById("def-"+use);
 	    if (isValid(obj))
-		fillFilter(obj, filter, false);
+		fillFilter(obj, filter);
 	    return;
 	}
     }
     for (var i=0; i<obj.childNodes.length; ++i) {
 	var child= obj.childNodes[i];
 	if (child.nodeType==1) {
-	    // hide recursive results
-	    if (hide && child.getAttribute("filter")!=null) {
-		if (child.getAttribute("display")!="none") {
-		    var ctm= obj.getCTM();
-		    if (Math.abs(ctm.c)<0.1) {
-			child.setAttribute("display","none");
-			layout(obj);
-		    }
-		}
-	    }
 	    // copy filter elements to root filter
 	    if (filter!=null && child.nodeName=="svg:filter") {
 		var arg_no= filter.getAttribute("arg_no");
@@ -120,7 +114,7 @@ function fillFilter(obj, filter, hide) {
 		filter.setAttribute("arg_no", eval(arg_no) + 1);
 		filter= null;
 	    } else {
-		fillFilter(child, filter, hide);
+		fillFilter(child, filter);
 	    }
 	}
     }

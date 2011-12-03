@@ -41,3 +41,9 @@ function path(obj) {
     }
 }
 
+function serializeXML(obj) {
+    var serializer = new XMLSerializer ();
+    var str = serializer.serializeToString (obj);
+    console.log(str);
+    return str;
+}
