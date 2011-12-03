@@ -48,6 +48,7 @@
     <xsl:element name="html:input">
       <xsl:attribute name="type">text</xsl:attribute>
       <xsl:attribute name="style">width:95px;height:28px</xsl:attribute>
+      <xsl:attribute name="onchange">rerunProg(event)</xsl:attribute>
       <xsl:attribute name="onkeypress">navigation(event)</xsl:attribute>
       <xsl:attribute name="placeholder">
 	<xsl:value-of select="$editable"/>

@@ -7,6 +7,7 @@
  */
 
 function compileToSVG(obj) {
+    console.log("compile");
     var child= obj.firstChild;
     // find program and canvas
     while (child!=null) {
