@@ -21,6 +21,7 @@ function verify(obj, isFinal) {
 }
 
 function compileToSVG(obj) {
+    console.log("compile");
     var child= obj.firstChild;
     var prog= null;
     var canvas= null;
