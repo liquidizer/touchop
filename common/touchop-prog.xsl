@@ -131,9 +131,17 @@
 
     <!-- child element prototype -->
     <svg:g display="none" top:content="true">
+      <!-- template -->
+      <svg:g>
+      <svg:foreignObject class="top:run">
+	<xsl:copy-of select="$template//item"/>
+      </svg:foreignObject>
+
+      <!-- list item input field -->
       <xsl:call-template name="editOperand">
 	<xsl:with-param name="editable" select="'value'"/>
       </xsl:call-template>
+      </svg:g>
     </svg:g>
 
     <!-- content -->

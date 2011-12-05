@@ -12,6 +12,8 @@
   <root>
     <xsl:stylesheet 
        xmlns:svg="http://www.w3.org/2000/svg"
+       xmlns:exsl="http://exslt.org/common"
+       exsl:dummy=""
        version="1.0">
       <xsl:template match="/">
 	<top:arg/>
@@ -37,13 +39,16 @@
     </xsl:variable>
   </assign>
 
+  <item>
+    <top:arg/>
+  </item>
+
   <for-each>
     <xsl:if test="1=1">
       <xsl:variable name="tmp">
 	<top:arg/>
       </xsl:variable>
-      <xsl:for-each select="exsl:node-set($tmp)/node()" 
-		    xmlns:exsl="http://exslt.org/common">
+      <xsl:for-each select="exsl:node-set($tmp)/node()">
 	<top:arg/>
       </xsl:for-each>
     </xsl:if>

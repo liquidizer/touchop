@@ -44,7 +44,11 @@ function compileToSVG(obj) {
 	serializeXML(xsl[0]);
 	var xml= document.createElement("none");
 	xsltProcessor=new XSLTProcessor();
+	try {
 	xsltProcessor.importStylesheet(xsl[0]);
+	} catch (e) {
+	    E=e;
+	}
 	var result= xsltProcessor.transformToFragment(xml,document);
 
 	// draw result
