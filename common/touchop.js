@@ -77,10 +77,11 @@ function msDown (evt) {
 	evt= translateTouch(evt);
 	touchOnly= evt.isTouch;
 
-	hand= evt.target;
-	while (hand.getAttribute("onmousedown")!="msDown(evt)") {
-	    hand= hand.parentNode;
+	var grabbed= evt.target;
+	while (grabbed.getAttribute("onmousedown")!="msDown(evt)") {
+	    grabbed= grabbed.parentNode;
 	}
+	hand= grabbed;
 
 	// store mouse position. Will be updated when mouse moves.
 	startPos= [evt.clientX, evt.clientY];
@@ -459,9 +460,9 @@ function setFloating(obj, doFloat) {
     var canMove= obj.getAttribute("onmousedown")!=null;
     if (canMove) {
 	// the shadow is always the first child
-	var shadow= obj.childNodes[0];
-	if (shadow.nodeType==1 && shadow.getAttribute("class")=="shadow") {
-	    obj.removeChild(shadow);
+	var oldShadow= obj.childNodes[0];
+	if (oldShadow.nodeType==1 && oldShadow.getAttribute("class")=="shadow") {
+	    obj.removeChild(oldShadow);
 	}
 	// find the objects background element
 	var back= obj.childNodes[0];
@@ -471,13 +472,10 @@ function setFloating(obj, doFloat) {
 	}
 	// create the shadow element by cloning the background
 	if (doFloat && back!=null) {
-	    var box= obj.getBBox();
-	    shadow= back.cloneNode(false);
-	    scaleRect(shadow, 
-		      box.x + 3, box.x + box.width + 3, 
-		      box.y + 5, box.y + box.height + 5);
-	    shadow.setAttribute("class", "shadow");
+	    var shadow= back.cloneNode(false);
 	    obj.insertBefore(shadow, obj.childNodes[0]);
+	    shadow.setAttribute("class", "shadow");
+	    shadow.setAttribute("transform", "translate(3,5)");
 	}
     }
 }
