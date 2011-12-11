@@ -51,7 +51,8 @@ function setValidDef(obj, name, flag) {
     var use= obj.getAttributeNS(topns, "use");
     if (use==name) {
 	obj.setAttribute("class", flag);
-	layout(obj);
+	validateDef(obj);
+	layout(findRoot(obj));
     }
     // recurse over all child elements
     for (var i=0; i<obj.childNodes.length; ++i) {
