@@ -56,6 +56,7 @@
   <xsl:comment>Emoticon</xsl:comment>
   <xsl:if test="not(test[@smiley='false'])">
     <svg:g onmousedown="window.history.back()"
+	   ontouchstart="window.history.back()"
 	   transform="translate(500,20)" >
       <svg:a xlink:href="index.html">
 	<svg:g id="top:notwin">
@@ -437,9 +438,10 @@
     </svg:g>
     <svg:path id="move-forward" class="move"
 	      d="m 30,11 -15,15 8,0 c 0,0 0,0 0,2 0,0 -5,9 -6,14 0,1 0,3 0,3 0,4 3,6 6,6 l 15,0 c 3,0 6,-2 6,-6 0,0 0,-2 0,-3 -1,-5 -6,-15 -6,-15 0,-1 0,-1 0,-1 l 7,0 z"/>
-    <svg:path id="flag"
+    <svg:path id="flag" class="move"
 	      d="M 1,30 L 7,0 L 8,0 L 8,2 C 8,2 11,0 16,4 C 21,6 20,9 22,15 C 25,21 28,20 28,20 C 28,20 25,25 19,23 C 14,21 12,14 5,18 L 3,31 L 1,30 z"/>
-    <svg:path id="arrow" d="M 0,0 L 18,0 M 18,0 L 14,-4 M 14,4 L 18,0"/>
+    <svg:path id="arrow" class="move"
+	      d="M 0,0 L 18,0 M 18,0 L 14,-4 M 14,4 L 18,0"/>
   </defs>  
 </xsl:template>
 
