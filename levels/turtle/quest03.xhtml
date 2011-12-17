@@ -2,13 +2,13 @@
 <?xml-stylesheet type="text/xsl" href="../../common/touchop.xsl"?>
 <touchop>
   <test domain="turtle"/>
-  <canvas plot="y" xy="50,100" size="180" xmin="-3" xmax="3" ymin="-3" ymax="3">
+  <canvas plot="y" xy="50,100" size="180" xmin="-1.5" xmax="0.5" ymin="-0.5" ymax="1.5">
     <point x="-1" y="1"/>
-    <point x="0.41" y="-0.41"/>
-    <point x="-1.59" y="1.59"/>
+    <point x="-.29" y="0.29"/>
+    <point x="-.794" y=".794"/>
     <turtle/>
   </canvas>
-  <program name="4&#215;" repeat="4" xy="300,100">
+  <program name="5&#215;" repeat="5" xy="300,100">
     <step/>
     <step/>
   </program>
@@ -17,6 +17,6 @@
     <step/>
   </program>
   <move value="rotate(-90)" img="#turn-right" xy="420,100"/>
-  <move value="scale(1.4142)" img="#move-grow" xy="420,180"/>
-  <move value="translate(30,0)" img="#move-forward" xy="420,260"/>
+  <move value="scale(0.71)" img="#move-shrink" xy="420,180"/>
+  <move value="translate(180/2,0)" img="#move-forward" xy="420,260"/>
 </touchop>

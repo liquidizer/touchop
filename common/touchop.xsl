@@ -339,7 +339,7 @@
   </xsl:variable>
   <!-- call grid creation -->
   <xsl:call-template name="ygrid">
-    <xsl:with-param name="pos" select="ceiling(@ymin)"/>
+    <xsl:with-param name="pos" select="ceiling(@ymin div $yres) * $yres"/>
     <xsl:with-param name="res" select="$yres"/>
   </xsl:call-template>
 
@@ -351,7 +351,7 @@
   </xsl:variable>
   <!-- call grid creation -->
   <xsl:call-template name="xgrid">
-    <xsl:with-param name="pos" select="ceiling(@xmin)"/>
+    <xsl:with-param name="pos" select="ceiling(@xmin div $xres) * $xres"/>
     <xsl:with-param name="res" select="$xres"/>
   </xsl:call-template>
 </xsl:template>
@@ -432,9 +432,9 @@
     <svg:g id="turn-right"> 
       <svg:use xlink:href="#turn-left" transform="matrix(-1,0,0,1,60,0)"/>
     </svg:g>
-    <svg:g id="move-grow"> 
+    <svg:g id="move-shrink"> 
+      <svg:use xlink:href="#move-forward" opacity="0.6"/>
       <svg:use xlink:href="#move-forward" transform="matrix(0.5,0,0,0.5,15,20)"/>
-      <svg:use xlink:href="#move-forward"/>
     </svg:g>
     <svg:path id="move-forward" class="move"
 	      d="m 30,11 -15,15 8,0 c 0,0 0,0 0,2 0,0 -5,9 -6,14 0,1 0,3 0,3 0,4 3,6 6,6 l 15,0 c 3,0 6,-2 6,-6 0,0 0,-2 0,-3 -1,-5 -6,-15 -6,-15 0,-1 0,-1 0,-1 l 7,0 z"/>
