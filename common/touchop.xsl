@@ -85,7 +85,6 @@
 <!-- A literal placed on the screen -->
 <xsl:template name="literal">
   <xsl:param name="name" select="@value"/>
-  <xsl:comment>Literal</xsl:comment>
   <xsl:variable name="len" select="string-length(translate($name,' ',''))"/>
   <xsl:element name="svg:rect">
     <xsl:attribute name="class">background</xsl:attribute>
@@ -261,8 +260,8 @@
   </svg:g>
 </xsl:template>
 
+<!-- Atomic element -->
 <xsl:template match="atom">
-  <xsl:comment>Atomic element</xsl:comment>
   <xsl:element name="svg:g">
     <xsl:attribute name="onmousedown">msDown(evt)</xsl:attribute>
     <xsl:attribute name="top:value"><xsl:value-of select="@value"/></xsl:attribute>
@@ -599,5 +598,26 @@
     </xsl:element>
   </xsl:for-each>
 </xsl:template>
+
+<!-- TOUCHOP - MUSICAL SCORE DOMAIN -->
+<!-- Special musical score setting -->
+<xsl:template match="test[@domain='music']">
+  <svg:script type="text/javascript" xlink:href="../../common/music.js"/>
+</xsl:template>
+
+<xsl:template match="note">
+  <xsl:element name="svg:g">
+    <xsl:attribute name="onmousedown">msDown(evt)</xsl:attribute>
+    <svg:text y="-20" x="-5" transform="scale(2)">&#x266A;</svg:text>
+  </xsl:element>
+</xsl:template>
+
+<!-- Drop area for musical notes -->
+<xsl:template match="vclef">
+  <svg:g top:layout="snapNote(obj)" class="operand">
+      <svg:rect height="10" width="50" rx="5" ry="5" class="background"/>
+  </svg:g>
+</xsl:template>
+  
 
 </xsl:stylesheet>
