@@ -143,10 +143,11 @@ function msMove (evt) {
 	if (dropTo.nodeType==1 && 
 	    (dropTo.getAttribute("blocked")!="true" || hand.parentNode==dropTo) &&
 	    hand.getAttributeNS(topns,"drop")!="none") {
+
 	    // insert grabbed object into mouse pointer target group
 	    setFloating(hand, false);
 	    moveToGroup(hand, dropTo, evt.clientX, evt.clientY);
-	    
+
 	    // verify the winning test during mouse hover
 	    verify(findRoot(hand), false);
 	    
@@ -185,6 +186,8 @@ function moveToGroup(obj, target, x, y) {
         target.appendChild(obj);
     }  catch (e) {
 	// ignore circular insertion due to event race
+	layout(obj);
+	return;
     }
     
     // default position at the cursor
@@ -334,7 +337,7 @@ function getPriority(obj) {
 // Creates a snap-in like effect what dropping operands
 function snap(obj) {
     var back= null;
-    obj.removeAttribute("blocked");
+    var blocked= false;
     for (var i=0; i<obj.childNodes.length; ++i) {
         child= obj.childNodes[i];
         if (child.nodeType==1) {
@@ -356,9 +359,14 @@ function snap(obj) {
 		back.setAttribute("opacity","0.0");
 		
 		if (child.getAttribute("onmousedown")!=null)
-		    obj.setAttribute("blocked","true");
+		    blocked= true;
 	    }
 	}
+    }
+    if (blocked) {
+	obj.setAttribute("blocked","true");
+    } else {
+	obj.removeAttribute("blocked");
     }
 }
 
