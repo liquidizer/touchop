@@ -36,7 +36,7 @@
 <xsl:template match="treble-clef">
   <svg:g id="treble-clef">
     <xsl:call-template name="note-line">
-      <xsl:with-param name="y" select="5"/>
+      <xsl:with-param name="y" select="15"/>
       <xsl:with-param name="count" select="3"/>
     </xsl:call-template>
     <xsl:call-template name="v-notes">
@@ -54,7 +54,7 @@
       <xsl:call-template name="h-notes">
 	<xsl:with-param name="x" select="$x"/>
 	<xsl:with-param name="y" select="0"/>
-	<xsl:with-param name="count" select="5"/>
+	<xsl:with-param name="count" select="7"/>
       </xsl:call-template>
     </svg:g>
     <xsl:call-template name="v-notes">

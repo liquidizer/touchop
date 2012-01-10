@@ -7,6 +7,8 @@
  */
 
 function verify(obj, isFinal) {
+    var a= new Audio("piano-0.mp3");
+    a.play
 }
 
 function snapNote(obj) {
