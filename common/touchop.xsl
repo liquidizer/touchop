@@ -37,7 +37,6 @@
   <html:meta name="apple-mobile-web-app-capable" content="yes" />
 
   <!-- iterate over all xml elements in the source file -->
-  <xsl:comment>List of operators</xsl:comment>
   <xsl:for-each select="*">
     <!-- apply operator translation accoring to the xy attribute -->
     <xsl:element name="svg:g">
@@ -53,7 +52,6 @@
 
   <!-- The emoticon indicates the winning status and links -->
   <!-- back to the index page -->
-  <xsl:comment>Emoticon</xsl:comment>
   <xsl:if test="not(test[@smiley='false'])">
     <svg:g onmousedown="window.history.back()"
 	   ontouchstart="window.history.back()"
@@ -75,7 +73,6 @@
 
 <!-- Generic drop area for operator arguments -->
 <xsl:template name="operand">
-  <xsl:comment>Drop area for operands</xsl:comment>
   <svg:g top:layout="snap(obj)" class="operand">
     <svg:rect height="50" width="50" rx="5" ry="5" class="background"/>
     <xsl:apply-templates/>
@@ -104,7 +101,6 @@
 <!-- TouchOp VARIABLE DEFINITION -->
 <!-- Operators used for variable definition and use -->
 <xsl:template match="def">
-  <xsl:comment>Variable definition</xsl:comment>
   <!-- variable definition is identified by def-@name -->
   <xsl:element name="svg:g">
     <xsl:attribute name="onmousedown">msDown(evt)</xsl:attribute>
@@ -139,7 +135,6 @@
 
 <!-- construct the text element for the winning task -->
 <xsl:template match="test[@domain='algebra']">
-  <xsl:comment>Winning test for the algebra domain</xsl:comment>
   <svg:script type="text/javascript" xlink:href="../../common/algebra.js"/>
   <svg:g transform="translate(50,60)">
     <xsl:element name="svg:text">
@@ -159,7 +154,6 @@
 
 <!-- power operator -->
 <xsl:template match="op[@name='power']">
-  <xsl:comment>Power operator</xsl:comment>
   <svg:g onmousedown="msDown(evt)"
 	   top:value="Math.pow(#1, #2)"
 	   top:priority="91"
@@ -178,7 +172,6 @@
 
 <!-- Multiplication operator -->
 <xsl:template match="op[@name='times']">
-  <xsl:comment>Multiplication operator</xsl:comment>
   <svg:g onmousedown="msDown(evt)"
 	 top:value="#1 * #2"
 	 top:priority="100"
@@ -193,7 +186,6 @@
 
 <!-- Division operator -->
 <xsl:template match="op[@name='divide']">
-  <xsl:comment>Division operator</xsl:comment>
   <svg:g onmousedown="msDown(evt)"
      top:value="#1 / #2"
      top:priority="99"
@@ -211,7 +203,6 @@
 </xsl:template>
 
 <xsl:template match="op[@name='plus']">
-  <xsl:comment>Addition operator</xsl:comment>
   <svg:g onmousedown="msDown(evt)"
      top:layout="horizontalLayout(obj)"
      top:priority="120"
@@ -226,7 +217,6 @@
 
 <!-- substraction operator -->
 <xsl:template match="op[@name='minus']">
-  <xsl:comment>Substraction operator</xsl:comment>
   <svg:g onmousedown="msDown(evt)"
      top:layout="horizontalLayout(obj)"
      top:priority="111"
@@ -243,7 +233,6 @@
 
 <!-- substraction operator -->
 <xsl:template match="func">
-  <xsl:comment>Substraction operator</xsl:comment>
   <svg:g onmousedown="msDown(evt)"
      top:layout="horizontalLayout(obj)"
      top:priority="0">
@@ -276,13 +265,11 @@
 
 <!-- Import the verify function for the plotting domain -->
 <xsl:template match="test[@domain='plot']">
-  <xsl:comment>Create formulas according to a reference plot</xsl:comment>
   <svg:script type="text/javascript" xlink:href="../../common/plot.js"/>
 </xsl:template>
 
 <!-- Create a canvas for the plotted graph -->
 <xsl:template match="canvas">
-  <xsl:comment>Plotting canvas</xsl:comment>
   <svg:clipPath id="canvasClip"><svg:use xlink:href="#canvasFrame"/></svg:clipPath>
   <xsl:element name="svg:rect">
     <xsl:attribute name="id">canvasFrame</xsl:attribute>
@@ -301,6 +288,7 @@
     <xsl:attribute name="top:ymax"><xsl:value-of select="@ymax"/></xsl:attribute>
     <xsl:variable name="xscale" select="@size div (@xmax - @xmin)"/>
     <xsl:variable name="yscale" select="@size div (@ymax - @ymin)"/>
+    <!-- Control points for the winning test -->
     <xsl:for-each select="point">
       <xsl:element name="svg:circle">
 	<xsl:attribute name="class">graph</xsl:attribute>
@@ -315,6 +303,7 @@
 	<xsl:attribute name="top:y"><xsl:value-of select="@y"/></xsl:attribute>
       </xsl:element>
     </xsl:for-each>
+    <!-- Turtle symbol -->
     <xsl:if test="turtle">
       <xsl:element name="svg:g">
 	<xsl:attribute name="transform">
@@ -327,28 +316,31 @@
 	<svg:path id="turtle" d="M 0,-5 l 12,5, -12,5 Z"/>
       </xsl:element>
     </xsl:if>
+    <!-- A path for graphs and tutrle trajectories -->
     <svg:path id="plotpath"/>
   </xsl:element>
 
-  <!-- compute grid resolution -->
+  <!-- compute y-grid resolution -->
   <xsl:variable name="yres">
     <xsl:call-template name="resolution">
       <xsl:with-param name="span" select="@ymax - @ymin"/>
     </xsl:call-template>
   </xsl:variable>
-  <!-- call grid creation -->
+
+  <!-- call y-grid creation -->
   <xsl:call-template name="ygrid">
     <xsl:with-param name="pos" select="ceiling(@ymin div $yres) * $yres"/>
     <xsl:with-param name="res" select="$yres"/>
   </xsl:call-template>
 
-  <!-- compute grid resolution -->
+  <!-- compute x-grid resolution -->
   <xsl:variable name="xres">
     <xsl:call-template name="resolution">
       <xsl:with-param name="span" select="@xmax - @xmin"/>
     </xsl:call-template>
   </xsl:variable>
-  <!-- call grid creation -->
+
+  <!-- call x-grid creation -->
   <xsl:call-template name="xgrid">
     <xsl:with-param name="pos" select="ceiling(@xmin div $xres) * $xres"/>
     <xsl:with-param name="res" select="$xres"/>
@@ -421,7 +413,6 @@
 
 <!-- Import the verify function for the plotting domain -->
 <xsl:template match="test[@domain='turtle']">
-  <xsl:comment>Move a turtle to specified goal</xsl:comment>
   <svg:script type="text/javascript" xlink:href="../../common/turtle.js"/>
   <defs>
     <svg:path id="half-right" class="move"
@@ -504,7 +495,6 @@
 <!-- TOUCHOP - IMAGE PROCESSING DOMAIN -->
 <!-- Special operators for image processing and image synthesis -->
 <xsl:template match="test[@domain='image']">
-  <xsl:comment>Image processing</xsl:comment>
   <svg:script type="text/javascript" xlink:href="../../common/image.js"/>
   <svg:g transform="translate(10,10)">
     <xsl:element name="svg:image">
@@ -598,26 +588,4 @@
     </xsl:element>
   </xsl:for-each>
 </xsl:template>
-
-<!-- TOUCHOP - MUSICAL SCORE DOMAIN -->
-<!-- Special musical score setting -->
-<xsl:template match="test[@domain='music']">
-  <svg:script type="text/javascript" xlink:href="../../common/music.js"/>
-</xsl:template>
-
-<xsl:template match="note">
-  <xsl:element name="svg:g">
-    <xsl:attribute name="onmousedown">msDown(evt)</xsl:attribute>
-    <svg:text y="-20" x="-5" transform="scale(2)">&#x266A;</svg:text>
-  </xsl:element>
-</xsl:template>
-
-<!-- Drop area for musical notes -->
-<xsl:template match="vclef">
-  <svg:g top:layout="snapNote(obj)" class="operand">
-      <svg:rect height="10" width="50" rx="5" ry="5" class="background"/>
-  </svg:g>
-</xsl:template>
-  
-
 </xsl:stylesheet>

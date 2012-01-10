@@ -11,7 +11,7 @@ function verify(obj, isFinal) {
 
 function snapNote(obj) {
     var back= null;
-    obj.removeAttribute("blocked");
+    var blocked= false;
     for (var i=0; i<obj.childNodes.length; ++i) {
         child= obj.childNodes[i];
         if (child.nodeType==1) {
@@ -24,14 +24,19 @@ function snapNote(obj) {
 		var box1= back.getBBox();
 		var box2= child.getBBox();
 
-		m.e = 0.5*box2.width;
-		m.f = 0.5*box2.height;
+		m.e = 0.5*box1.width;
+		m.f = 0.5*box1.height;
 		setTransform(child, m);
 
 		if (child.getAttribute("onmousedown")!=null)
-		    obj.setAttribute("blocked","true");
+		    blocked= true;
 	    }
 	}
     }
-    obj.parentNode.appendChild(obj);
+    if (blocked) {
+	obj.setAttribute("blocked","true");
+	obj.parentNode.parentNode.appendChild(obj.parentNode);
+    } else {
+	obj.removeAttribute("blocked");
+    }
 }

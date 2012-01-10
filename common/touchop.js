@@ -29,7 +29,7 @@ window.onload = function() {
 function deepLayout(obj, doFloat) {
     if (obj.nodeType==1 && obj.getAttribute("display")!="none") {
         // layout children
-        var isObj= obj.getAttribute("onmousedown")=="msDown(evt)";
+        var isObj= /msDown/.test(obj.getAttribute("onmousedown"));
 	if (isObj) {
 	    obj.setAttribute("ontouchstart", obj.getAttribute("onmousedown"));
 	}
@@ -71,17 +71,20 @@ function translateTouch(evt) {
 }
 
 // msDown is called whenever the mouse button is pressed anywhere on the root document.
-function msDown (evt) {
+function msDown (evt, notsticky) {
     if (hand==null && evt.target!=null) {
         // find signaling object
 	evt= translateTouch(evt);
 	touchOnly= evt.isTouch;
 
 	var grabbed= evt.target;
-	while (grabbed.getAttribute("onmousedown")!="msDown(evt)") {
+	while (!/msDown/.test(grabbed.getAttribute("onmousedown"))) {
 	    grabbed= grabbed.parentNode;
 	}
 	hand= grabbed;
+
+	if (notsticky)
+	    hand.setAttribute("pointer-events","none");
 
 	// store mouse position. Will be updated when mouse moves.
 	startPos= [evt.clientX, evt.clientY];
@@ -499,7 +502,7 @@ function longClickAction(x, y) {
 function findRoot(obj) {
     var root= obj;
     while (obj!=null && obj.nodeType==1) {
-	if (obj.getAttribute("onmousedown")=="msDown(evt)")
+	if (/msDown/.test(obj.getAttribute("onmousedown")))
 	    root= obj;
 	obj= obj.parentNode;
     }
