@@ -97,3 +97,14 @@ text.axes {
     opacity: 0.5;
     pointer-events:none;
 }
+
+.playback .note {
+    fill: #CC0000;
+    stroke: black;
+    stroke-width: 1;
+}
+
+.note {
+    pointer-events: none;
+}
+
