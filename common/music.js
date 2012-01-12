@@ -6,6 +6,10 @@
  * of the GPL (http://www.gnu.org/licenses/gpl.html)
  */
 
+var codec="mp3";
+if ((new Audio("")).canPlayType('audio/ogg')) {
+    codec="ogg";
+}
 function verify(obj, isFinal) {
     if (isFinal) {
 	while (obj.getAttribute("id")!="clef") {
@@ -70,7 +74,7 @@ function synthesizeSample(obj) {
 		var note= getNote(child);
 		if (note) {
 		    var time= note.getAttributeNS(topns, "time");
-		    var audio= new Audio("ding.wav");
+		    var audio= new Audio("piano-"+pitch+"."+codec);
 		    audio.load();
 		    sound.push([eval(time),note,audio]);
 		}
