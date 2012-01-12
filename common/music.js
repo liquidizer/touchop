@@ -6,18 +6,23 @@
  * of the GPL (http://www.gnu.org/licenses/gpl.html)
  */
 
-var ding= new Audio("ding.wav");
 function verify(obj, isFinal) {
     if (isFinal) {
-	sound= synthesize();
-	playSound(sound, 0);
+	while (obj.getAttribute("id")!="clef") {
+	    obj= obj.parentNode;
+	    if (obj.nodeType!=1) return;
+	}
+	sound= synthesize(obj);
+	playSound(sound, 0, 0);
     }
 }
 
 function playSound(sound, index) {
     if (index>0) {
 	for (var j=0; j<sound[index-1].length; ++j) {
-	    var obj= sound[index-1][j][2];
+	    var audio= sound[index-1][j][2];
+	    audio.pause();
+	    var obj= sound[index-1][j][1];
 	    obj.removeAttribute("class");
 	}
     }
@@ -25,22 +30,24 @@ function playSound(sound, index) {
 	var time= 0;
 	for (var j=0; j<sound[index].length; ++j) {
 	    var tune= sound[index][j];
-	    tune[2].setAttribute("class","playback");
-	    time= Math.max(tune[1], time);
+	    tune[1].setAttribute("class","playback");
+	    time= Math.max(tune[0], time);
+	    tune[2].play();
 	}
 	if (time==0)
 	    playSound(sound,index+1);
 	else {
 	    // play sound and schedule next tune
-	    ding.play();
-	    setTimeout(function () { playSound(sound, index+1); },
-		       2000/time);
+	    time= 2000/time;
+	    sound[index][0][2].onplay= function() {
+		setTimeout(function() {
+		    playSound(sound, index+1); }, time);
+	    };
 	}
     }
 }
 
-function synthesize() {
-    var clef= document.getElementById("clef");
+function synthesize(clef) {
     var sound= [];
     for (var i=0; i<clef.childNodes.length; ++i) {
 	var child= clef.childNodes[i];
@@ -63,7 +70,9 @@ function synthesizeSample(obj) {
 		var note= getNote(child);
 		if (note) {
 		    var time= note.getAttributeNS(topns, "time");
-		    sound.push([eval(pitch),eval(time),note]);
+		    var audio= new Audio("ding.wav");
+		    audio.load();
+		    sound.push([eval(time),note,audio]);
 		}
 	    }
 	}
