@@ -6,10 +6,17 @@
  * of the GPL (http://www.gnu.org/licenses/gpl.html)
  */
 
-var codec="mp3";
+// determine the supported audio codec
+var codec;
 if ((new Audio("")).canPlayType('audio/ogg')) {
     codec="ogg";
+} else if ((new Audio("")).canPlayType('audio/mpeg')) {
+    codec="mp3";
+} else {
+    alert("Your device does not support audio playback");
 }
+
+// play the notated melody
 function verify(obj, isFinal) {
     if (isFinal) {
 	while (obj.getAttribute("id")!="clef") {
@@ -17,12 +24,47 @@ function verify(obj, isFinal) {
 	    if (obj.nodeType!=1) return;
 	}
 	sound= synthesize(obj);
-	playSound(sound, 0, 0);
+	soundCheck(sound);
+	playSound(sound, 0, 10);
     }
 }
 
-function playSound(sound, index) {
+// extract sound string for win verification
+function soundCheck(sound) {
+    var str="";
+    for (var i=0; i<sound.length; ++i) {
+	if (i>0) str= str+",";
+	for (var j=0; j<sound[i].length; ++j) {
+	    if (j>0) str= str+" ";
+	    str= str+ sound[i][j][4];
+	}
+    }
+    var win= document.getElementById("test").getAttributeNS(topns,"win");
+    if (str==win)
+	smile(1.0);
+    else
+	smile(0.0);
+    return str;
+}
+
+// play a list of notes
+function playSound(sound, index, retry) {
+    if (index==0) {
+	// check if all tunes are ready to play
+	var canplay= true;
+	for (var j=0; j<sound.length; ++j) {
+	    canplay = canplay && sound[j][0][3];
+	}
+	if (!canplay) {
+	    if (retry>0)
+		setTimeout(function(){ playSound(sound,0,retry-1); }, 200);
+	    else
+		console.log("Timeout: could not load sound files");
+	    return;
+	}
+    }
     if (index>0) {
+	// clear the playback marker from the last played note
 	for (var j=0; j<sound[index-1].length; ++j) {
 	    var audio= sound[index-1][j][2];
 	    audio.pause();
@@ -31,52 +73,56 @@ function playSound(sound, index) {
 	}
     }
     if (index<sound.length) {
-	var time= 0;
+	// play the next note
+	var time= 1;
 	for (var j=0; j<sound[index].length; ++j) {
 	    var tune= sound[index][j];
 	    tune[1].setAttribute("class","playback");
 	    time= Math.max(tune[0], time);
 	    tune[2].play();
 	}
-	if (time==0)
-	    playSound(sound,index+1);
-	else {
-	    // play sound and schedule next tune
-	    time= 2000/time;
-	    sound[index][0][2].onplay= function() {
-		setTimeout(function() {
-		    playSound(sound, index+1); }, time);
-	    };
-	}
+	// play sound and schedule next tune
+	time= 2000/time;
+	setTimeout(function() { playSound(sound, index+1); }, time);
     }
 }
 
+// get a list of sound samples from the score
 function synthesize(clef) {
     var sound= [];
     for (var i=0; i<clef.childNodes.length; ++i) {
 	var child= clef.childNodes[i];
 	if (child.nodeType==1) {
 	    var name= child.getAttributeNS(topns, "name");
-	    if (name=="sample")
-		sound.push(synthesizeSample(child));
+	    if (name=="sample") {
+		var sample= synthesizeSample(child);
+		if (sample.length>0)
+		    sound.push(sample);
+	    }
 	}
     }
     return sound;
 }
 
+// get a list of notes for one sample
 function synthesizeSample(obj) {
     var sound= [];
     for (var i=0; i<obj.childNodes.length; ++i) {
 	var child= obj.childNodes[i];
 	if (child.nodeType==1) {
-	    var pitch= child.getAttributeNS(topns, "pitch");
-	    if (pitch!="") {
+	    var pitch= eval(child.getAttributeNS(topns, "pitch"));
+	    if (pitch) {
 		var note= getNote(child);
 		if (note) {
-		    var time= note.getAttributeNS(topns, "time");
+		    var time= eval(note.getAttributeNS(topns, "time"));
 		    var audio= new Audio("piano-"+pitch+"."+codec);
+		    var str= formatNote(pitch+1, time);
+		    var tune= [time, note, audio, false, str];
+		    audio.addEventListener("canplay", function () { 
+			    tune[3]=true; }, false);
+		    audio.preload= true;
 		    audio.load();
-		    sound.push([eval(time),note,audio]);
+		    sound.push(tune);
 		}
 	    }
 	}
@@ -84,6 +130,11 @@ function synthesizeSample(obj) {
     return sound;
 }
 
+function formatNote(pitch, time) {
+    return String.fromCharCode(97 + (pitch % 7))+Math.floor((pitch-2) / 7)+"/"+time;
+}
+
+// get the note element for the sample
 function getNote(obj) {
     for (var i=0; i<obj.childNodes.length; ++i) {
 	var child= obj.childNodes[i];
@@ -99,7 +150,7 @@ function getNote(obj) {
     return null;
 }
 
-
+// Layout function for snapping notes to score lines
 function snapNote(obj) {
     var back= null;
     var blocked= false;
