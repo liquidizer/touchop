@@ -157,23 +157,20 @@ function msMove (evt) {
 	}
         else if (dropTo != hand.parentNode) {
 	    // object can not be dropped let it move
-	    var isTop= hand == findRoot(hand);
-	    if (isTop || !isTop && dist>30) {
-		sendHome(hand);
+	    sendHome(hand);
 	    
-		// switch to screen coordinate system
-		var m= hand.parentNode.getScreenCTM().inverse();
-		// translate by screen coordinates
-		m= m.translate(dx,dy);
-		// transform bock to local coordinate system
-		m= m.multiply(hand.getScreenCTM());
-		// apply transformation
-		setTransform(hand, m);
-
-		// offset snap region
-		startPos= [evt.clientX, evt.clientY];
-		hasMoved= true;
-	    }
+	    // switch to screen coordinate system
+	    var m= hand.parentNode.getScreenCTM().inverse();
+	    // translate by screen coordinates
+	    m= m.translate(dx,dy);
+	    // transform bock to local coordinate system
+	    m= m.multiply(hand.getScreenCTM());
+	    // apply transformation
+	    setTransform(hand, m);
+	    
+	    // offset snap region
+	    startPos= [evt.clientX, evt.clientY];
+	    hasMoved= true;
         }
     }
 }

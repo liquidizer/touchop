@@ -39,6 +39,9 @@ d="M90.5625 318.0938 Q90.5625 330.8906 76.0781 337.6406 Q64.9688 342.7031 50.343
     <xsl:attribute name="id">test</xsl:attribute>
     <xsl:attribute name="top:win"><xsl:value-of select="@win"/></xsl:attribute>
     <xsl:attribute name="top:src"><xsl:value-of select="@src"/></xsl:attribute>
+    <xsl:attribute name="onclick">playSample()</xsl:attribute>
+    <xsl:attribute name="ontouchstart">playSample()</xsl:attribute>
+    <svg:path d="M 20,20 l 70,30 l -70,30 Z" fill="olive"/>
   </xsl:element>
 	       
 </xsl:template>
@@ -62,7 +65,6 @@ d="M90.5625 318.0938 Q90.5625 330.8906 76.0781 337.6406 Q64.9688 342.7031 50.343
 <!-- Drop area for musical notes -->
 <xsl:template match="treble-clef">
   <svg:g id="clef">
-    <svg:use xlink:href="#treble-clef-symbol"/>
     <xsl:call-template name="note-line">
       <xsl:with-param name="y" select="25"/>
       <xsl:with-param name="count" select="5"/>
@@ -71,6 +73,7 @@ d="M90.5625 318.0938 Q90.5625 330.8906 76.0781 337.6406 Q64.9688 342.7031 50.343
       <xsl:with-param name="x" select="80"/>
       <xsl:with-param name="count" select="@len"/>
     </xsl:call-template>
+    <svg:use xlink:href="#treble-clef-symbol"/>
   </svg:g>
 </xsl:template>
 

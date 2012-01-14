@@ -7,17 +7,38 @@
  */
 
 // determine the supported audio codec
-var codec;
-if ((new Audio("")).canPlayType('audio/ogg')) {
-    codec="ogg";
-} else if ((new Audio("")).canPlayType('audio/mpeg')) {
-    codec="mp3";
-} else {
-    alert("Your device does not support audio playback");
+var currentPlay= 0;
+var codec= getCodec();
+
+function getCodec() {
+    var audio= new Audio("");
+    if (audio.canPlayType('audio/ogg')) {
+	codec="ogg";
+    } else if (audio.canPlayType('audio/mpeg')) {
+	codec="mp3";
+    } else {
+	alert("Your device does not support audio playback");
+    }
+    for (var j=1; j<=13; ++j) {
+	audio= new Audio("snd/piano-"+j+"."+codec);
+	audio.load();
+    }
+    playSample();
+    return codec;
+}
+
+
+// play the reference sample
+function playSample() {
+    var obj= document.getElementById("test");
+    var src= obj.getAttributeNS(topns, "src");
+    var audio2= new Audio(src+"."+codec);
+    audio2.play();
 }
 
 // play the notated melody
 function verify(obj, isFinal) {
+    currentPlay= currentPlay + 1;
     if (isFinal) {
 	while (obj.getAttribute("id")!="clef") {
 	    obj= obj.parentNode;
@@ -25,7 +46,7 @@ function verify(obj, isFinal) {
 	}
 	sound= synthesize(obj);
 	soundCheck(sound);
-	playSound(sound, 0, 10);
+	playSound(sound, 0, currentPlay, 20);
     }
 }
 
@@ -48,21 +69,7 @@ function soundCheck(sound) {
 }
 
 // play a list of notes
-function playSound(sound, index, retry) {
-    if (index==0) {
-	// check if all tunes are ready to play
-	var canplay= true;
-	for (var j=0; j<sound.length; ++j) {
-	    canplay = canplay && sound[j][0][3];
-	}
-	if (!canplay) {
-	    if (retry>0)
-		setTimeout(function(){ playSound(sound,0,retry-1); }, 200);
-	    else
-		console.log("Timeout: could not load sound files");
-	    return;
-	}
-    }
+function playSound(sound, index, cur, retry) {
     if (index>0) {
 	// clear the playback marker from the last played note
 	for (var j=0; j<sound[index-1].length; ++j) {
@@ -70,6 +77,19 @@ function playSound(sound, index, retry) {
 	    audio.pause();
 	    var obj= sound[index-1][j][1];
 	    obj.removeAttribute("class");
+	}
+    }
+    if (currentPlay!=cur)
+	return;
+    if (index==0) {
+	// check if all tunes are ready to play
+	var canplay= true;
+	for (var j=0; j<sound.length; ++j) {
+	    canplay = canplay && sound[j][sound[j].length-1][3];
+	}
+	if (!canplay && retry>0) {
+	    setTimeout(function(){ playSound(sound,0,cur,retry-1); }, 100);
+	    return;
 	}
     }
     if (index<sound.length) {
@@ -83,7 +103,7 @@ function playSound(sound, index, retry) {
 	}
 	// play sound and schedule next tune
 	time= 2000/time;
-	setTimeout(function() { playSound(sound, index+1); }, time);
+	setTimeout(function() { playSound(sound, index+1, cur); }, time);
     }
 }
 
@@ -115,7 +135,7 @@ function synthesizeSample(obj) {
 		var note= getNote(child);
 		if (note) {
 		    var time= eval(note.getAttributeNS(topns, "time"));
-		    var audio= new Audio("piano-"+pitch+"."+codec);
+		    var audio= new Audio("snd/piano-"+pitch+"."+codec);
 		    var str= formatNote(pitch+1, time);
 		    var tune= [time, note, audio, false, str];
 		    audio.addEventListener("canplay", function () { 
@@ -131,7 +151,7 @@ function synthesizeSample(obj) {
 }
 
 function formatNote(pitch, time) {
-    return String.fromCharCode(97 + (pitch % 7))+Math.floor((pitch-2) / 7)+"/"+time;
+    return String.fromCharCode(97 + (pitch % 7))+Math.floor((pitch+5) / 7)+"/"+time;
 }
 
 // get the note element for the sample
