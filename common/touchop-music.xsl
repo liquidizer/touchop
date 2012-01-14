@@ -41,7 +41,9 @@ d="M90.5625 318.0938 Q90.5625 330.8906 76.0781 337.6406 Q64.9688 342.7031 50.343
     <xsl:attribute name="top:src"><xsl:value-of select="@src"/></xsl:attribute>
     <xsl:attribute name="onclick">playSample()</xsl:attribute>
     <xsl:attribute name="ontouchstart">playSample()</xsl:attribute>
+    <svg:path d="M 22,24 l 70,30 l -70,30 Z" class="shadow"/>
     <svg:path d="M 20,20 l 70,30 l -70,30 Z" fill="olive"/>
+    <svg:text x="22" y="69" fill="white">?</svg:text>
   </xsl:element>
 	       
 </xsl:template>
