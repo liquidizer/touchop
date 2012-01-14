@@ -54,11 +54,12 @@ function verify(obj, isFinal) {
 function soundCheck(sound) {
     var str="";
     for (var i=0; i<sound.length; ++i) {
-	if (i>0) str= str+",";
+	if (i>0) str= str+" ";
+	var tunes=[];
 	for (var j=0; j<sound[i].length; ++j) {
-	    if (j>0) str= str+" ";
-	    str= str+ sound[i][j][4];
+	    tunes.push(sound[i][j][4]);
 	}
+	str=str + tunes.sort();
     }
     var win= document.getElementById("test").getAttributeNS(topns,"win");
     if (str==win)
@@ -74,7 +75,6 @@ function playSound(sound, index, cur, retry) {
 	// clear the playback marker from the last played note
 	for (var j=0; j<sound[index-1].length; ++j) {
 	    var audio= sound[index-1][j][2];
-	    audio.pause();
 	    var obj= sound[index-1][j][1];
 	    obj.removeAttribute("class");
 	}
