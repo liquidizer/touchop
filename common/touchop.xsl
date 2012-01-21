@@ -324,6 +324,7 @@
 	  <xsl:text>,</xsl:text>
 	  <xsl:value-of select="(@ymax - 0) div (@ymax - @ymin) * @size"/>
 	  <xsl:text>)</xsl:text>
+	  <xsl:text> rotate(-90)</xsl:text>
 	</xsl:attribute>
 	<svg:path id="turtle" d="M 0,-5 l 12,5, -12,5 Z"/>
       </xsl:element>
