@@ -61,8 +61,13 @@ function soundCheck(sound) {
 	}
 	str=str + tunes.sort();
     }
+    var hash=0;
+    for (var i=0; i<str.length; ++i) {
+	hash= (hash*11311 + str.charCodeAt(i)) % 1000000;
+    }
+    console.log(str+" -> "+hash);
     var win= document.getElementById("test").getAttributeNS(topns,"win");
-    if (str==win)
+    if (str==win || hash==win)
 	smile(1.0);
     else
 	smile(0.0);
