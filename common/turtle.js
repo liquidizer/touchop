@@ -13,13 +13,15 @@ var path= null;
 var win= false;
 var winList= [];
 var turtleStack=[];
+var running= false;
 
 function verify(obj, isFinal) {
     if (isFinal && isValid(obj)) {
 	resetTurtle();
 	turtleStack=[obj];
 	// check, if something is already executed
-	if (current==null) {
+	if (!running) {
+	    running= true;
 	    current= obj;
 	    executeNext();
 	} else {
@@ -61,7 +63,13 @@ function resetPlaybackStyle(obj) {
 // execute the next command
 function executeNext() {
     if (current==null) {
-	if (!win) smile(0.0);
+	if (!win) {
+	    smile(0.0);
+	    setTimeout(function() {
+		    if (!running) resetTurtle();
+		}, 1000);
+	}
+	running= false;
 	return;
     }
     if (current.nodeType==1) {
