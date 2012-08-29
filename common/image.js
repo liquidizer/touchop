@@ -86,7 +86,7 @@ function updateFilter(obj) {
 function fillFilter(obj, filter) {
     if (filter!=null) {
 	var use= obj.getAttributeNS(topns,"use");
-	if (use!="") {
+	if (use) {
 	    obj= document.getElementById("def-"+use);
 	    if (isValid(obj))
 		fillFilter(obj, filter);

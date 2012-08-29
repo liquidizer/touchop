@@ -38,9 +38,7 @@ function deepLayout(obj, doFloat) {
         }
         // call layout function if available
         var command= obj.getAttributeNS(topns,"layout");
-        if (command!="") {
-            eval(command);
-        }
+	command && eval(command);
 
 	// set Floating
 	setFloating(obj, doFloat);
@@ -244,7 +242,7 @@ function layout(element) {
     var ctm1= obj.getCTM();
     do {
         command= obj.getAttributeNS(topns,"layout");
-        if (command!="") {
+        if (command) {
             top= obj;
             eval(command);
         }
@@ -269,7 +267,7 @@ function layout(element) {
 function insertParenthesis(obj) {
     // check if object has priority attribute
     var myPrio= obj.getAttributeNS(topns, "priority");
-    if (myPrio!="") {
+    if (myPrio) {
         // myPrio is the operations priority
         myPrio= parseInt(myPrio);
 	if ((myPrio&1)==1)
@@ -315,7 +313,7 @@ function insertParenthesis(obj) {
 // whether parenthesis are required.
 function getPriority(obj) {
     var prio= obj.getAttributeNS(topns, "priority");
-    if (prio!="") {
+    if (prio) {
         return parseInt(prio);
     } else {
         for (var i=0; i<obj.childNodes.length; ++i) {
@@ -382,7 +380,7 @@ function verticalLayout(obj) {
 // centered in the other axis.
 function boxLayout(obj, horizontal) {
     var padding=5;
-    if (obj.getAttributeNS(topns, "padding")!="")
+    if (obj.getAttributeNS(topns, "padding"))
         padding= parseInt(obj.getAttributeNS(topns, "padding"));
 
     var back= null;

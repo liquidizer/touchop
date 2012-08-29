@@ -3,22 +3,20 @@ var total= 0;
 
 function update(evt) {
     // show persistent success emoticons if the page is delivered as html5
-    if (window.location.hostname!="") {
-	var levels= document.getElementById("levels");
-	
-	// refresh level state
-	passed=0;
-	total=0;
-	updateStyle(levels);
-	if (passed==total)
-	    passed="PASSED";
-	else
-	    passed=passed+"/"+total;
+    var levels= document.getElementById("levels");
+    
+    // refresh level state
+    passed=0;
+    total=0;
+    updateStyle(levels);
+    if (passed==total)
+	passed="PASSED";
+    else
+	passed=passed+"/"+total;
 
-	// persist level state
-	var key= window.location.pathname;
-	window.localStorage.setItem(key,passed);
-    }
+    // persist level state
+    var key= window.location.pathname;
+    window.localStorage.setItem(key,passed);
 }
 
 function updateStyle(obj) {

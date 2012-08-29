@@ -91,7 +91,7 @@ function executeNext() {
 	    return;
 	}
 	var value= current.getAttributeNS(topns, "value");
-	if (value!="") {
+	if (value) {
 	    if (current.getAttribute("class")=="playback") {
 		move(value);
 		current.setAttribute("class","");
@@ -105,16 +105,16 @@ function executeNext() {
 	// repetition
 	var rep= current.getAttributeNS(topns,"repeat");
 	if (state==null) {
-	    if (rep=="")
-		state= 1;
-	    else
+	    if (rep)
 		state= rep;
+	    else
+		state= 1;
 	}
 	current.setAttribute("state",state -1);
 
 	// function call
 	var use= current.getAttributeNS(topns, "use");
-	if (use!="") {
+	if (use) {
 	    var target= document.getElementById("def-"+use);
 	    current.setAttribute("class","playback");
 	    resetPlaybackStyle(target);

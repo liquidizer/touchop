@@ -10,7 +10,7 @@
 function computeValue(obj) {
     // check for redirections
     var use= obj.getAttributeNS(topns, "use");
-    if (use!="") {
+    if (use) {
 	obj= document.getElementById("def-"+use);
 	if (obj.getAttribute("class")!="valid")
 	    return null;
@@ -26,14 +26,14 @@ function computeValue(obj) {
 	    // if the child node has a value, compute it and 
 	    // store in the argument list.
 	    var sub= computeValue(obj.childNodes[i]);
-	    if (sub!="") {
+	    if (sub) {
 		args[args.length]= sub;
 	    }
 	}
     }
 
     // if value is a formula of child values
-    if (value.indexOf("#")>=0) {
+    if (value && value.indexOf("#")>=0) {
         // replace #n substrings with appropriate sub values
         for (var i=0; i<args.length; ++i) {
             value= value.replace("#"+(i+1), args[i]);

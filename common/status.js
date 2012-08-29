@@ -26,18 +26,18 @@ function status(msg) {
 
 }
 
-function path(obj) {
+function pathstr(obj) {
     if (obj==null || obj.nodeType!=1) {
 	return "";
     } else {
 	var str= obj.nodeName;
 	str= str.replace(/^svg:/,"");
-	if (obj.getAttribute("class")!=null)
+	if (obj.getAttribute("class"))
 	    str=str+"."+obj.getAttribute("class");
 	var v= obj.getAttributeNS(topns,'value');
-	if (v!="")
+	if (v)
 	    str= str+"="+v;
-	return path(obj.parentNode)+"/"+str;
+	return pathstr(obj.parentNode)+"/"+str;
     }
 }
 

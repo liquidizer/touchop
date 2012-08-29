@@ -10,7 +10,6 @@ function plot(elt_x, elt_y) {
     // remove old plot
     var win = true;
     var path= document.getElementById("plotpath");
-    path.setAttribute("d","");
 
     // build plot function
     if (elt_x==null) {
@@ -129,7 +128,7 @@ function isBetween(ax, ay, bx, by, cx, cy) {
 function computeValue(obj) {
     // check for redirections
     var use= obj.getAttributeNS(topns, "use");
-    if (use!="") {
+    if (use) {
 	obj= document.getElementById("def-"+use);
     }
 
@@ -143,9 +142,9 @@ function computeValue(obj) {
 	    // if the child node has a value, compute it and 
 	    // store in the argument list.
 	    var sub= computeValue(obj.childNodes[i]);
-	    if (sub!="") {
+	    if (sub) {
 		sub= "("+sub+")";
-		if (value=="") {
+		if (!value) {
 		    sub= sub.replace(/\u03c0/,Math.PI);
 		    return sub;
 		} else {
@@ -154,20 +153,28 @@ function computeValue(obj) {
 	    }
 	}
     }
-    if (value.match(/#/)) throw "incomplete";
+    if (value && value.match(/#/)) throw "incomplete";
     return value;
 }
 
 // verify whether the new object satisfies the winning test
 function verify(obj, isFinal) {
-    if (isFinal && obj.getAttributeNS(topns, "def")!="") {
+    if (isFinal && obj.getAttributeNS(topns, "def")) {
 	var elt_x= document.getElementById("def-x");
 	var elt_y= document.getElementById("def-y");
 	try {
 	    if ((elt_x==null || isValid(elt_x))
 		&& isValid(elt_y))
 		plot(elt_x, elt_y);
+	    else {
+		document.getElementById("plotpath")
+		.setAttribute("d","m 0 0");
+	    }
+
 	} catch (e) {
+	    status(e.toString());
+	    status(e.fileName);
+	    status(e.lineNumber);
 	    if (e!="incomplete") throw e;
 	}
     }

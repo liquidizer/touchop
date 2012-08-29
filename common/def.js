@@ -75,7 +75,7 @@ function checkIsValid(obj, list) {
 
     // check cyclic definition
     var use= obj.getAttributeNS(topns, "use");
-    if (use!="") {
+    if (use) {
 	for (i=0; i<list.length; ++i) {
 	    if (use==list[i]) {
 		throw "cycle";
@@ -87,7 +87,7 @@ function checkIsValid(obj, list) {
 
     // check definitions for cycles
     var name= obj.getAttributeNS(topns, "def");
-    if (name!="")
+    if (name)
 	list= list.concat([name]);
 
     // recurse over child elements
