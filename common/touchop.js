@@ -206,7 +206,7 @@ function moveToGroup(obj, target, x, y) {
 // The draged object is inserted into its home group and the transformation is adjusted
 function sendHome(obj) {
     // move this object to the root element
-    var target= document.lastChild;
+    var target= document.firstChild;
     if (obj.parentNode != target) {
 
 	// store the current location
