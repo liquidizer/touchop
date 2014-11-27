@@ -95,11 +95,9 @@
     <xsl:attribute name="rx">5</xsl:attribute>
     <xsl:attribute name="ry">5</xsl:attribute>
   </xsl:element>
-  <xsl:element name="svg:text">
-    <xsl:attribute name="transform">translate(15,45)</xsl:attribute>
-    <xsl:attribute name="class">atom</xsl:attribute>
+  <svg:text transform="translate(15,45)" class="atom">
     <xsl:value-of select="$name"/>
-  </xsl:element>
+  </svg:text> 
 </xsl:template>
 
 <!-- TouchOp VARIABLE DEFINITION -->
@@ -155,6 +153,20 @@
 	<xsl:value-of select="text()"/>
       </xsl:if>
     </xsl:element>
+  </svg:g>
+</xsl:template>
+
+<!-- Trivial operator -->
+<xsl:template match="target">
+  <xsl:comment>Simple drop target</xsl:comment>
+  <svg:g
+   onmousedown="msDown(evt)"
+	 top:value="{@value} == #1"
+	 top:priority="100"
+	 top:layout="horizontalLayout(obj)">
+    <svg:rect class="background" rx="5" ry="5"/>
+    <svg:text><xsl:value-of select="@value"/>=</svg:text>
+    <xsl:call-template name="operand"/>
   </svg:g>
 </xsl:template>
 
