@@ -24,7 +24,107 @@
 	 viewBox="0 0 60 60">
   <svg:title>Touchop</svg:title>
 
-  <svg:style type="text/css">@import url('../../common/style.css');</svg:style>
+  <svg:style type="text/css">
+text {
+    font-size: 48px;
+}
+.atom {
+    text-anchor: middle;
+}
+.background {
+    fill: deepskyblue;
+    stroke: #00B0E0;
+    stroke-width: 1;
+}
+
+.playback .background {
+    fill: #CC0000;
+    stroke: black;
+    stroke-width: 2;
+}
+
+.invalid .background {
+    fill: lightgray;
+    stroke: gray;
+    stroke-width: 1;
+}
+.valid .background {
+    fill: DarkSeaGreen;
+}
+
+.program .background {
+    stroke: black;
+    stroke-width: 1px;
+}    
+
+.program > text {
+    font-size: 12pt;
+}
+
+.image > .background {
+    stroke: black;
+    stroke-width: 1px;
+    fill: lightgray;
+}    
+
+.image text {
+    font-size: 12pt;
+}
+
+.shadow {
+    fill: black;
+    opacity: 0.4;
+}
+
+.operand > .background {
+    fill: #ffffe0;
+    stroke: black;
+}
+
+#plotpath {
+    fill: none;
+    stroke: blue;
+    stroke-width: 3px;
+}
+
+path.axes {
+    fill: none;
+    stroke: black;
+    stroke-width: 0.5px;
+}
+
+circle.graph {
+    fill: navy;
+    stroke: #000000;
+    opacity: 0.9;
+    stroke-width: 1px;
+}
+
+rect.canvas {
+    fill: none;
+    stroke: #000000;
+    stroke-width: 1px;
+}
+
+text.axes {
+    font-size: 10pt;
+    text-anchor: middle;
+}
+
+#turtle {
+    fill: red;
+    stroke: #000000;
+    stroke-width: 1px;
+}
+
+.move {
+    fill:white;
+    stroke:black;
+    stroke-width:2;
+    opacity: 0.5;
+    pointer-events:none;
+}
+</svg:style>
 
   <!-- iterate over all xml elements in the source file -->
   <xsl:comment>List of operators</xsl:comment>

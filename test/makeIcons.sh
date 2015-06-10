@@ -1,3 +1,4 @@
+#!/bin/bash
 X="`find -name quest\*xhtml | xargs grep -l canvas | sed -e s/.xhtml//`"
 for file in $X
 do
