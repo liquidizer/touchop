@@ -363,6 +363,9 @@ function snap(obj) {
     } else {
 	obj.removeAttribute("blocked");
     }
+    // vibrate
+    if (hand!=null)
+	navigator.vibrate(10);
 }
 
 // Layouts all child objects horizontally.
