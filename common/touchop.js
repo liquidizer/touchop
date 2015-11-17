@@ -1,7 +1,7 @@
 /* Touchop - Touchable operators
  *
  * Copyright(C) 2008, 2011, Stefan Dirnstorfer
- * This software may be copied, distributed and modified under the terms 
+ * This software may be copied, distributed and modified under the terms
  * of the GPL (http://www.gnu.org/licenses/gpl.html)
  */
 
@@ -19,7 +19,7 @@ var hasMoved= false;
 // position for long click action, after which the top group is selected
 var longClick=[0,0];
 
-// Initialize the touchop framework. 
+// Initialize the touchop framework.
 window.onload = function() {
     // Relayout all objects on the screen
     deepLayout(document.childNodes[0], true);
@@ -114,61 +114,69 @@ function msUp (evt) {
 function releaseHand() {
     // make object receive mouse events again, release grip
     hand.removeAttribute("pointer-events");
-    
+
     // delete reference to hand object.
     hand= null;
 }
 
 // Move the grabbed object "hand" with the mouse
-function msMove (evt) {
-    evt= translateTouch(evt);
-    if (hand!=null) {
+function msMove(evt) {
+    var evt = translateTouch(evt);
+    if (hand != null) {
         // compute relative mouse movements since last call
-        var dx=evt.clientX-startPos[0];
-        var dy=evt.clientY-startPos[1];
-	var dist=Math.abs(dx)+Math.abs(dy);
+        var dx = evt.clientX - startPos[0];
+        var dy = evt.clientY - startPos[1];
+        var dist = Math.abs(dx) + Math.abs(dy);
 
-	// long click action
-	initLongClick(evt.clientX, evt.clientY);
+        // long click action
+        initLongClick(evt.clientX, evt.clientY);
 
-	// check if object can be dropped
-	var dropTo= evt.target;
-	while (dropTo.nodeType==1 && dropTo.getAttribute("class")!="operand")
-	    dropTo= dropTo.parentNode;
-	if (dropTo.nodeType==1 && 
-	    (dropTo.getAttribute("blocked")!="true" || hand.parentNode==dropTo) &&
-	    hand.getAttributeNS(topns,"drop")!="none") {
+        // check if object can be dropped
+        var dropTo;
+        var current = evt.target;
+        while (current.nodeType == 1) {
+            if (current.getAttribute('class') === "operand" &&
+                (current.getAttribute('blocked') !== "true" || current === hand.parentNode))
+              dropTo = current;
+            if (current.getAttribute('class') === "palette")
+              hand.setAttribute('opacity',0.5);
+            if (current === hand)
+              dropTo = undefined;
+            current = current.parentNode;
+        }
+        if (dropTo) {
+            // offset snap region
+            if (dropTo != hand.parentNode)
+                startPos = [evt.clientX, evt.clientY];
+            hasMoved = true;
 
-	    // insert grabbed object into mouse pointer target group
-	    setFloating(hand, false);
-	    moveToGroup(hand, dropTo, evt.clientX, evt.clientY);
+            // insert grabbed object into mouse pointer target group
+            setFloating(hand, false);
+            hand.removeAttribute('opacity');
+            moveToGroup(hand, dropTo, evt.clientX, evt.clientY);
 
-	    // verify the winning test during mouse hover
-	    verify(findRoot(hand), false);
-	    
-	    // offset snap region
-	    startPos= [evt.clientX, evt.clientY];
-	    hasMoved= true;
-	}
+        }
         else if (dropTo != hand.parentNode) {
-	    // object can not be dropped let it move
-	    var isTop= hand == findRoot(hand);
-	    if (isTop || !isTop && dist>30) {
-		sendHome(hand);
-	    
-		// switch to screen coordinate system
-		var m= hand.parentNode.getScreenCTM().inverse();
-		// translate by screen coordinates
-		m= m.translate(dx,dy);
-		// transform bock to local coordinate system
-		m= m.multiply(hand.getScreenCTM());
-		// apply transformation
-		setTransform(hand, m);
+            // object can not be dropped let it move
+            var isTop = hand == findRoot(hand);
+            if (isTop || dist > 30) {
+                // make underlying objects receive mouse events.
+                sendHome(hand);
+                hand.setAttribute('pointer-events','none');
 
-		// offset snap region
-		startPos= [evt.clientX, evt.clientY];
-		hasMoved= true;
-	    }
+                // switch to screen coordinate system
+                var m = hand.parentNode.getScreenCTM().inverse();
+                // translate by screen coordinates
+                m = m.translate(dx, dy);
+                // transform bock to local coordinate system
+                m = m.multiply(hand.getScreenCTM());
+                // apply transformation
+                setTransform(hand, m);
+
+                // offset snap region
+                startPos = [evt.clientX, evt.clientY];
+                hasMoved = true;
+            }
         }
     }
 }
@@ -184,7 +192,7 @@ function moveToGroup(obj, target, x, y) {
 	layout(obj);
 	return;
     }
-    
+
     // default position at the cursor
     if (target.getAttributeNS(topns,"container")=="true") {
 	var m= obj.getScreenCTM();
@@ -193,7 +201,7 @@ function moveToGroup(obj, target, x, y) {
 	m.f= y;
 	setTransform(obj, p.multiply(m));
     }
-    
+
     // layout old and new container
     if (oldContainer!=target) {
 	setTimeout(function() {layout(oldContainer);}, 1);
@@ -206,7 +214,8 @@ function moveToGroup(obj, target, x, y) {
 // The draged object is inserted into its home group and the transformation is adjusted
 function sendHome(obj) {
     // move this object to the root element
-    var target= document.firstChild;
+    var target= obj;
+    while (target.localName!='svg') target=target.parentNode;
     if (obj.parentNode != target) {
 
 	// store the current location
@@ -220,7 +229,7 @@ function sendHome(obj) {
 	var m= obj.getScreenCTM();
 	m.e= m2.e;
 	m.f= m2.f;
-	m= m1.multiply(m); 
+	m= m1.multiply(m);
 
 	// update transformation
 	setTransform(obj, m);
@@ -230,9 +239,6 @@ function sendHome(obj) {
     // make the object float on top
     if (obj!= target.lastChild)
 	target.appendChild(obj);
-
-    // make underlying objects receive mouse events. Will be reverted after mouse up.
-    obj.setAttribute("pointer-events","none");
 }
 
 // Transform element and all containing groups to hold new content
@@ -352,7 +358,7 @@ function snap(obj) {
 
 		// make drop area opaque
 		back.setAttribute("opacity","0.0");
-		
+
 		if (child.getAttribute("onmousedown")!=null)
 		    blocked= true;
 	    }
@@ -364,7 +370,7 @@ function snap(obj) {
 	obj.removeAttribute("blocked");
     }
     // vibrate
-    if (hand!=null)
+    if (hand!=null && navigator.vibrate)
 	navigator.vibrate(10);
 }
 
@@ -399,7 +405,7 @@ function boxLayout(obj, horizontal) {
 	    var opt= child.getAttributeNS(topns, "layoutOpt");
             if (child.getAttribute("class")=="background") {
                 back= child;
-            } else if (back!=null && child.getAttribute("display")!="none" 
+            } else if (back!=null && child.getAttribute("display")!="none"
 		       && child.transform) {
                 // find local coordinate system
 		var m= child.getTransformToElement(obj);
@@ -418,7 +424,7 @@ function boxLayout(obj, horizontal) {
 		    m.f= y - m.d * (box.y + 0.5*box.height)
 			- m.b * (box.x + 0.5*box.width);
 		} else {
-		    m.e= y - m.a * (box.x + 0.5*box.width) 
+		    m.e= y - m.a * (box.x + 0.5*box.width)
 			- m.c * (box.y + 0.5*box.height);
 		    m.f= x - m.d * box.y - Math.min(m.d,0)*box.height;
 		}
@@ -452,7 +458,7 @@ function boxLayout(obj, horizontal) {
 	if (horizontal)
             scaleRect(back, x0-padding, x, y-h/2, y+h/2);
 	else
-	    scaleRect(back, y-h/2, y+h/2, x0-padding, x); 
+	    scaleRect(back, y-h/2, y+h/2, x0-padding, x);
     }
 }
 

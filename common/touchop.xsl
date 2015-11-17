@@ -604,7 +604,7 @@
   </svg:g>
 </xsl:template>
 
-<xsl:template name="toSVG">
+<xsl:template name="toSVG" match="toSVG">
   <xsl:for-each select="*">
     <xsl:element name="{concat('svg:',name())}">
       <xsl:copy-of select="@*"/>
