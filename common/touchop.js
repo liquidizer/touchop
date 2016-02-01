@@ -44,7 +44,7 @@ function deepLayout(obj, doFloat) {
 	setFloating(obj, doFloat);
 	if (doFloat && isObj) {
 	    var box= obj.getBBox();
-	    var m= obj.getTransformToElement(obj.parentNode);
+	    var m= getTransformToElement(obj, obj.parentNode);
 	    m= m.translate(-box.x, -box.y);
 	    setTransform(obj, m);
 	}
@@ -260,7 +260,7 @@ function layout(element) {
         // make sure original element does not move on the screen
         var ctm2= element.getCTM();
 	var w= top.getCTM();
-	var m= top.getTransformToElement(top.parentNode);
+	var m= getTransformToElement(top, top.parentNode);
 	m= m.multiply(w.inverse());
 	m= m.translate(ctm1.e-ctm2.e, ctm1.f-ctm2.f);
 	m= m.multiply(w);
@@ -348,7 +348,7 @@ function snap(obj) {
 		back.removeAttribute("opacity");
 	    }
 	    else if (back!=null) {
-		var m= child.getTransformToElement(obj);
+		var m= getTransformToElement(child, obj);
 		var box1= back.getBBox();
 		var box2= child.getBBox();
 
@@ -408,7 +408,7 @@ function boxLayout(obj, horizontal) {
             } else if (back!=null && child.getAttribute("display")!="none"
 		       && child.transform) {
                 // find local coordinate system
-		var m= child.getTransformToElement(obj);
+		var m= getTransformToElement(child, obj);
 		var box= child.getBBox();
 
 		if (opt=="stretch") {
@@ -446,7 +446,7 @@ function boxLayout(obj, horizontal) {
     if (stretch!=null) {
 	h= h+10;
 	var box= stretch.getBBox();
-	var m= stretch.getTransformToElement(obj);
+	var m= getTransformToElement(stretch, obj);
 	m.a= h/box.width;
 	m.e= m.e + (1-m.a)*(box.x+box.width/2);
 	setTransform(stretch, m);
@@ -526,6 +526,12 @@ function setTransform(obj, m) {
     // For some very strange reasons conversion to string is 2x faster.
     obj.setAttribute("transform","matrix("+m.a+","+m.b+","+m.c+","+m.d+","+m.e+","+m.f+")");
 }
+
+// Replacement for the deprecated function
+function getTransformToElement(obj, target) {
+    return target.getScreenCTM().inverse().multiply(obj.getScreenCTM());
+}
+
 
 // sets the oppacitiy to show either of the two similies
 function smile(value) {
